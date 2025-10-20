@@ -14,10 +14,10 @@ public class AlphabetData : ScriptableObject
         public Sprite image;
     }
 
-    public List<LetterData> AlphabatPlain= new List<LetterData>();
-    public List<LetterData> AlphabatNormal = new List<LetterData>();
-    public List<LetterData> AlphabatHighlighted = new List<LetterData>();
-    public List<LetterData> AlphabatWrong = new List<LetterData>();
+    public List<LetterData> AlphabetPlain= new List<LetterData>();
+    public List<LetterData> AlphabetNormal = new List<LetterData>();
+    public List<LetterData> AlphabetHighlighted = new List<LetterData>();
+    public List<LetterData> AlphabetWrong = new List<LetterData>();
     
 
 
