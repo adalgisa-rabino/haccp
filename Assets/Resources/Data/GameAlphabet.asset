@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4428eea3061d471b980d343362caecc, type: 3}
   m_Name: GameAlphabet
   m_EditorClassIdentifier: 
-  AlphabatPlain:
+  AlphabetPlain:
   - letter: A
     image: {fileID: 21300000, guid: 44561d07cd3f04779ae906eef01b91f0, type: 3}
   - letter: B
@@ -33,6 +33,8 @@ MonoBehaviour:
     image: {fileID: 21300000, guid: 2f5a18860466042d5b5ad584e25be028, type: 3}
   - letter: J
     image: {fileID: 21300000, guid: b30e8dd3716294c4f972510c81e4552b, type: 3}
+  - letter: K
+    image: {fileID: 21300000, guid: 2112995d047964356aac7f55d5e72980, type: 3}
   - letter: L
     image: {fileID: 21300000, guid: 6f2271d9ead4a40ae92cef3662c2e376, type: 3}
   - letter: M
@@ -63,9 +65,7 @@ MonoBehaviour:
     image: {fileID: 21300000, guid: 7445fb4293f9f411a9f116578953d5f5, type: 3}
   - letter: Z
     image: {fileID: 21300000, guid: 1f4f1d7a5f4034be19acc4ec5dd13859, type: 3}
-  - letter: K
-    image: {fileID: 21300000, guid: 2112995d047964356aac7f55d5e72980, type: 3}
-  AlphabatNormal:
+  AlphabetNormal:
   - letter: A
     image: {fileID: 21300000, guid: a262ef21b3e2a47c0be9171a2a3a8923, type: 3}
   - letter: B
@@ -86,6 +86,8 @@ MonoBehaviour:
     image: {fileID: 21300000, guid: d4202c6f641fa4a0b8459f72f2ce2082, type: 3}
   - letter: J
     image: {fileID: 21300000, guid: 719a4de1a1b9848e19b5f41deefb2cfe, type: 3}
+  - letter: K
+    image: {fileID: 21300000, guid: 2ed9c5b1a29624e4ba52fe2ceb1a69de, type: 3}
   - letter: L
     image: {fileID: 21300000, guid: f1d07045d208245ff92aa725e86d8d20, type: 3}
   - letter: M
@@ -116,9 +118,7 @@ MonoBehaviour:
     image: {fileID: 21300000, guid: 06a9a7d8322b5414b889aaa052144f51, type: 3}
   - letter: Z
     image: {fileID: 21300000, guid: 510e2f8a13d7244a69204e433e4ef705, type: 3}
-  - letter: K
-    image: {fileID: 21300000, guid: 2ed9c5b1a29624e4ba52fe2ceb1a69de, type: 3}
-  AlphabatHighlighted:
+  AlphabetHighlighted:
   - letter: A
     image: {fileID: 21300000, guid: e12e718013deb4a14b2c572203211f6c, type: 3}
   - letter: B
@@ -171,7 +171,7 @@ MonoBehaviour:
     image: {fileID: 21300000, guid: 65093ea3fcafc436f95fd2bba739b7d0, type: 3}
   - letter: Z
     image: {fileID: 21300000, guid: c57eed76b7dc344699ffa873c04b72db, type: 3}
-  AlphabatWrong:
+  AlphabetWrong:
   - letter: A
     image: {fileID: 21300000, guid: 3f186fc4b2368445f9e9f663d0c352c6, type: 3}
   - letter: B

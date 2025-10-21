@@ -18,10 +18,10 @@ public class AlphabetDataDrawer : Editor
 
     private void OnEnable()
     {
-        InitializeReorderableLists(ref AlphabetPlainList, "AlphabatPlain", "Alphabet Plain");
-        InitializeReorderableLists(ref AlphabetNormalList, "AlphabatNormal", "Alphabet Normal");
-        InitializeReorderableLists(ref AlphatbetHighlightedList, "AlphabatHighlighted", "Alphabet Highlighted");
-        InitializeReorderableLists(ref AlphabetWrongList, "AlphabatWrong", "Alphabet Wrong");
+        InitializeReorderableLists(ref AlphabetPlainList, "AlphabetPlain", "Alphabet Plain");
+        InitializeReorderableLists(ref AlphabetNormalList, "AlphabetNormal", "Alphabet Normal");
+        InitializeReorderableLists(ref AlphatbetHighlightedList, "AlphabetHighlighted", "Alphabet Highlighted");
+        InitializeReorderableLists(ref AlphabetWrongList, "AlphabetWrong", "Alphabet Wrong");
     }
 
     public override void OnInspectorGUI()

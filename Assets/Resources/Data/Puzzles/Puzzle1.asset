@@ -13,43 +13,129 @@ MonoBehaviour:
   m_Name: Puzzle1
   m_EditorClassIdentifier: 
   timeInSeconds: 0
-  Columns: 5
-  Rows: 5
+  Columns: 10
+  Rows: 10
   Board:
-  - Size: 5
+  - Size: 10
+    Row:
+    - F
+    - I
+    - W
+    - O
+    - E
+    - A
+    - H
+    - V
+    - F
+    - J
+  - Size: 10
+    Row:
+    - A
+    - I
+    - A
+    - Y
+    - R
+    - X
+    - I
+    - J
+    - C
+    - M
+  - Size: 10
     Row:
     - E
-    - I
-    - H
-    - D
-    - J
-  - Size: 5
-    Row:
-    - P
+    - A
+    - C
     - U
-    - L
-    - M
+    - Y
+    - U
     - G
-  - Size: 5
+    - M
+    - I
+    - L
+  - Size: 10
     Row:
     - B
     - K
-    - P
+    - A
+    - X
+    - I
+    - J
+    - F
+    - B
+    - A
     - Q
-    - U
-  - Size: 5
+  - Size: 10
     Row:
-    - Y
+    - Z
     - T
-    - G
-    - K
-    - V
-  - Size: 5
+    - W
+    - O
+    - U
+    - M
+    - D
+    - X
+    - O
+    - S
+  - Size: 10
     Row:
-    - R
-    - I
-    - I
+    - B
+    - E
+    - X
+    - E
+    - Z
+    - L
+    - T
+    - Q
+    - A
+    - D
+  - Size: 10
+    Row:
+    - N
+    - X
+    - U
+    - Y
+    - O
+    - V
+    - U
+    - U
+    - J
+    - D
+  - Size: 10
+    Row:
     - A
     - R
+    - S
+    - P
+    - G
+    - I
+    - P
+    - P
+    - Q
+    - G
+  - Size: 10
+    Row:
+    - M
+    - A
+    - M
+    - M
+    - A
+    - P
+    - Q
+    - B
+    - B
+    - F
+  - Size: 10
+    Row:
+    - H
+    - N
+    - X
+    - L
+    - O
+    - E
+    - R
+    - I
+    - C
+    - O
   SearchWords:
-  - word: ciaopp
+  - word: ciao
+  - word: mamma
