@@ -1,0 +1,140 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 543e9f591022842b4988c36f110c21b2, type: 3}
+  m_Name: Puzzle1
+  m_EditorClassIdentifier: 
+  timeInSeconds: 0
+  Columns: 10
+  Rows: 10
+  Board:
+  - Size: 10
+    Row:
+    - X
+    - F
+    - G
+    - B
+    - C
+    - L
+    - F
+    - E
+    - I
+    - Y
+  - Size: 10
+    Row:
+    - C
+    - A
+    - X
+    - I
+    - J
+    - S
+    - O
+    - P
+    - Y
+    - Y
+  - Size: 10
+    Row:
+    - H
+    - I
+    - A
+    - Y
+    - W
+    - L
+    - L
+    - L
+    - X
+    - G
+  - Size: 10
+    Row:
+    - Z
+    - J
+    - A
+    - J
+    - Y
+    - A
+    - K
+    - P
+    - R
+    - M
+  - Size: 10
+    Row:
+    - I
+    - R
+    - T
+    - O
+    - I
+    - J
+    - Y
+    - W
+    - L
+    - D
+  - Size: 10
+    Row:
+    - X
+    - V
+    - R
+    - L
+    - Y
+    - H
+    - N
+    - X
+    - A
+    - Z
+  - Size: 10
+    Row:
+    - J
+    - U
+    - P
+    - Q
+    - O
+    - Z
+    - F
+    - Y
+    - O
+    - C
+  - Size: 10
+    Row:
+    - W
+    - X
+    - T
+    - A
+    - B
+    - G
+    - H
+    - F
+    - Y
+    - R
+  - Size: 10
+    Row:
+    - Z
+    - Z
+    - A
+    - I
+    - N
+    - C
+    - O
+    - O
+    - K
+    - C
+  - Size: 10
+    Row:
+    - K
+    - D
+    - K
+    - Q
+    - I
+    - S
+    - S
+    - A
+    - F
+    - J
+  SearchWords:
+  - word: ciao
