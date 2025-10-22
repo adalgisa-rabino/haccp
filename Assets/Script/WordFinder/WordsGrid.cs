@@ -114,7 +114,7 @@ public class WordsGrid : MonoBehaviour
 
         //calcolo square size
 
-        squareSize.y = (squareRect.width * targetScale.x) + squareOffset;
+        squareSize.x = (squareRect.width * targetScale.x) + squareOffset;
         squareSize.y = (squareRect.height * targetScale.y) + squareOffset;
 
         var midWidhtPosition = ((currentGameData.selectedBoardData.Columns * squareSize.x) / 2) * 0.01f;

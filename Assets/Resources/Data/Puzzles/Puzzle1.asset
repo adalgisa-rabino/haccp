@@ -18,124 +18,123 @@ MonoBehaviour:
   Board:
   - Size: 10
     Row:
+    - X
     - F
-    - I
-    - W
-    - O
+    - G
+    - B
+    - C
+    - L
+    - F
     - E
-    - A
-    - H
-    - V
-    - F
-    - J
+    - I
+    - Y
   - Size: 10
     Row:
+    - C
     - A
-    - I
-    - A
-    - Y
-    - R
     - X
     - I
     - J
-    - C
-    - M
-  - Size: 10
-    Row:
-    - E
-    - A
-    - C
-    - U
+    - S
+    - O
+    - P
     - Y
-    - U
-    - G
-    - M
-    - I
-    - L
+    - Y
   - Size: 10
     Row:
-    - B
+    - H
+    - I
+    - A
+    - Y
+    - W
+    - L
+    - L
+    - L
+    - X
+    - G
+  - Size: 10
+    Row:
+    - Z
+    - J
+    - A
+    - J
+    - Y
+    - A
     - K
-    - A
-    - X
-    - I
-    - J
-    - F
-    - B
-    - A
-    - Q
-  - Size: 10
-    Row:
-    - Z
-    - T
-    - W
-    - O
-    - U
-    - M
-    - D
-    - X
-    - O
-    - S
-  - Size: 10
-    Row:
-    - B
-    - E
-    - X
-    - E
-    - Z
-    - L
-    - T
-    - Q
-    - A
-    - D
-  - Size: 10
-    Row:
-    - N
-    - X
-    - U
-    - Y
-    - O
-    - V
-    - U
-    - U
-    - J
-    - D
-  - Size: 10
-    Row:
-    - A
+    - P
     - R
-    - S
-    - P
-    - G
+    - M
+  - Size: 10
+    Row:
     - I
-    - P
-    - P
-    - Q
-    - G
+    - R
+    - T
+    - O
+    - I
+    - J
+    - Y
+    - W
+    - L
+    - D
   - Size: 10
     Row:
-    - M
-    - A
-    - M
-    - M
-    - A
-    - P
-    - Q
-    - B
-    - B
-    - F
-  - Size: 10
-    Row:
+    - X
+    - V
+    - R
+    - L
+    - Y
     - H
     - N
     - X
-    - L
+    - A
+    - Z
+  - Size: 10
+    Row:
+    - J
+    - U
+    - P
+    - Q
     - O
-    - E
+    - Z
+    - F
+    - Y
+    - O
+    - C
+  - Size: 10
+    Row:
+    - W
+    - X
+    - T
+    - A
+    - B
+    - G
+    - H
+    - F
+    - Y
     - R
+  - Size: 10
+    Row:
+    - Z
+    - Z
+    - A
     - I
+    - N
     - C
     - O
+    - O
+    - K
+    - C
+  - Size: 10
+    Row:
+    - K
+    - D
+    - K
+    - Q
+    - I
+    - S
+    - S
+    - A
+    - F
+    - J
   SearchWords:
   - word: ciao
-  - word: mamma
