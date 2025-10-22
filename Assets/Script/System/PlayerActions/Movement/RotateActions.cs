@@ -80,7 +80,7 @@ public class RotateActions : MonoBehaviour
     {
 
         if (_leftHeld || _rightHeld)
-            Debug.Log($"[RotateActions] rotating dir={(_rightHeld ? 1 : 0) - (_leftHeld ? 1 : 0)}");
+         //   Debug.Log($"[RotateActions] rotating dir={(_rightHeld ? 1 : 0) - (_leftHeld ? 1 : 0)}");
 
 
         if (!targetToRotate) return;

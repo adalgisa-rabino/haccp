@@ -1,724 +1,724 @@
 {
-  "indizi": [
-    {
-      "id": "clue_001",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Cuoco",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Durante il turno il cuoco ha registrato tutte le temperature di cottura delle pietanze e i valori erano sempre conformi."
-    },
-    {
-      "id": "clue_002",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Cuoco",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Dai rapporti di servizio risulta che il cuoco non ha mai lasciato l’area cottura e non ha toccato né dolci né preparazioni fredde."
-    },
-    {
-      "id": "clue_003",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Cuoco",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Nei controlli si è visto che il cuoco ha mantenuto costantemente separati gli alimenti crudi da quelli già cotti."
-    },
-    {
-      "id": "clue_004",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Pasticcere",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Il banco di pasticceria è stato preparato con utensili dedicati esclusivamente a dolci senza allergeni."
-    },
-    {
-      "id": "clue_005",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Pasticcere",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Prima di iniziare a lavorare il pasticcere ha igienizzato accuratamente il piano di lavoro con disinfettante certificato."
-    },
-    {
-      "id": "clue_006",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Pasticcere",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Il pasticcere ha gestito solo impasti e creme senza mai entrare in contatto con carni o altri alimenti crudi."
-    },
-    {
-      "id": "clue_007",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Cameriere",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Secondo le telecamere interne il cameriere non è mai entrato in cucina o nei locali di preparazione."
-    },
-    {
-      "id": "clue_008",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Cameriere",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "I clienti hanno confermato che il cameriere ha sempre servito utilizzando guanti e pinze."
-    },
-    {
-      "id": "clue_009",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Cameriere",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Il menù consegnato dal cameriere riportava correttamente la lista degli allergeni obbligatori per legge."
-    },
-    {
-      "id": "clue_010",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Scaffalista Fattorino",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Lo scaffalista ha riposto le consegne nel magazzino refrigerato mantenendo la catena del freddo."
-    },
-    {
-      "id": "clue_011",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Scaffalista Fattorino",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Un’ispezione al magazzino ha verificato che nessun prodotto fosse oltre la data di scadenza."
-    },
-    {
-      "id": "clue_012",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Scaffalista Fattorino",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Tutti i colli ricevuti erano etichettati e registrati con codice lotto dal fattorino."
-    },
-    {
-      "id": "clue_013",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Lavapiatti",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Il lavapiatti ha seguito correttamente il ciclo completo con detergente e risciacquo ad alta temperatura."
-    },
-    {
-      "id": "clue_014",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Lavapiatti",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Al controllo visivo gli utensili lavati non presentavano residui di cibo né odori sospetti."
-    },
-    {
-      "id": "clue_015",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Lavapiatti",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "L’area lavaggio mostrava netta separazione tra stoviglie sporche e utensili già sanificati."
-    },
-    {
-      "id": "clue_016",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Operatore pulizie",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "L’addetto alle pulizie ha utilizzato esclusivamente prodotti certificati per superfici a contatto con alimenti."
-    },
-    {
-      "id": "clue_017",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Operatore pulizie",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Tutti i detergenti erano conservati in un armadio chiuso separato dalle aree alimentari."
-    },
-    {
-      "id": "clue_018",
-      "tipo": "Escludente",
-      "categoria": "Colpevole",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "Operatore pulizie",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Nei registri risultano rispettati i tempi di contatto previsti per i disinfettanti usati."
-    },
-    {
-      "id": "clue_019",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Fisici",
-      "bersaglioLuogo": "",
-      "testo": "L’ispezione non ha trovato vetri metalli plastica o altri corpi estranei nei piatti serviti."
-    },
-    {
-      "id": "clue_020",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Fisici",
-      "bersaglioLuogo": "",
-      "testo": "Nei campioni analizzati non sono stati rilevati frammenti ossei sabbia o residui naturali."
-    },
-    {
-      "id": "clue_021",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Fisici",
-      "bersaglioLuogo": "",
-      "testo": "Gli alimenti erano stati sottoposti a controllo visivo e non presentavano impurità solide."
-    },
-    {
-      "id": "clue_022",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Chimici",
-      "bersaglioLuogo": "",
-      "testo": "Le analisi di laboratorio hanno escluso la presenza di pesticidi o farmaci negli ingredienti."
-    },
-    {
-      "id": "clue_023",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Chimici",
-      "bersaglioLuogo": "",
-      "testo": "Non sono stati trovati residui di detergenti o disinfettanti sugli utensili."
-    },
-    {
-      "id": "clue_024",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Chimici",
-      "bersaglioLuogo": "",
-      "testo": "Le analisi non hanno evidenziato metalli pesanti nei prodotti alimentari."
-    },
-    {
-      "id": "clue_025",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Biologici",
-      "bersaglioLuogo": "",
-      "testo": "I rapporti microbiologici hanno confermato l’assenza di batteri patogeni."
-    },
-    {
-      "id": "clue_026",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Biologici",
-      "bersaglioLuogo": "",
-      "testo": "Nei controlli visivi e di laboratorio non sono emerse muffe né lieviti."
-    },
-    {
-      "id": "clue_027",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Biologici",
-      "bersaglioLuogo": "",
-      "testo": "I campioni esaminati erano privi di virus o parassiti."
-    },
-    {
-      "id": "clue_028",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Allergeni",
-      "bersaglioLuogo": "",
-      "testo": "Le analisi hanno escluso la presenza di glutine o latte nel piatto."
-    },
-    {
-      "id": "clue_029",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Allergeni",
-      "bersaglioLuogo": "",
-      "testo": "Nessuna traccia di arachidi o frutta a guscio è stata rinvenuta."
-    },
-    {
-      "id": "clue_030",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Allergeni",
-      "bersaglioLuogo": "",
-      "testo": "Non sono state rilevate contaminazioni da pesce o crostacei."
-    },
-    {
-      "id": "clue_031",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Crociata",
-      "bersaglioLuogo": "",
-      "testo": "Tutti i coltelli e i taglieri risultavano sanificati tra un alimento e l’altro."
-    },
-    {
-      "id": "clue_032",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Crociata",
-      "bersaglioLuogo": "",
-      "testo": "Carni crude e cibi pronti erano conservati in contenitori separati."
-    },
-    {
-      "id": "clue_033",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Crociata",
-      "bersaglioLuogo": "",
-      "testo": "Le teglie e le padelle sono state lavate accuratamente tra una preparazione e l’altra."
-    },
-    {
-      "id": "clue_034",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Proliferazione",
-      "bersaglioLuogo": "",
-      "testo": "I frigoriferi mantenevano temperature corrette per conservare i cibi."
-    },
-    {
-      "id": "clue_035",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Proliferazione",
-      "bersaglioLuogo": "",
-      "testo": "Nessun prodotto era oltre la data di scadenza."
-    },
-    {
-      "id": "clue_036",
-      "tipo": "Escludente",
-      "categoria": "Arma",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Proliferazione",
-      "bersaglioLuogo": "",
-      "testo": "I registri HACCP mostravano controlli regolari e conformi."
-    },
-    {
-      "id": "clue_037",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Magazzino",
-      "testo": "Durante l’ispezione nessun alimento è stato trovato a temperatura ambiente."
-    },
-    {
-      "id": "clue_038",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Magazzino",
-      "testo": "Tutti i lotti risultavano correttamente etichettati e registrati."
-    },
-    {
-      "id": "clue_039",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Magazzino",
-      "testo": "Non c’erano alimenti scaduti o mal conservati."
-    },
-    {
-      "id": "clue_040",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Frigorifero",
-      "testo": "La temperatura era stabile tra 0 e 4 gradi."
-    },
-    {
-      "id": "clue_041",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Frigorifero",
-      "testo": "Gli alimenti erano conservati separando crudo e cotto."
-    },
-    {
-      "id": "clue_042",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Frigorifero",
-      "testo": "Nessun guasto era stato registrato al sistema di refrigerazione."
-    },
-    {
-      "id": "clue_043",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Lavandino",
-      "testo": "Il lavandino era stato sanificato e risciacquato correttamente."
-    },
-    {
-      "id": "clue_044",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Lavandino",
-      "testo": "Non sono state trovate tracce di detergente nel lavello."
-    },
-    {
-      "id": "clue_045",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Lavandino",
-      "testo": "Al momento del controllo non vi erano stoviglie sporche."
-    },
-    {
-      "id": "clue_046",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Area cottura",
-      "testo": "I piani di lavoro erano stati sanificati."
-    },
-    {
-      "id": "clue_047",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Area cottura",
-      "testo": "Non erano presenti utensili sporchi lasciati in giro."
-    },
-    {
-      "id": "clue_048",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Area cottura",
-      "testo": "L’area cottura aveva superato i controlli previsti."
-    },
-    {
-      "id": "clue_049",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Banco freddo",
-      "testo": "Il banco freddo era stato igienizzato all’inizio del turno."
-    },
-    {
-      "id": "clue_050",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Banco freddo",
-      "testo": "Non sono stati trovati residui di precedenti lavorazioni."
-    },
-    {
-      "id": "clue_051",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Banco freddo",
-      "testo": "Gli ingredienti erano correttamente separati da quelli con allergeni."
-    },
-    {
-      "id": "clue_052",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Armadio abiti",
-      "testo": "L’armadio spogliatoio era pulito e igienizzato."
-    },
-    {
-      "id": "clue_053",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Armadio abiti",
-      "testo": "Gli indumenti erano conservati separati dagli alimenti."
-    },
-    {
-      "id": "clue_054",
-      "tipo": "Escludente",
-      "categoria": "Luogo",
-      "effetto": "Esclude",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Armadio abiti",
-      "testo": "Non sono stati rilevati segni di scarsa igiene."
-    },
-    {
-      "id": "clue_055",
-      "tipo": "Ambiguo",
-      "categoria": "Colpevole",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Gli utensili apparivano puliti ma alcune macchie residue potevano sfuggire a un controllo veloce."
-    },
-    {
-      "id": "clue_056",
-      "tipo": "Ambiguo",
-      "categoria": "Colpevole",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "Cuoco",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Alcuni testimoni hanno visto il cuoco passare vicino al banco freddo durante il servizio."
-    },
-    {
-      "id": "clue_057",
-      "tipo": "Ambiguo",
-      "categoria": "Colpevole",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "Cameriere",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Il cameriere non ha cucinato ma ha toccato direttamente bicchieri e posate."
-    },
-    {
-      "id": "clue_058",
-      "tipo": "Ambiguo",
-      "categoria": "Colpevole",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "Scaffalista",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Magazzino",
-      "testo": "La consegna degli alimenti da parte dello scaffalista è stata rapida ma non tutti i pacchi sembravano controllati."
-    },
-    {
-      "id": "clue_059",
-      "tipo": "Ambiguo",
-      "categoria": "Colpevole",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "Pulizie",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "L’addetto alle pulizie ha usato la stessa spugna in più reparti anche se dichiarava che fosse pulita."
-    },
-    {
-      "id": "clue_060",
-      "tipo": "Ambiguo",
-      "categoria": "Colpevole",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "Lavapiatti",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "",
-      "testo": "Il lavapiatti ricordava la procedura ma non era certo di aver cambiato l’acqua nell’ultima vasca."
-    },
-    {
-      "id": "clue_061",
-      "tipo": "Ambiguo",
-      "categoria": "Arma",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Biologico",
-      "bersaglioLuogo": "",
-      "testo": "Il cliente ha accusato nausea e crampi sintomi che possono derivare da cause diverse."
-    },
-    {
-      "id": "clue_062",
-      "tipo": "Ambiguo",
-      "categoria": "Arma",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Chimico",
-      "bersaglioLuogo": "",
-      "testo": "Alcuni operatori hanno notato un odore insolito difficile da ricondurre con certezza a una sostanza."
-    },
-    {
-      "id": "clue_063",
-      "tipo": "Ambiguo",
-      "categoria": "Arma",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Fisico",
-      "bersaglioLuogo": "",
-      "testo": "Gli alimenti sembravano a posto ma c’erano minuscoli residui non identificati."
-    },
-    {
-      "id": "clue_064",
-      "tipo": "Ambiguo",
-      "categoria": "Arma",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Allergeni",
-      "bersaglioLuogo": "",
-      "testo": "Gli strumenti usati per più piatti non risultano sempre differenziati."
-    },
-    {
-      "id": "clue_065",
-      "tipo": "Ambiguo",
-      "categoria": "Arma",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Biologico",
-      "bersaglioLuogo": "",
-      "testo": "Le analisi microbiologiche sono risultate nella norma ma non tutti i campioni sono stati testati."
-    },
-    {
-      "id": "clue_066",
-      "tipo": "Ambiguo",
-      "categoria": "Arma",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "Chimico",
-      "bersaglioLuogo": "",
-      "testo": "I test chimici non hanno rilevato sostanze nocive eppure il piatto aveva un retrogusto anomalo."
-    },
-    {
-      "id": "clue_067",
-      "tipo": "Ambiguo",
-      "categoria": "Luogo",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Dispensa",
-      "testo": "La dispensa appariva ordinata ma alcuni pacchi erano aperti e non sigillati."
-    },
-    {
-      "id": "clue_068",
-      "tipo": "Ambiguo",
-      "categoria": "Luogo",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Frigorifero",
-      "testo": "Il frigorifero era in funzione ma la temperatura si avvicinava al limite massimo consentito."
-    },
-    {
-      "id": "clue_069",
-      "tipo": "Ambiguo",
-      "categoria": "Luogo",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Banco freddo",
-      "testo": "Il banco freddo veniva usato da più persone e i registri non erano aggiornati."
-    },
-    {
-      "id": "clue_070",
-      "tipo": "Ambiguo",
-      "categoria": "Luogo",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Area cottura",
-      "testo": "L’area cottura era pulita ma alcuni utensili erano accatastati senza copertura."
-    },
-    {
-      "id": "clue_071",
-      "tipo": "Ambiguo",
-      "categoria": "Luogo",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Lavandino",
-      "testo": "Il lavandino risultava igienizzato ma non era chiaro se fosse stato usato subito dopo."
-    },
-    {
-      "id": "clue_072",
-      "tipo": "Ambiguo",
-      "categoria": "Luogo",
-      "effetto": "Ambiguo",
-      "bersaglioColpevole": "",
-      "bersaglioArma": "",
-      "bersaglioLuogo": "Armadio abiti",
-      "testo": "L’armadio abiti non conteneva indumenti sporchi visibili ma alcuni non erano imbustati."
-    }
-  ]
+    "indizi": [
+        {
+            "id": "ex_cuoco_001",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Cuoco",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Durante il turno il cuoco ha registrato tutte le temperature di cottura delle pietanze e i valori erano sempre conformi."
+        },
+        {
+            "id": "ex_cuoco_002",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Cuoco",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Dai rapporti di servizio risulta che il cuoco non ha mai lasciato l’area cottura e non ha toccato né dolci né preparazioni fredde."
+        },
+        {
+            "id": "ex_cuoco_003",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Cuoco",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Nei controlli si è visto che il cuoco ha mantenuto costantemente separati gli alimenti crudi da quelli già cotti."
+        },
+        {
+            "id": "ex_pasticcere_001",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Pasticcere",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Il banco di pasticceria è stato preparato con utensili dedicati esclusivamente a dolci senza allergeni."
+        },
+        {
+            "id": "ex_pasticcere_002",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Pasticcere",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Prima di iniziare a lavorare il pasticcere ha igienizzato accuratamente il piano di lavoro con disinfettante certificato."
+        },
+        {
+            "id": "ex_pasticcere_003",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Pasticcere",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Il pasticcere ha gestito solo impasti e creme senza mai entrare in contatto con carni o altri alimenti crudi."
+        },
+        {
+            "id": "ex_cameriere_001",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Cameriere",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Secondo le telecamere interne il cameriere non è mai entrato in cucina o nei locali di preparazione."
+        },
+        {
+            "id": "ex_cameriere_002",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Cameriere",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "I clienti hanno confermato che il cameriere ha sempre servito utilizzando guanti e pinze."
+        },
+        {
+            "id": "ex_cameriere_003",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Cameriere",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Il menù consegnato dal cameriere riportava correttamente la lista degli allergeni obbligatori per legge."
+        },
+        {
+            "id": "ex_scaffalista_001",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Scaffalista Fattorino",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Lo scaffalista ha riposto le consegne nel magazzino refrigerato mantenendo la catena del freddo."
+        },
+        {
+            "id": "ex_scaffalista_002",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Scaffalista Fattorino",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Un’ispezione al magazzino ha verificato che nessun prodotto fosse oltre la data di scadenza."
+        },
+        {
+            "id": "ex_scaffalista_003",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Scaffalista Fattorino",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Tutti i colli ricevuti erano etichettati e registrati con codice lotto dal fattorino."
+        },
+        {
+            "id": "ex_lavapiatti_001",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Lavapiatti",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Il lavapiatti ha seguito correttamente il ciclo completo con detergente e risciacquo ad alta temperatura."
+        },
+        {
+            "id": "ex_lavapiatti_002",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Lavapiatti",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Al controllo visivo gli utensili lavati non presentavano residui di cibo né odori sospetti."
+        },
+        {
+            "id": "ex_lavapiatti_003",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Lavapiatti",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "L’area lavaggio mostrava netta separazione tra stoviglie sporche e utensili già sanificati."
+        },
+        {
+            "id": "ex_pulizie_001",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Operatore pulizie",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "L’addetto alle pulizie ha utilizzato esclusivamente prodotti certificati per superfici a contatto con alimenti."
+        },
+        {
+            "id": "ex_pulizie_002",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Operatore pulizie",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Tutti i detergenti erano conservati in un armadio chiuso separato dalle aree alimentari."
+        },
+        {
+            "id": "ex_pulizie_003",
+            "tipo": "Escludente",
+            "categoria": "Colpevole",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "Operatore pulizie",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Nei registri risultano rispettati i tempi di contatto previsti per i disinfettanti usati."
+        },
+        {
+            "id": "ex_fisici_001",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti fisici",
+            "bersaglioLuogo": "",
+            "testo": "L’ispezione non ha trovato vetri, metalli, plastica o altri corpi estranei nei piatti serviti."
+        },
+        {
+            "id": "ex_fisici_002",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti fisici",
+            "bersaglioLuogo": "",
+            "testo": "Nei campioni analizzati non sono stati rilevati frammenti ossei, sabbia o residui naturali."
+        },
+        {
+            "id": "ex_fisici_003",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti fisici",
+            "bersaglioLuogo": "",
+            "testo": "Gli alimenti erano stati sottoposti a controllo visivo e non presentavano impurità solide."
+        },
+        {
+            "id": "ex_chimici_001",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti chimici",
+            "bersaglioLuogo": "",
+            "testo": "Le analisi di laboratorio hanno escluso la presenza di pesticidi o farmaci negli ingredienti."
+        },
+        {
+            "id": "ex_chimici_002",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti chimici",
+            "bersaglioLuogo": "",
+            "testo": "Non sono stati trovati residui di detergenti o disinfettanti sugli utensili."
+        },
+        {
+            "id": "ex_chimici_003",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti chimici",
+            "bersaglioLuogo": "",
+            "testo": "Le analisi non hanno evidenziato metalli pesanti nei prodotti alimentari."
+        },
+        {
+            "id": "ex_biologici_001",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti biologici",
+            "bersaglioLuogo": "",
+            "testo": "I rapporti microbiologici hanno confermato l’assenza di batteri patogeni."
+        },
+        {
+            "id": "ex_biologici_002",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti biologici",
+            "bersaglioLuogo": "",
+            "testo": "Nei controlli visivi e di laboratorio non sono emerse muffe né lieviti."
+        },
+        {
+            "id": "ex_biologici_003",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti biologici",
+            "bersaglioLuogo": "",
+            "testo": "I campioni esaminati erano privi di virus o parassiti."
+        },
+        {
+            "id": "ex_allergeni_001",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Allergeni",
+            "bersaglioLuogo": "",
+            "testo": "Le analisi hanno escluso la presenza di glutine o latte nel piatto."
+        },
+        {
+            "id": "ex_allergeni_002",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Allergeni",
+            "bersaglioLuogo": "",
+            "testo": "Nessuna traccia di arachidi o frutta a guscio è stata rinvenuta."
+        },
+        {
+            "id": "ex_allergeni_003",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Allergeni",
+            "bersaglioLuogo": "",
+            "testo": "Non sono state rilevate contaminazioni da pesce o crostacei."
+        },
+        {
+            "id": "ex_crociata_001",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminazione crociata",
+            "bersaglioLuogo": "",
+            "testo": "Tutti i coltelli e i taglieri risultavano sanificati tra un alimento e l’altro."
+        },
+        {
+            "id": "ex_crociata_002",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminazione crociata",
+            "bersaglioLuogo": "",
+            "testo": "Carni crude e cibi pronti erano conservati in contenitori separati."
+        },
+        {
+            "id": "ex_crociata_003",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminazione crociata",
+            "bersaglioLuogo": "",
+            "testo": "Le teglie e le padelle sono state lavate accuratamente tra una preparazione e l’altra."
+        },
+        {
+            "id": "ex_proliferazione_001",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Proliferazione microbica",
+            "bersaglioLuogo": "",
+            "testo": "I frigoriferi mantenevano temperature corrette per conservare i cibi."
+        },
+        {
+            "id": "ex_proliferazione_002",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Proliferazione microbica",
+            "bersaglioLuogo": "",
+            "testo": "Nessun prodotto era oltre la data di scadenza."
+        },
+        {
+            "id": "ex_proliferazione_003",
+            "tipo": "Escludente",
+            "categoria": "Arma",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Proliferazione microbica",
+            "bersaglioLuogo": "",
+            "testo": "I registri HACCP mostravano controlli regolari e conformi."
+        },
+        {
+            "id": "ex_magazzino_001",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Magazzino",
+            "testo": "Durante l’ispezione nessun alimento è stato trovato a temperatura ambiente."
+        },
+        {
+            "id": "ex_magazzino_002",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Magazzino",
+            "testo": "Tutti i lotti risultavano correttamente etichettati e registrati."
+        },
+        {
+            "id": "ex_magazzino_003",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Magazzino",
+            "testo": "Non c’erano alimenti scaduti o mal conservati."
+        },
+        {
+            "id": "ex_frigo_001",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Frigorifero",
+            "testo": "La temperatura era stabile tra 0 e 4 gradi."
+        },
+        {
+            "id": "ex_frigo_002",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Frigorifero",
+            "testo": "Gli alimenti erano conservati separando crudo e cotto."
+        },
+        {
+            "id": "ex_frigo_003",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Frigorifero",
+            "testo": "Nessun guasto era stato registrato al sistema di refrigerazione."
+        },
+        {
+            "id": "ex_lavandino_001",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Lavandino",
+            "testo": "Il lavandino era stato sanificato e risciacquato correttamente."
+        },
+        {
+            "id": "ex_lavandino_002",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Lavandino",
+            "testo": "Non sono state trovate tracce di detergente nel lavello."
+        },
+        {
+            "id": "ex_lavandino_003",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Lavandino",
+            "testo": "Al momento del controllo non vi erano stoviglie sporche."
+        },
+        {
+            "id": "ex_area_cottura_001",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Area cottura",
+            "testo": "I piani di lavoro erano stati sanificati."
+        },
+        {
+            "id": "ex_area_cottura_002",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Area cottura",
+            "testo": "Non erano presenti utensili sporchi lasciati in giro."
+        },
+        {
+            "id": "ex_area_cottura_003",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Area cottura",
+            "testo": "L’area cottura aveva superato i controlli previsti."
+        },
+        {
+            "id": "ex_banco_freddo_001",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Banco freddo",
+            "testo": "Il banco freddo era stato igienizzato all’inizio del turno."
+        },
+        {
+            "id": "ex_banco_freddo_002",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Banco freddo",
+            "testo": "Non sono stati trovati residui di precedenti lavorazioni."
+        },
+        {
+            "id": "ex_banco_freddo_003",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Banco freddo",
+            "testo": "Gli ingredienti erano correttamente separati da quelli con allergeni."
+        },
+        {
+            "id": "ex_armadio_001",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Armadio abiti",
+            "testo": "L’armadio spogliatoio era pulito e igienizzato."
+        },
+        {
+            "id": "ex_armadio_002",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Armadio abiti",
+            "testo": "Gli indumenti erano conservati separati dagli alimenti."
+        },
+        {
+            "id": "ex_armadio_003",
+            "tipo": "Escludente",
+            "categoria": "Luogo",
+            "effetto": "Esclude",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Armadio abiti",
+            "testo": "Non sono stati rilevati segni di scarsa igiene."
+        },
+        {
+            "id": "amb_col_001",
+            "tipo": "Ambiguo",
+            "categoria": "Colpevole",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "Lavapiatti; Pasticcere",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Gli utensili apparivano puliti ma alcune macchie residue potevano sfuggire a un controllo veloce."
+        },
+        {
+            "id": "amb_col_002",
+            "tipo": "Ambiguo",
+            "categoria": "Colpevole",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "Cuoco; Pasticcere",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Alcuni testimoni hanno visto il cuoco passare vicino al banco freddo durante il servizio."
+        },
+        {
+            "id": "amb_col_003",
+            "tipo": "Ambiguo",
+            "categoria": "Colpevole",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "Cameriere; Contaminazione crociata",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Il cameriere non ha cucinato ma ha toccato direttamente bicchieri e posate."
+        },
+        {
+            "id": "amb_col_004",
+            "tipo": "Ambiguo",
+            "categoria": "Colpevole",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "Scaffalista Fattorino; Magazzino",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "La consegna degli alimenti da parte dello scaffalista è stata rapida ma non tutti i pacchi sembravano controllati."
+        },
+        {
+            "id": "amb_col_005",
+            "tipo": "Ambiguo",
+            "categoria": "Colpevole",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "Operatore pulizie; Contaminazione crociata",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "L’addetto alle pulizie ha usato la stessa spugna in più reparti anche se dichiarava che fosse pulita."
+        },
+        {
+            "id": "amb_col_006",
+            "tipo": "Ambiguo",
+            "categoria": "Colpevole",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "Lavapiatti",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "",
+            "testo": "Il lavapiatti ricordava la procedura ma non era certo di aver cambiato l’acqua nell’ultima vasca."
+        },
+        {
+            "id": "amb_arma_001",
+            "tipo": "Ambiguo",
+            "categoria": "Arma",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti biologici; Contaminanti chimici; Allergeni",
+            "bersaglioLuogo": "",
+            "testo": "Il cliente ha accusato nausea e crampi, sintomi che possono derivare da cause diverse."
+        },
+        {
+            "id": "amb_arma_002",
+            "tipo": "Ambiguo",
+            "categoria": "Arma",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti chimici; Contaminanti biologici",
+            "bersaglioLuogo": "",
+            "testo": "Alcuni operatori hanno notato un odore insolito difficile da ricondurre con certezza a una sostanza."
+        },
+        {
+            "id": "amb_arma_003",
+            "tipo": "Ambiguo",
+            "categoria": "Arma",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti fisici; Contaminanti biologici",
+            "bersaglioLuogo": "",
+            "testo": "Gli alimenti sembravano a posto ma c’erano minuscoli residui non identificati."
+        },
+        {
+            "id": "amb_arma_004",
+            "tipo": "Ambiguo",
+            "categoria": "Arma",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Allergeni; Contaminazione crociata",
+            "bersaglioLuogo": "",
+            "testo": "Gli strumenti usati per più piatti non risultano sempre differenziati."
+        },
+        {
+            "id": "amb_arma_005",
+            "tipo": "Ambiguo",
+            "categoria": "Arma",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti biologici",
+            "bersaglioLuogo": "",
+            "testo": "Le analisi microbiologiche sono risultate nella norma ma non tutti i campioni sono stati testati."
+        },
+        {
+            "id": "amb_arma_006",
+            "tipo": "Ambiguo",
+            "categoria": "Arma",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "Contaminanti chimici; Allergeni",
+            "bersaglioLuogo": "",
+            "testo": "I test chimici non hanno rilevato sostanze nocive eppure il piatto aveva un retrogusto anomalo."
+        },
+        {
+            "id": "amb_luogo_001",
+            "tipo": "Ambiguo",
+            "categoria": "Luogo",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Magazzino",
+            "testo": "La dispensa appariva ordinata ma alcuni pacchi erano aperti e non sigillati."
+        },
+        {
+            "id": "amb_luogo_002",
+            "tipo": "Ambiguo",
+            "categoria": "Luogo",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Frigorifero",
+            "testo": "Il frigorifero era in funzione ma la temperatura si avvicinava al limite massimo consentito."
+        },
+        {
+            "id": "amb_luogo_003",
+            "tipo": "Ambiguo",
+            "categoria": "Luogo",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Banco freddo",
+            "testo": "Il banco freddo veniva usato da più persone e i registri non erano aggiornati."
+        },
+        {
+            "id": "amb_luogo_004",
+            "tipo": "Ambiguo",
+            "categoria": "Luogo",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Area cottura",
+            "testo": "L’area cottura era pulita ma alcuni utensili erano accatastati senza copertura."
+        },
+        {
+            "id": "amb_luogo_005",
+            "tipo": "Ambiguo",
+            "categoria": "Luogo",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Lavandino",
+            "testo": "Il lavandino risultava igienizzato ma non era chiaro se fosse stato usato subito dopo."
+        },
+        {
+            "id": "amb_luogo_006",
+            "tipo": "Ambiguo",
+            "categoria": "Luogo",
+            "effetto": "Ambiguo",
+            "bersaglioColpevole": "",
+            "bersaglioArma": "",
+            "bersaglioLuogo": "Armadio abiti",
+            "testo": "L’armadio abiti non conteneva indumenti sporchi visibili ma alcuni non erano imbustati."
+        }
+    ]
 }
