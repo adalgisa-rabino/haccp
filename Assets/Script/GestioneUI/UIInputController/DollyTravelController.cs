@@ -24,14 +24,14 @@ public class DollyTravelController : MonoBehaviour
     [Range(10, 500)] public int samples = 150;   // campioni per trovare tStart
     public bool closedSpline = true;             // spline chiusa → wrap su [0..1)
     public float travelSpeedT = 0.35f;           // velocità costante in t/s
-    public float stopEpsilonT = 0.005f;          // tolleranza di arrivo in t
+    //public float stopEpsilonT = 0.005f;          // tolleranza di arrivo in t
 
     [Header("Facoltativo: disattiva input durante il travel")]
     public MonoBehaviour[] disableDuringTravel;  // es. UIWalkController, UIRotateController, ViewActions, ecc.
 
     // ---- stato interno ----
-    private CinemachineSplineDolly _extFwd;
-    private CinemachineSplineDolly _extBwd;
+    private CinemachineSplineDolly CameraFwd;
+    private CinemachineSplineDolly CameraBwd;
     private bool _isTravelling;
     private int _dir = +1;                     // +1 avanti, -1 indietro
     private float _tCurrent;
@@ -40,58 +40,57 @@ public class DollyTravelController : MonoBehaviour
 
     void Awake()
     {
-        if (dollyVCamFwd) _extFwd = dollyVCamFwd.GetComponent<CinemachineSplineDolly>();
-        if (dollyVCamBwd) _extBwd = dollyVCamBwd.GetComponent<CinemachineSplineDolly>();
-
-        if (spline && spline.Splines != null && spline.Splines.Count > 0)
-            closedSpline = spline.Splines[0].Closed;
+        if (dollyVCamFwd) CameraFwd = dollyVCamFwd.GetComponent<CinemachineSplineDolly>();
+        if (dollyVCamBwd) CameraBwd = dollyVCamBwd.GetComponent<CinemachineSplineDolly>();
     }
 
+    
+
     /// <summary>
-    /// Avvia il viaggio verso 'stop' scegliendo il verso più corto.
+    ///    ------  Avvia il viaggio verso 'stop' scegliendo il verso più corto  ------
     /// </summary>
+    
     public void BeginTravelTo(TeleportStop stop)
     {
+        // se i campi non sono assegnai non partire
         if (!stop || spline == null || moveVCam == null || dollyVCamFwd == null || dollyVCamBwd == null
-            || _extFwd == null || _extBwd == null || playerRootForYaw == null)
+            || CameraFwd == null || CameraBwd == null || playerRootForYaw == null)
             return;
 
+        //assegnazione telecamera principale, se non c'è esci
         var cam = Camera.main;
         if (!cam) return;
 
         // 1) t di partenza: se sei già su una Dolly, usa la sua CameraPosition; altrimenti punto più vicino alla POV
-        float tStart = SplineNearest.ClosestOnSpline(spline, samples, cam.transform.position).t;
-        if (dollyVCamFwd.Priority > moveVCam.Priority && dollyVCamFwd.Priority >= dollyVCamBwd.Priority && _extFwd != null)
-            tStart = _extFwd.CameraPosition;
-        else if (dollyVCamBwd.Priority > moveVCam.Priority && dollyVCamBwd.Priority >= dollyVCamFwd.Priority && _extBwd != null)
-            tStart = _extBwd.CameraPosition;
+        float tStart;
+        if (dollyVCamFwd.Priority > moveVCam.Priority && dollyVCamFwd.Priority >= dollyVCamBwd.Priority && CameraFwd != null)
+            tStart = CameraFwd.CameraPosition;
+        else if (dollyVCamBwd.Priority > moveVCam.Priority && dollyVCamBwd.Priority >= dollyVCamFwd.Priority && CameraBwd != null)
+            tStart = CameraBwd.CameraPosition;
+        else
+            tStart = SplineNearest.ClosestOnSpline(spline, samples, cam.transform.position).t;
 
-        _tCurrent = Mathf.Clamp01(tStart);
-        _tTarget = Mathf.Clamp01(stop.T);
+        //Mathf.Clamp01(x) forza il valore x nell’intervallo [0,1].
+        //Qui garantisce che sia il punto di partenza (_tCurrent) sia il target (_tTarget) siano parametri validi
+        //per la spline (le spline si valutano su t normalizzato 0..1).
+        _tCurrent = Mathf.Clamp01(tStart); //tStart è la posizione sulla spline più vicina a dove si trova la camera
+        _tTarget = Mathf.Clamp01(stop.timeOnSpline); //stop.T è la posizione del TeleportStop
 
         // 2) verso più corto
-        if (closedSpline)
-        {
-            float forward = Mathf.Repeat(_tTarget - _tCurrent, 1f);
-            float backward = Mathf.Repeat(_tCurrent - _tTarget, 1f);
-            _dir = (forward <= backward) ? +1 : -1;
-            _tripRemainingStartT = Mathf.Max((_dir > 0) ? forward : backward, 1e-5f);
-        }
-        else
-        {
-            _dir = (_tTarget >= _tCurrent) ? +1 : -1;
-            _tripRemainingStartT = Mathf.Max(Mathf.Abs(_tTarget - _tCurrent), 1e-5f);
-        }
+        // --- rimosso il ramo per spline aperte: assumiamo sempre spline chiusa (wrap) nel gioco ---
+        // calcola la distanza tra la posizione di TeleportStop e la posizione iniziale a cui mi trovo (entrambi valori di posizione sulla spline) in una direzione e nell'altra
+        float forward = Mathf.Repeat(_tTarget - _tCurrent, 1f);
+        float backward = Mathf.Repeat(_tCurrent - _tTarget, 1f);
+        _dir = (forward <= backward) ? +1 : -1;  //scegli il verso con distanza minore; in caso di parità sceglie forward (+1) per via della condizione <=
+        _tripRemainingStartT = Mathf.Max((_dir > 0) ? forward : backward); 
 
         // 3) imposta stessa spline su entrambe e sync iniziale
-        _extFwd.Spline = spline;
-        _extBwd.Spline = spline;
         SetCameraPositionBoth(_tCurrent);
-        SyncPlayerAndPivotToDolly();             // allinea subito Player&Pivot al t di partenza
+        SyncPlayerAndPivotToDolly();             //?? allinea subito Player&Pivot al t di partenza
 
         // 4) attiva il rig giusto, disattiva input se richiesto
-        ActivateRig(_dir > 0);
-        SetInputsEnabled(false);
+        ActivateRig(_dir > 0); // Attiva la Dolly forward o backward via Priority; Move più bassa durante il travel
+        SetInputsEnabled(false); // Dis/abilita i tuoi script di input durante il travel
 
         _isTravelling = true;
     }
@@ -100,46 +99,41 @@ public class DollyTravelController : MonoBehaviour
     {
         if (!_isTravelling) return;
 
-        // distanza residua lungo il verso scelto (in t normalizzato)
-        float remaining = closedSpline
-            ? (_dir > 0 ? Mathf.Repeat(_tTarget - _tCurrent, 1f)
-                        : Mathf.Repeat(_tCurrent - _tTarget, 1f))
-            : Mathf.Abs(_tTarget - _tCurrent);
+        // distanza residua lungo il verso scelto
+        float remaining = (_dir > 0)
+            ? Mathf.Repeat(_tTarget - _tCurrent, 1f)
+            : Mathf.Repeat(_tCurrent - _tTarget, 1f);
 
-        // passo costante in t (senza ease)
+        // passo costante
         float maxStep = travelSpeedT * Time.deltaTime;
 
         // overshoot-safe: se supereremmo il target, snappa e chiudi
-        if (remaining <= maxStep + stopEpsilonT)
+        if (remaining <= maxStep)
         {
             _tCurrent = _tTarget;
             SetCameraPositionBoth(_tCurrent);
-            SyncPlayerAndPivotToDolly();         // ultima sync (sono già allineati)
-            FinishAndHandoffToMove();
+            SyncPlayerAndPivotToDolly();         //?? ultima sync (sono già allineati)
+            FinishAndHandoffToMove();            //?
             return;
         }
 
         // altrimenti avanza con segno
         float stepSigned = (_dir > 0 ? +maxStep : -maxStep);
-        _tCurrent = closedSpline
-            ? Mathf.Repeat(_tCurrent + stepSigned, 1f)
-            : Mathf.Clamp01(_tCurrent + stepSigned);
+        _tCurrent = Mathf.Repeat(_tCurrent + stepSigned, 1f);
 
         // muovi le Dolly e sincronizza Player&Pivot ad ogni frame → nessuno scarto allo switch
         SetCameraPositionBoth(_tCurrent);
-        SyncPlayerAndPivotToDolly();
+        SyncPlayerAndPivotToDolly(); //?
     }
-
-    // -------- Helpers --------
 
     /// Scrive CameraPosition = t su entrambe le Dolly (sempre).
     private void SetCameraPositionBoth(float t)
     {
-        if (_extFwd) _extFwd.CameraPosition = t;
-        if (_extBwd) _extBwd.CameraPosition = t;
+        if (CameraFwd) CameraFwd.CameraPosition = t;
+        if (CameraBwd) CameraBwd.CameraPosition = t;
     }
 
-    /// Attiva la Dolly forward o backward via Priority; Move più bassa durante il travel.
+    /// Attiva la Dolly forward o backward via Priority; Move più bassa durante il travel
     private void ActivateRig(bool forward)
     {
         if (forward)
@@ -155,7 +149,7 @@ public class DollyTravelController : MonoBehaviour
         if (moveVCam) moveVCam.Priority = 5;
     }
 
-    /// Dis/abilita i tuoi script di input durante il travel (facoltativo ma consigliato).
+    /// Dis/abilita i tuoi script di input durante il travel
     private void SetInputsEnabled(bool enabled)
     {
         if (disableDuringTravel == null) return;
