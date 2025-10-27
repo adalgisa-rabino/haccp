@@ -1,4 +1,8 @@
+
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
 
 public class GridSquare : MonoBehaviour
 {
@@ -13,6 +17,9 @@ public class GridSquare : MonoBehaviour
     private bool _selected;
     private bool _clicked;
     private int _index = -1;
+
+
+    private bool _correct = false;
 
     public void SetIndex(int index)
     {
@@ -31,8 +38,12 @@ public class GridSquare : MonoBehaviour
     {
         _clicked = false;
         _selected = false;
+        _correct = false;
         _displayedImage = GetComponent<SpriteRenderer>();
+
     }
+
+    /*
 
     void Update()
     {
@@ -53,6 +64,7 @@ public class GridSquare : MonoBehaviour
             }
         }
     }
+    */
 
 
     private void OnEnable()
@@ -60,6 +72,8 @@ public class GridSquare : MonoBehaviour
         GameEvents.OnEnableSquareSelection += OnEnableSquareSelection;
         GameEvents.OnDisableSquareSelection += OnDisableSquareSelection;
         GameEvents.OnSelectSquare += SelectSquare;
+        GameEvents.OnCorrectWord += CorrectWord;
+
 
     }
 
@@ -68,6 +82,7 @@ public class GridSquare : MonoBehaviour
         GameEvents.OnEnableSquareSelection -= OnEnableSquareSelection;
         GameEvents.OnDisableSquareSelection -= OnDisableSquareSelection;
         GameEvents.OnSelectSquare -= SelectSquare;
+        GameEvents.OnCorrectWord -= CorrectWord;
 
     }
 
@@ -81,9 +96,19 @@ public class GridSquare : MonoBehaviour
     {
         _selected = false;
         _clicked = false;
+        if (_correct == true)
+        {
+            //_displayedImage.sprite = _correctLetterData.image;
+
+        }
+        else
+        {
+            _displayedImage.sprite = _normalLetterData.image;
+
+        }
     }
 
-    
+
     private void SelectSquare(Vector3 position)
     {
         if ((transform.position - position).sqrMagnitude < 0.0001f) // confronto robusto
@@ -112,10 +137,10 @@ public class GridSquare : MonoBehaviour
         GameEvents.EnableSquareSelectionMethod();
 
         // INVIA la posizione del quadrato selezionato
-        GameEvents.SelectSquareMethod(transform.position);
+        //GameEvents.SelectSquareMethod(transform.position);
 
         CheckSquare();
-        _displayedImage.sprite = _correctLetterData.image;
+        //_displayedImage.sprite = _correctLetterData.image;
     }
 
 
@@ -125,7 +150,7 @@ public class GridSquare : MonoBehaviour
         // se sto “trascinando” con il mouse premuto, colora anche al passaggio
         if (_clicked)
         {
-            GameEvents.SelectSquareMethod(transform.position);
+            //GameEvents.SelectSquareMethod(transform.position);
         }
         CheckSquare();
 
@@ -133,7 +158,7 @@ public class GridSquare : MonoBehaviour
 
     private void OnMouseUp()
     {
-        
+
         GameEvents.ClearSelectionMethod();
         GameEvents.DisableSquareSelectionMethod();
 
@@ -141,10 +166,27 @@ public class GridSquare : MonoBehaviour
 
     public void CheckSquare()
     {
-        if(_selected == false && _clicked == true)
+        if (_selected == false && _clicked == true)
         {
             _selected = true;
             GameEvents.CheckSquareMethod(_normalLetterData.letter, gameObject.transform.position, _index);
         }
     }
+
+    private void CorrectWord(string word, List<int> squareIndexes)
+    {
+        if (_selected && squareIndexes.Contains(_index))
+        {
+            _correct = true;
+            _displayedImage.sprite = _selectedLetterData.image;
+        }
+
+        _selected = false;
+        _clicked = false;
+    }
+
+
+
+
+
 }

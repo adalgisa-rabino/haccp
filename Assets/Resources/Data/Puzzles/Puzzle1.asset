@@ -18,123 +18,126 @@ MonoBehaviour:
   Board:
   - Size: 10
     Row:
-    - X
-    - F
-    - G
-    - B
-    - C
-    - L
-    - F
-    - E
-    - I
-    - Y
-  - Size: 10
-    Row:
-    - C
-    - A
-    - X
-    - I
-    - J
-    - S
     - O
-    - P
-    - Y
-    - Y
+    - I
+    - N
+    - S
+    - Q
+    - A
+    - Z
+    - F
+    - Q
+    - O
   - Size: 10
     Row:
-    - H
-    - I
-    - A
-    - Y
     - W
-    - L
-    - L
-    - L
+    - A
+    - R
+    - W
     - X
-    - G
+    - Z
+    - M
+    - B
+    - O
+    - D
   - Size: 10
     Row:
     - Z
-    - J
+    - C
+    - F
+    - U
+    - L
+    - Q
+    - E
+    - M
+    - B
+    - R
+  - Size: 10
+    Row:
+    - X
+    - C
+    - I
     - A
-    - J
+    - O
+    - K
+    - B
     - Y
     - A
     - K
-    - P
+  - Size: 10
+    Row:
+    - V
+    - U
+    - J
     - R
+    - J
+    - K
+    - W
+    - R
+    - V
     - M
   - Size: 10
     Row:
-    - I
-    - R
-    - T
-    - O
-    - I
-    - J
-    - Y
-    - W
-    - L
-    - D
-  - Size: 10
-    Row:
-    - X
-    - V
-    - R
-    - L
-    - Y
-    - H
-    - N
-    - X
     - A
-    - Z
+    - L
+    - E
+    - S
+    - S
+    - A
+    - N
+    - D
+    - R
+    - A
   - Size: 10
     Row:
+    - P
+    - C
+    - K
     - J
+    - N
+    - J
+    - B
+    - S
     - U
     - P
-    - Q
-    - O
-    - Z
-    - F
-    - Y
-    - O
-    - C
   - Size: 10
     Row:
-    - W
+    - U
+    - J
+    - L
     - X
     - T
-    - A
-    - B
+    - W
+    - X
+    - O
+    - O
+    - I
+  - Size: 10
+    Row:
+    - I
     - G
-    - H
-    - F
-    - Y
-    - R
-  - Size: 10
-    Row:
-    - Z
-    - Z
-    - A
-    - I
     - N
+    - X
+    - Q
+    - V
     - C
     - O
-    - O
-    - K
-    - C
+    - H
+    - S
   - Size: 10
     Row:
-    - K
     - D
-    - K
-    - Q
+    - H
     - I
-    - S
-    - S
+    - T
+    - U
+    - M
+    - I
     - A
-    - F
-    - J
+    - Z
+    - H
   SearchWords:
-  - word: ciao
+  - word: CIAO
+  - word: TUMIAZ
+  - word: MAMMA
+  - word: ALESSANDRA
