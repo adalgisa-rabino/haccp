@@ -1,4 +1,4 @@
-﻿using Unity.Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -16,9 +16,9 @@ public class DollyTravelController : MonoBehaviour
     public CinemachineCamera dollyVCamBwd;       // Dolly con track di look "backward"
 
     [Header("Player rig (seguìto da MoveVCamera)")]
-    public Transform playerRootForYaw;           // Root del player (ruota Y e prende la posizione)
+    public Transform playerTransform;           // Root del player (ruota Y e prende la posizione)
     public ViewActions viewActions;              // Per impostare il pitch del pivot in modo immediato
-    public Transform cameraPivotFallback;        // Solo se non usi ViewActions: pivot della camera (figlio del player)
+    public Transform cameraPivotTransform;        // Solo se non usi ViewActions: pivot della camera (figlio del player)
 
     [Header("Travel settings (t/sec, Units=Normalized)")]
     [Range(10, 500)] public int samples = 150;   // campioni per trovare tStart
@@ -54,7 +54,7 @@ public class DollyTravelController : MonoBehaviour
     {
         // se i campi non sono assegnai non partire
         if (!stop || spline == null || moveVCam == null || dollyVCamFwd == null || dollyVCamBwd == null
-            || CameraFwd == null || CameraBwd == null || playerRootForYaw == null)
+            || CameraFwd == null || CameraBwd == null || playerTransform == null)
             return;
 
         //assegnazione telecamera principale, se non c'è esci
@@ -86,7 +86,7 @@ public class DollyTravelController : MonoBehaviour
 
         // 3) imposta stessa spline su entrambe e sync iniziale
         SetCameraPositionBoth(_tCurrent);
-        SyncPlayerAndPivotToDolly();             //?? allinea subito Player&Pivot al t di partenza
+        //SyncPlayerAndPivotToDolly();             //?? allinea subito Player&Pivot al t di partenza
 
         // 4) attiva il rig giusto, disattiva input se richiesto
         ActivateRig(_dir > 0); // Attiva la Dolly forward o backward via Priority; Move più bassa durante il travel
@@ -107,7 +107,7 @@ public class DollyTravelController : MonoBehaviour
         // passo costante
         float maxStep = travelSpeedT * Time.deltaTime;
 
-        // overshoot-safe: se supereremmo il target, snappa e chiudi
+        // se supero il target (TravelStop) ferma la camera attiva e cambia camera
         if (remaining <= maxStep)
         {
             _tCurrent = _tTarget;
@@ -123,7 +123,6 @@ public class DollyTravelController : MonoBehaviour
 
         // muovi le Dolly e sincronizza Player&Pivot ad ogni frame → nessuno scarto allo switch
         SetCameraPositionBoth(_tCurrent);
-        SyncPlayerAndPivotToDolly(); //?
     }
 
     /// Scrive CameraPosition = t su entrambe le Dolly (sempre).
@@ -161,35 +160,37 @@ public class DollyTravelController : MonoBehaviour
     private void SyncPlayerAndPivotToDolly()
     {
         var activeDolly = (_dir > 0) ? dollyVCamFwd : dollyVCamBwd;
-        if (!activeDolly || !playerRootForYaw) return;
+        if (!activeDolly || playerTransform == null) return;
 
         Transform d = activeDolly.transform;
 
-        // POSIZIONE al Player root
-        playerRootForYaw.position = d.position;
+        // assegna al player solo X,Z dalla dolly, conserva Y corrente del player
+        Vector3 playerPos = playerTransform.position;
+        playerTransform.position = new Vector3(d.position.x, playerPos.y, d.position.z);
 
-        // YAW al Player root (solo direzione orizzontale)
-        Vector3 fwdOnPlane = Vector3.ProjectOnPlane(d.forward, Vector3.up);
-        if (fwdOnPlane.sqrMagnitude > 1e-6f)
+        // assegna al pivot la posizione completa della dolly (X,Y,Z) rispettando la gerarchia
+        if (cameraPivotTransform != null)
         {
-            Quaternion yawOnly = Quaternion.LookRotation(fwdOnPlane.normalized, Vector3.up);
-            playerRootForYaw.rotation = yawOnly;
-        }
+            var parent = cameraPivotTransform.parent;
+            if (parent != null)
+                cameraPivotTransform.localPosition = parent.InverseTransformPoint(d.position);
+            else
+                cameraPivotTransform.position = d.position;
 
-        // PITCH al pivot
-        float pitchDeg = Mathf.Asin(Mathf.Clamp(d.forward.y, -1f, 1f)) * Mathf.Rad2Deg;
-        if (viewActions != null)
-        {
-            viewActions.SetPitchImmediate(pitchDeg); // usa il tuo metodo (clamping integrato)
-        }
-        else if (cameraPivotFallback != null)
-        {
-            // fallback: imponi localEuler X, azzera yaw/roll locali
-            var e = cameraPivotFallback.localEulerAngles;
-            // converti in [-180,180] e imposta X = pitchDeg
-            float normX = Mathf.DeltaAngle(0f, e.x);
-            normX = pitchDeg;
-            cameraPivotFallback.localEulerAngles = new Vector3(normX, 0f, 0f);
+            // SYNC VIEW sul pivot: pitch (X) dalla componente verticale di forward, roll (Z) dalla dolly
+            float pitchDeg = Mathf.Asin(Mathf.Clamp(d.forward.y, -1f, 1f)) * Mathf.Rad2Deg;
+            float rollDeg = Mathf.DeltaAngle(0f, d.rotation.eulerAngles.z);
+
+            // Se il pivot è figlio del player, applichiamo pitch/roll in locale (yaw gestito dal player)
+            if (cameraPivotTransform.IsChildOf(playerTransform))
+            {
+                cameraPivotTransform.localEulerAngles = new Vector3(pitchDeg, 0f, rollDeg);
+            }
+            else
+            {
+                // pivot indipendente: combiniamo yaw del player con pitch/roll della dolly
+                float playerYaw = playerTransform != null ? playerTransform.eulerAngles.y : d.rotation.eulerAngles.y;
+                cameraPivotTransform.rotation = Quaternion.Euler(pitchDeg, playerYaw, rollDeg);
         }
     }
 
@@ -206,5 +207,6 @@ public class DollyTravelController : MonoBehaviour
         if (dollyVCamBwd) dollyVCamBwd.Priority = 10;
 
         _isTravelling = false;
-    }
+
+       }
 }
