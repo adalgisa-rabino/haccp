@@ -164,11 +164,15 @@ public class DollyTravelController : MonoBehaviour
 
         Transform d = activeDolly.transform;
 
-        // assegna al player solo X,Z dalla dolly, conserva Y corrente del player
+        // 1) posizione player: X,Z dalla dolly, Y corrente del player
         Vector3 playerPos = playerTransform.position;
         playerTransform.position = new Vector3(d.position.x, playerPos.y, d.position.z);
 
-        // assegna al pivot la posizione completa della dolly (X,Y,Z) rispettando la gerarchia
+        // 2) YAW al player (deve essere applicato PRIMA del pivot se il pivot è figlio del player)
+        float dollyYaw = d.rotation.eulerAngles.y;
+        playerTransform.rotation = Quaternion.Euler(0f, dollyYaw, 0f);
+
+        // 3) sincronizza pivot (posizione + view) rispettando la gerarchia
         if (cameraPivotTransform != null)
         {
             var parent = cameraPivotTransform.parent;
@@ -177,20 +181,15 @@ public class DollyTravelController : MonoBehaviour
             else
                 cameraPivotTransform.position = d.position;
 
-            // SYNC VIEW sul pivot: pitch (X) dalla componente verticale di forward, roll (Z) dalla dolly
+            // pitch (X) dalla componente verticale della forward della dolly
             float pitchDeg = Mathf.Asin(Mathf.Clamp(d.forward.y, -1f, 1f)) * Mathf.Rad2Deg;
+            // roll (Z) dalla rotazione Z della dolly (normalizzata)
             float rollDeg = Mathf.DeltaAngle(0f, d.rotation.eulerAngles.z);
 
-            // Se il pivot è figlio del player, applichiamo pitch/roll in locale (yaw gestito dal player)
-            if (cameraPivotTransform.IsChildOf(playerTransform))
-            {
-                cameraPivotTransform.localEulerAngles = new Vector3(pitchDeg, 0f, rollDeg);
-            }
-            else
-            {
-                // pivot indipendente: combiniamo yaw del player con pitch/roll della dolly
-                float playerYaw = playerTransform != null ? playerTransform.eulerAngles.y : d.rotation.eulerAngles.y;
-                cameraPivotTransform.rotation = Quaternion.Euler(pitchDeg, playerYaw, rollDeg);
+           // pivot figlio: yaw è già gestito dal player → impostiamo solo pitch/roll locali
+           cameraPivotTransform.localEulerAngles = new Vector3(pitchDeg, 0f, rollDeg);
+           
+           
         }
     }
 
