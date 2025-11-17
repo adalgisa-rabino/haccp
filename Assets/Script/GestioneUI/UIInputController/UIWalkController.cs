@@ -1,17 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-/// <summary>
-/// UIWalkController
-/// ---------------------------
-/// Script da mettere su un pulsante UI per inviare comandi di camminata
-/// avanti o indietro al componente <see cref="WalkActions"/> sul Player.
-///
-/// Come usarlo:
-/// - Aggancia questo script ai pulsanti UI "Forward" e "Backward".
-/// - Trascina nell'Inspector il Player (che ha lo script WalkActions).
-/// - Imposta axisSign: +1 per avanti, -1 per indietro.
-/// </summary>
 public class UIWalkController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
     [Header("Riferimenti")]

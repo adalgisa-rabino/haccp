@@ -1,10 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-// using Project.Actions; // se usi namespace
 
-/// <summary>
-/// UIViewController: sta sul pulsante UI (Up/Down) e invia comandi a ViewActions.
-/// </summary>
 public class UIViewController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
     [Header("Riferimenti")]
