@@ -9,12 +9,12 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Shelf
   - Water
   - UI
   - Draggable
-  - 
-  - 
+  - FridgeBlock
+  - SnapZone
   - 
   - 
   - 
