@@ -1,13 +1,15 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(Collider))]
-public class CalibrationPoint : MonoBehaviour
+
+public class CalibrationPoint : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [Tooltip("Indice del punto (0..8) per l'ordine di calibrazione")]
     public int index;
 
     [Header("Sprite da colorare")]
-    public SpriteRenderer spriteRenderer;
+    public Image spriteRenderer;
 
     [Header("Colori")]
     public Color idleColor = Color.white;
@@ -27,8 +29,16 @@ public class CalibrationPoint : MonoBehaviour
         }
     }
 
-    private void OnMouseDown()
+    public void OnPointerUp(PointerEventData e)
     {
+        Debug.Log($"CalibrationPoint {name}: OnPointerUp called.");
+    }
+
+    public void OnPointerDown(PointerEventData e)
+    {
+
+        Debug.Log($"CalibrationPoint {name}: OnPointerDown called."); 
+
         // visual feedback
         SetSelected(true);
 

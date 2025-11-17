@@ -1,4 +1,3 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 /// Esegue la rotazione orizzontale (yaw) del Player in modo semplice e robusto.

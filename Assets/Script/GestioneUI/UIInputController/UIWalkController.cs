@@ -17,6 +17,7 @@ public class UIWalkController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public void OnPointerDown(PointerEventData e)
     {
+        Debug.Log($"OnPointerDown called.");
         holding = true;
         Apply(true);
     }

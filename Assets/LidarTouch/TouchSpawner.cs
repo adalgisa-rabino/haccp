@@ -33,6 +33,7 @@ public class TouchSpawner : StandaloneInputModule
 
     public void ClickAt(Vector2 pos, GestureType type, int touchId)
     {
+        Input.simulateMouseWithTouches = true;
         if (debugClickDot != null && type == GestureType.TouchDown)
         {
             debugClickDot.OnClick(pos);
