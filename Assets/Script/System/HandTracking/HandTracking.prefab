@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -6744285875580001119}
   m_Layer: 0
   m_Name: HandTracking
-  m_TagString: Untagged
+  m_TagString: Hand
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -64,6 +64,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   udpReceive: {fileID: 0}
   handPoints: []
+  handRoot: {fileID: 0}
+  additionalHands: []
+  handPrefab: {fileID: 0}
+  generatedHandsParent: {fileID: 0}
+  maxSpawnedHands: 2
+  enablePalmNormalization: 1
+  referencePalmArea: 0.015
+  scaleGain: 3
+  minScale: 0.1
+  maxScale: 5
+  baseZ: 0.6
+  depthScale: 0.2
 --- !u!1 &8190038175990125631
 GameObject:
   m_ObjectHideFlags: 0
