@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
 
-public class Selectable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
+public class Selectable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     // Camera usata per convertire coordinate schermo → mondo
     private Camera cam;
@@ -23,10 +23,6 @@ public class Selectable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoi
     // Trasforn dell'oggetto visivo principale.
     private Transform visualRoot;
 
-    // Eventuale Animator che controlla il modello (idle, animazioni, ecc.)
-    private Animator visualAnimator;
-    private bool visualAnimatorWasEnabled;
-
     // Layer in cui si trovano le mensole (per il raycast verticale)
     public LayerMask shelfLayerMask;
 
@@ -39,6 +35,9 @@ public class Selectable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoi
 
     // Zona evidenziata correntemente (se il puntatore è sopra una FridgeSnapZone)
     private FridgeSnapZone highlightedZone;
+
+    //Flag oggetto selezionato
+    public bool isSelected = false;
 
     //private Vector3 originalScale;
 
@@ -55,10 +54,7 @@ public class Selectable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoi
         var rend = GetComponentInChildren<Renderer>();
         visualRoot = rend != null ? rend.transform : transform;
 
-        // Se c'è un Animator associato al modello visivo, lo salviamo.
-        visualAnimator = visualRoot.GetComponentInParent<Animator>();
-
-        //originalScale = visualRoot.localScale;
+                //originalScale = visualRoot.localScale;
     }
 
     // =====================================================================
@@ -71,17 +67,26 @@ public class Selectable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoi
     public void OnPointerDown(PointerEventData eventData)
     {
         Debug.Log($"[Draggable] OnPointerDown su {name} | pos: {eventData.position} | pointerId: {eventData.pointerId}");
-        BeginDrag(eventData.position);
+        //SelectObject(eventData.position);
+
+        if(isSelected)
+        {
+            ReleaseObject(eventData.position);
+        }
+        else
+        {
+            SelectObject(eventData.position);
+        }
     }
 
     /// <summary>
     /// Chiamato ad ogni frame in cui il puntatore si muove con il pulsante/dito premuto.
     /// </summary>
-    public void OnDrag(PointerEventData eventData)
-    {
-        Debug.Log($"[Draggable] OnDrag su {name} | pos: {eventData.position} | pointerId: {eventData.pointerId}");
-        ContinueDrag(eventData.position);
-    }
+    //public void OnDrag(PointerEventData eventData)
+    //{
+    //    Debug.Log($"[Draggable] OnDrag su {name} | pos: {eventData.position} | pointerId: {eventData.pointerId}");
+    //    ContinueDrag(eventData.position);
+    //}
 
     /// <summary>
     /// Chiamato quando il puntatore viene rilasciato (mouse up / touch end / Lidar touch up).
@@ -89,7 +94,7 @@ public class Selectable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoi
     public void OnPointerUp(PointerEventData eventData)
     {
         Debug.Log($"[Draggable] OnPointerUp su {name} | pos: {eventData.position} | pointerId: {eventData.pointerId}");
-        EndDrag(eventData.position);
+        ReleaseObject(eventData.position);
     }
 
     // =====================================================================
@@ -101,8 +106,10 @@ public class Selectable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoi
     /// Quando trascino un oggetto 3D usando coordinate dello schermo (mouse, touch, Lidar…), il puntatore è in 2D, ma l’oggetto sta in 3D.
     /// Quindi devo dire a Unity a che distanza dalla camera deve collocare l’oggetto mentre lo seguo con il puntatore.
     /// </summary>
-    public void BeginDrag(Vector2 screenPos) //Stabilisce il punto dello spazio da cui inizia il trascinamento, così l’oggetto resta “agganciato” esattamente dove hai cliccato.
+    public void SelectObject(Vector2 screenPos) //Stabilisce il punto dello spazio da cui inizia il trascinamento, così l’oggetto resta “agganciato” esattamente dove hai cliccato.
     {
+        isSelected = true;
+
         if (cam == null) cam = Camera.main;
 
         // Converto la posizione word del modello 3D in coordinate schermo, cioè rispetto alla camera (dove screenPoint.z è la profondità rispetto alla camera)
@@ -138,44 +145,41 @@ public class Selectable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoi
     /// <summary>
     /// Aggiorna la posizione dell'oggetto mentre si trascina.
     /// </summary>
-    /// <summary>
-    /// Aggiorna la posizione dell'oggetto mentre si trascina.
-    /// </summary>
-    public void ContinueDrag(Vector2 screenPos)
-    {
-        if (cam == null) cam = Camera.main;
+   //public void ContinueDrag(Vector2 screenPos)
+   // {
+   //     if (cam == null) cam = Camera.main;
 
-        // Converto il puntatore 2D in un punto 3D del mondo mantenendo la stessa profondità dalla camera dell'oggetto 3D
-        // Così aggiorno continuamente la posizione dell’oggetto nello spazio
-        Vector3 curScreenPoint = new Vector3(
-            screenPos.x,
-            screenPos.y,
-            screenPoint.z);
+   //     // Converto il puntatore 2D in un punto 3D del mondo mantenendo la stessa profondità dalla camera dell'oggetto 3D
+   //     // Così aggiorno continuamente la posizione dell’oggetto nello spazio
+   //     Vector3 curScreenPoint = new Vector3(
+   //         screenPos.x,
+   //         screenPos.y,
+   //         screenPoint.z);
 
-        // Converto la posizione in coordinate mondo del puntatore
-        // mantenendo la stessa profondità e aggiungendo l'offset (differenza tra il centro dell'oggetto e il punto cliccato)
-        Vector3 curWorldPos =
-            cam.ScreenToWorldPoint(curScreenPoint) + offset;
+   //     // Converto la posizione in coordinate mondo del puntatore
+   //     // mantenendo la stessa profondità e aggiungendo l'offset (differenza tra il centro dell'oggetto e il punto cliccato)
+   //     Vector3 curWorldPos =
+   //         cam.ScreenToWorldPoint(curScreenPoint) + offset;
 
-        // (RIMOSSO) Avviciniamo leggermente il puntatore e l'oggetto alla camera così che non intersechi il frigorifero
-        // → ora l'avvicinamento avviene solo all'inizio (BeginDrag)
+   //     // (RIMOSSO) Avviciniamo leggermente il puntatore e l'oggetto alla camera così che non intersechi il frigorifero
+   //     // → ora l'avvicinamento avviene solo all'inizio (BeginDrag)
 
-        transform.position = curWorldPos; // Spostamento del transform dell'oggetto 3d
+   //     transform.position = curWorldPos; // Spostamento del transform dell'oggetto 3d
 
-        // Se il nodo visivo non coincide con il transform principale, aggiorniamo anche lui.
-        if (visualRoot != null && visualRoot != transform)
-            visualRoot.position = curWorldPos;
+   //     // Se il nodo visivo non coincide con il transform principale, aggiorniamo anche lui.
+   //     if (visualRoot != null && visualRoot != transform)
+   //         visualRoot.position = curWorldPos;
 
-        // Aggiorna evidenziazione delle SnapZone sotto il puntatore.
-        UpdateSnapZoneHighlight(screenPos);
-    }
+   //     // Aggiorna evidenziazione delle SnapZone sotto il puntatore.
+   //     UpdateSnapZoneHighlight(screenPos);
+   // }
 
 
     /// <summary>
     /// Termina il drag: prova ad agganciare l'oggetto a una SnapZone sotto il puntatore,
     /// riattiva la fisica e ripristina l'Animator.
     /// </summary>
-    public void EndDrag(Vector2 screenPos)
+    public void ReleaseObject(Vector2 screenPos)
     {
         // Tenta di agganciare l'oggetto alla SnapZone sotto il puntatore (se presente).
         SnapIntoZoneUnderPointer(screenPos);
@@ -186,9 +190,7 @@ public class Selectable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoi
         // Rimuove eventuale evidenziazione residua.
         SetHighlightedZone(null);
 
-        // Ripristina lo stato dell'Animator (se esisteva).
-        if (visualAnimator != null)
-            visualAnimator.enabled = visualAnimatorWasEnabled;
+        
     }
 
     // =====================================================================
