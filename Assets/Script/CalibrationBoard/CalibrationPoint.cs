@@ -8,8 +8,7 @@ public class CalibrationPoint : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     [Tooltip("Indice del punto (0..8) per l'ordine di calibrazione")]
     public int index;
 
-    [Header("Sprite da colorare")]
-    public Image spriteRenderer;
+    private Image spriteRenderer;
 
     [Header("Colori")]
     public Color idleColor = Color.white;
@@ -19,6 +18,7 @@ public class CalibrationPoint : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     void Awake()
     {
+        spriteRenderer = GetComponent<Image>();
         if (spriteRenderer != null)
         {
             spriteRenderer.color = idleColor;

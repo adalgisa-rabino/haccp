@@ -1,35 +1,39 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-/// <summary>
-/// This script draws a red dot on screen at every mouse click position.
-/// It's intended for simple debug visualization.
-/// - Left-click to add a dot.
-/// - Right-click to clear all dots.
-/// </summary>
 public class DebugClickDot : MonoBehaviour
 {
-    private List<Vector2> clickPositions = new List<Vector2>();
+    private Vector2 currentPos;
+    private Color currentColor = Color.red;
+    private bool visible = false;
 
-    public int dotSize = 10;
+    public int dotSize = 20;
 
-    public void OnClick(Vector2 pos)
+    // Mostra il punto con posizione e colore specificati
+    public void Show(Vector2 pos, Color color)
     {
-       clickPositions.Add(pos);
+        currentPos = pos;
+        currentColor = color;
+        visible = true;
+    }
+
+    public void Hide()
+    {
+        visible = false;
     }
 
     void OnGUI()
     {
-        GUI.color = Color.red;
+        if (!visible)
+            return;
 
-        foreach (Vector2 pos in clickPositions)
-        {
-            float guiX = pos.x - (dotSize / 2);
-            float guiY = Screen.height - pos.y - (dotSize / 2);
+        GUI.color = currentColor;
 
-            Rect dotRect = new Rect(guiX, guiY, dotSize, dotSize);
+        float guiX = currentPos.x - (dotSize / 2);
+        float guiY = Screen.height - currentPos.y - (dotSize / 2);
 
-            GUI.DrawTexture(dotRect, Texture2D.whiteTexture);
-        }
+        Rect dotRect = new Rect(guiX, guiY, dotSize, dotSize);
+        GUI.DrawTexture(dotRect, Texture2D.whiteTexture);
     }
 }
+

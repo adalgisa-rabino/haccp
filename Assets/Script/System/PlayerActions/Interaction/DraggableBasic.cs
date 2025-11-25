@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
 
-public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
+public class DraggableBasic : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     // Camera usata per convertire coordinate schermo → mondo
     private Camera cam;
@@ -40,8 +40,6 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
     // Zona evidenziata correntemente (se il puntatore è sopra una FridgeSnapZone)
     private FridgeSnapZone highlightedZone;
 
-    private Vector3 originalScale;
-
     void Awake()
     {
         // Se non è impostata una camera, usa la main camera
@@ -57,8 +55,6 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
 
         // Se c'è un Animator associato al modello visivo, lo salviamo.
         visualAnimator = visualRoot.GetComponentInParent<Animator>();
-
-        originalScale = visualRoot.localScale;
     }
 
     // =====================================================================
@@ -70,7 +66,6 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
     /// </summary>
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log($"[Draggable] OnPointerDown su {name} | pos: {eventData.position} | pointerId: {eventData.pointerId}");
         BeginDrag(eventData.position);
     }
 
@@ -79,7 +74,6 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
     /// </summary>
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log($"[Draggable] OnDrag su {name} | pos: {eventData.position} | pointerId: {eventData.pointerId}");
         ContinueDrag(eventData.position);
     }
 
@@ -88,7 +82,6 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
     /// </summary>
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log($"[Draggable] OnPointerUp su {name} | pos: {eventData.position} | pointerId: {eventData.pointerId}");
         EndDrag(eventData.position);
     }
 
@@ -106,24 +99,17 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
         if (cam == null) cam = Camera.main;
 
         // Converto la posizione word del modello 3D in coordinate schermo, cioè rispetto alla camera (dove screenPoint.z è la profondità rispetto alla camera)
-        // → la modifichiamo portando subito l'oggetto un po' avanti verso la camera
-        Vector3 pulledForwardPos = visualRoot.position - cam.transform.forward * dragTowardsCamera;
-        screenPoint = cam.WorldToScreenPoint(pulledForwardPos);
+        screenPoint = cam.WorldToScreenPoint(visualRoot.position);
 
         // Converto il puntatore 2D in un punto 3D del mondo mantenendo la stessa profondità dalla camera dell'oggetto 3D
-        // Così detremino come l’utente ha “preso” l’oggetto cioè in quale punto lo ha afferrato
+        // Così determino come l’utente ha “preso” l’oggetto cioè in quale punto lo ha afferrato
         var worldUnderPointer = cam.ScreenToWorldPoint(new Vector3(
             screenPos.x,
             screenPos.y,
             screenPoint.z));
 
         // Offset tra il centro dell'oggetto e il punto cliccato, serve poi a mantenere “agganciato” il punto di presa.
-        offset = pulledForwardPos - worldUnderPointer;
-
-        // Sposto subito l’oggetto in avanti (così non serve farlo ogni frame durante il drag)
-        transform.position = pulledForwardPos;
-        if (visualRoot != null && visualRoot != transform)
-            visualRoot.position = pulledForwardPos;
+        offset = visualRoot.position - worldUnderPointer;
 
         // Blocca la fisica durante il drag in modo da muovere l'oggetto a mano.
         rb.isKinematic = true;
@@ -140,20 +126,12 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
             visualAnimatorWasEnabled = visualAnimator.enabled;
             visualAnimator.enabled = false;
         }
-
-        if (visualRoot != null)
-        {
-            visualRoot.localScale = originalScale * 1.2f;
-        }
     }
 
+    /// <summary>
+    /// Aggiorna la posizione dell'oggetto mentre si trascina.
+    /// </summary>
 
-    /// <summary>
-    /// Aggiorna la posizione dell'oggetto mentre si trascina.
-    /// </summary>
-    /// <summary>
-    /// Aggiorna la posizione dell'oggetto mentre si trascina.
-    /// </summary>
     public void ContinueDrag(Vector2 screenPos)
     {
         if (cam == null) cam = Camera.main;
@@ -170,9 +148,6 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
         Vector3 curWorldPos =
             cam.ScreenToWorldPoint(curScreenPoint) + offset;
 
-        // (RIMOSSO) Avviciniamo leggermente il puntatore e l'oggetto alla camera così che non intersechi il frigorifero
-        // → ora l'avvicinamento avviene solo all'inizio (BeginDrag)
-
         transform.position = curWorldPos; // Spostamento del transform dell'oggetto 3d
 
         // Se il nodo visivo non coincide con il transform principale, aggiorniamo anche lui.
@@ -182,6 +157,7 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
         // Aggiorna evidenziazione delle SnapZone sotto il puntatore.
         UpdateSnapZoneHighlight(screenPos);
     }
+
 
 
     /// <summary>
@@ -202,11 +178,6 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
         // Ripristina lo stato dell'Animator (se esisteva).
         if (visualAnimator != null)
             visualAnimator.enabled = visualAnimatorWasEnabled;
-
-        if (visualRoot != null)
-        {
-            visualRoot.localScale = originalScale;
-        }
     }
 
     // =====================================================================

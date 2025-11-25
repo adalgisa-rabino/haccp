@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
 
-public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
+public class Selectable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     // Camera usata per convertire coordinate schermo → mondo
     private Camera cam;
@@ -40,7 +40,7 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
     // Zona evidenziata correntemente (se il puntatore è sopra una FridgeSnapZone)
     private FridgeSnapZone highlightedZone;
 
-    private Vector3 originalScale;
+    //private Vector3 originalScale;
 
     void Awake()
     {
@@ -58,7 +58,7 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
         // Se c'è un Animator associato al modello visivo, lo salviamo.
         visualAnimator = visualRoot.GetComponentInParent<Animator>();
 
-        originalScale = visualRoot.localScale;
+        //originalScale = visualRoot.localScale;
     }
 
     // =====================================================================
@@ -132,19 +132,6 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
         // (Se usi Rigidbody classico di Unity, assicurati che la proprietà sia "velocity".)
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-
-        // Se l'oggetto ha un Animator, lo disabilitiamo temporaneamente:
-        // evita che l'animazione sposti il modello mentre lo trasciniamo.
-        if (visualAnimator != null)
-        {
-            visualAnimatorWasEnabled = visualAnimator.enabled;
-            visualAnimator.enabled = false;
-        }
-
-        if (visualRoot != null)
-        {
-            visualRoot.localScale = originalScale * 1.2f;
-        }
     }
 
 
@@ -202,11 +189,6 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
         // Ripristina lo stato dell'Animator (se esisteva).
         if (visualAnimator != null)
             visualAnimator.enabled = visualAnimatorWasEnabled;
-
-        if (visualRoot != null)
-        {
-            visualRoot.localScale = originalScale;
-        }
     }
 
     // =====================================================================

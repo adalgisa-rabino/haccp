@@ -1,4 +1,4 @@
-using LidarTouch.Core.Tracking;
+﻿using LidarTouch.Core.Tracking;
 using LidarTouch.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,7 +14,7 @@ public class TouchSpawner : StandaloneInputModule
     {
         base.OnEnable();
         freeFingerIds.Clear();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 1; i++)
         {
             freeFingerIds.Enqueue(i);
         }
@@ -31,15 +31,40 @@ public class TouchSpawner : StandaloneInputModule
         return new Vector2(x, y);
     }
 
+    private string ColorName(Color c)
+    {
+        if (c == Color.green) return "green";
+        if (c == Color.blue) return "blue";
+        if (c == Color.red) return "red";
+        if (c == Color.white) return "white";
+        return $"rgba({c.r:F2},{c.g:F2},{c.b:F2},{c.a:F2})";
+    }
+
+
     public void ClickAt(Vector2 pos, GestureType type, int touchId)
     {
         Input.simulateMouseWithTouches = true;
-        if (debugClickDot != null && type == GestureType.TouchDown)
+
+        // DEBUG DOT con colori in base al tipo di gesto
+        if (debugClickDot != null)
         {
-            debugClickDot.OnClick(pos);
+            Color col = Color.white;
+
+            switch (type)
+            {
+                case GestureType.TouchDown: col = Color.green; break;
+                case GestureType.TouchDrag: col = Color.blue; break;
+                case GestureType.TouchUp: col = Color.red; break;
+            }
+
+            // LOG ESTESO: tipo, colore, ID, posizione schermo
+            Debug.Log($"[TouchSpawner] EVENT: {type} | COLOR: {ColorName(col)} | ID: {touchId} | POS: {pos}");
+
+            debugClickDot.Show(pos, col);
         }
 
-        int fingerId; 
+
+        int fingerId;
 
         switch (type)
         {
@@ -48,7 +73,7 @@ public class TouchSpawner : StandaloneInputModule
                     if (freeFingerIds.Count == 0)
                     {
                         Debug.LogWarning("No free finger IDs available. Max 10 touches supported.");
-                        return; 
+                        return;
                     }
 
                     fingerId = freeFingerIds.Dequeue();
@@ -59,7 +84,7 @@ public class TouchSpawner : StandaloneInputModule
                         {
                             position = pos,
                             phase = TouchPhase.Began,
-                            fingerId = fingerId 
+                            fingerId = fingerId
                         }, out bool b, out bool bb
                     );
                     ProcessTouchPress(pointerData, b, bb);
@@ -76,7 +101,7 @@ public class TouchSpawner : StandaloneInputModule
                         {
                             position = pos,
                             phase = TouchPhase.Ended,
-                            fingerId = fingerId 
+                            fingerId = fingerId
                         }, out bool b, out bool bb
                     );
                     ProcessTouchPress(pointerData, b, bb);
@@ -96,7 +121,7 @@ public class TouchSpawner : StandaloneInputModule
                         {
                             position = pos,
                             phase = TouchPhase.Moved,
-                            fingerId = fingerId // Use remapped ID
+                            fingerId = fingerId
                         }, out bool _, out bool _
                     );
                     ProcessDrag(pointerData);
