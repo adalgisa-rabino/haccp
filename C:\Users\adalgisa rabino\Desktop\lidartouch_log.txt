@@ -1,0 +1,1 @@
+2025-11-25T17:05:18.6791000Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
