@@ -1,14 +1,8 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// ViewActions (attaccato al Player)
-/// ---------------------------------
-/// Gestisce SOLO il pitch (asse X) della vista agendo su un "pivot"
-/// (di solito il CameraPivot, figlio del Player).
-/// - NON tocca la rotazione del Player (yaw/roll rimangono intatti).
-/// - Può forzare Y=0 e Z=0 sul pivot (consigliato).
-/// - Espone SetPitchImmediate(...) per sincronizzare SUBITO il pitch (es. dopo un teleport).
-/// </summary>
+
+/// Gestisce il pitch (asse X) della vista agendo su un "pivot"
+/// In questo caso è il CameraPivot, figlio del Player
 public class ViewActions : MonoBehaviour
 {
     [Header("Target della vista")]

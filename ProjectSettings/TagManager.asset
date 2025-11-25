@@ -5,16 +5,17 @@ TagManager:
   serializedVersion: 3
   tags:
   - Anchor
+  - Hand
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Shelf
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Draggable
+  - FridgeBlock
+  - SnapZone
   - 
   - 
   - 
