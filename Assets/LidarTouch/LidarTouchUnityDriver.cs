@@ -30,7 +30,7 @@ namespace LidarTouch.Unity
 
         [Header("Tracking Settings")]
         // Frequenza di aggiornamento del tracking (frame al secondo)
-        public double FrameRate = 60;
+        public double FrameRate = 110;
 
         [Header("Events")]
         // Evento Unity che viene invocato ogni volta che viene ricevuto un gesto dal Lidar

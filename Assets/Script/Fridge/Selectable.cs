@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
 
-public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
+public class Selectable : MonoBehaviour, IPointerDownHandler
 {
     // Camera usata per convertire coordinate schermo → mondo
     private Camera cam;
@@ -40,7 +40,15 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
     // Zona evidenziata correntemente (se il puntatore è sopra una FridgeSnapZone)
     private FridgeSnapZone highlightedZone;
 
+    //Boleano per sapere se l'oggetto è stato selezionato
+    bool isSelected = false;
+    public static Selectable CurrentSelected;
+
     private Vector3 originalScale;
+
+    // Posizione/rotazione al momento della selezione (per poter tornare "dov'era")
+    private Vector3 originalPosition;
+    private Quaternion originalRotation;
 
     void Awake()
     {
@@ -70,66 +78,79 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
     /// </summary>
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log($"[Draggable] OnPointerDown su {name} | pos: {eventData.position} | pointerId: {eventData.pointerId}");
-        BeginDrag(eventData.position);
+        if (cam == null) cam = Camera.main;
+
+        // 1. Verifica che il "click" sia davvero su questo oggetto
+        Ray ray = cam.ScreenPointToRay(eventData.position);
+        if (!Physics.Raycast(ray, out var hit, 100f))
+            return; // niente colpito → ignora
+
+        // Se il collider colpito NON è il mio (né un figlio del mio), esco
+        if (hit.collider != myCol && !hit.collider.transform.IsChildOf(transform))
+            return;
+
+        // 2. A questo punto è davvero un click su di me: gestisco toggle selezione
+        Debug.Log($"[Selectable] OnPointerDown su {name} | pos: {eventData.position} | pointerId: {eventData.pointerId}");
+
+        // Se questo oggetto è già selezionato, un secondo tap annulla la selezione
+        // e lo riporta alla posa originale (dov'era).
+        if (isSelected)
+        {
+            CancelSelection();
+            return;
+        }
+
+        // Se un altro Selectable è già selezionato, NON permettiamo la selezione di questo
+        if (CurrentSelected != null && CurrentSelected != this)
+        {
+            Debug.Log($"[Selectable] {CurrentSelected.name} è già selezionato, ignoro click su {name}.");
+            return;
+        }
+
+        // Se arrivo qui, posso selezionare questo oggetto
+        SelectObject(eventData.position);
+        isSelected = true;
+        CurrentSelected = this;
     }
 
-    /// <summary>
-    /// Chiamato ad ogni frame in cui il puntatore si muove con il pulsante/dito premuto.
-    /// </summary>
-    public void OnDrag(PointerEventData eventData)
-    {
-        Debug.Log($"[Draggable] OnDrag su {name} | pos: {eventData.position} | pointerId: {eventData.pointerId}");
-        ContinueDrag(eventData.position);
-    }
-
-    /// <summary>
-    /// Chiamato quando il puntatore viene rilasciato (mouse up / touch end / Lidar touch up).
-    /// </summary>
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        Debug.Log($"[Draggable] OnPointerUp su {name} | pos: {eventData.position} | pointerId: {eventData.pointerId}");
-        EndDrag(eventData.position);
-    }
-
-    // =====================================================================
-    //  LOGICA COMUNE DI DRAG (INDIPENDENTE DALLA SORGENTE: MOUSE / LIDAR)
-    // =====================================================================
 
     /// <summary>
     /// Inizializza il drag: calcola offset e blocca la fisica.
     /// Quando trascino un oggetto 3D usando coordinate dello schermo (mouse, touch, Lidar…), il puntatore è in 2D, ma l’oggetto sta in 3D.
     /// Quindi devo dire a Unity a che distanza dalla camera deve collocare l’oggetto mentre lo seguo con il puntatore.
     /// </summary>
-    public void BeginDrag(Vector2 screenPos) //Stabilisce il punto dello spazio da cui inizia il trascinamento, così l’oggetto resta “agganciato” esattamente dove hai cliccato.
+    public void SelectObject(Vector2 screenPos) //Stabilisce il punto dello spazio da cui inizia il trascinamento, così l’oggetto resta “agganciato” esattamente dove hai cliccato.
     {
+        Debug.Log($"ObjectSelected");
+
         if (cam == null) cam = Camera.main;
 
-        // Converto la posizione word del modello 3D in coordinate schermo, cioè rispetto alla camera (dove screenPoint.z è la profondità rispetto alla camera)
-        // → la modifichiamo portando subito l'oggetto un po' avanti verso la camera
+        // Salvo la posa originale per poterci tornare se la selezione viene annullata
+        originalPosition = transform.position;
+        originalRotation = transform.rotation;
+
+        // Converto la posizione word del modello 3D in coordinate schermo, cioè rispetto alla camera
+        // e porto l'oggetto un po' avanti verso la camera
         Vector3 pulledForwardPos = visualRoot.position - cam.transform.forward * dragTowardsCamera;
-        screenPoint = cam.WorldToScreenPoint(pulledForwardPos);
+        Vector3 pulledForwardScreen = cam.WorldToScreenPoint(pulledForwardPos);
 
-        // Converto il puntatore 2D in un punto 3D del mondo mantenendo la stessa profondità dalla camera dell'oggetto 3D
-        // Così detremino come l’utente ha “preso” l’oggetto cioè in quale punto lo ha afferrato
-        var worldUnderPointer = cam.ScreenToWorldPoint(new Vector3(
-            screenPos.x,
-            screenPos.y,
-            screenPoint.z));
+        // Centro l'oggetto nella vista della camera mantenendo la stessa profondità
+        Vector3 centeredScreenPoint = new Vector3(
+            Screen.width * 0.5f,
+            Screen.height * 0.5f,
+            pulledForwardScreen.z);
 
-        // Offset tra il centro dell'oggetto e il punto cliccato, serve poi a mantenere “agganciato” il punto di presa.
-        offset = pulledForwardPos - worldUnderPointer;
+        Vector3 centeredWorldPos = cam.ScreenToWorldPoint(centeredScreenPoint);
 
-        // Sposto subito l’oggetto in avanti (così non serve farlo ogni frame durante il drag)
-        transform.position = pulledForwardPos;
+        // Sposto subito l’oggetto nella posizione centrata e avanzata
+        transform.position = centeredWorldPos;
         if (visualRoot != null && visualRoot != transform)
-            visualRoot.position = pulledForwardPos;
+            visualRoot.position = centeredWorldPos;
 
         // Blocca la fisica durante il drag in modo da muovere l'oggetto a mano.
         rb.isKinematic = true;
 
         // Azzeriamo velocità lineare e angolare.
-        // (Se usi Rigidbody classico di Unity, assicurati che la proprietà sia "velocity".)
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
@@ -149,65 +170,94 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
 
 
     /// <summary>
-    /// Aggiorna la posizione dell'oggetto mentre si trascina.
+    /// Annulla la selezione e rimette l'oggetto nella posa originale (posizione/rotazione/scala).
     /// </summary>
-    /// <summary>
-    /// Aggiorna la posizione dell'oggetto mentre si trascina.
-    /// </summary>
-    public void ContinueDrag(Vector2 screenPos)
+    private void CancelSelection()
     {
-        if (cam == null) cam = Camera.main;
+        // Ripristina posa originale
+        transform.position = originalPosition;
+        transform.rotation = originalRotation;
 
-        // Converto il puntatore 2D in un punto 3D del mondo mantenendo la stessa profondità dalla camera dell'oggetto 3D
-        // Così aggiorno continuamente la posizione dell’oggetto nello spazio
-        Vector3 curScreenPoint = new Vector3(
-            screenPos.x,
-            screenPos.y,
-            screenPoint.z);
-
-        // Converto la posizione in coordinate mondo del puntatore
-        // mantenendo la stessa profondità e aggiungendo l'offset (differenza tra il centro dell'oggetto e il punto cliccato)
-        Vector3 curWorldPos =
-            cam.ScreenToWorldPoint(curScreenPoint) + offset;
-
-        // (RIMOSSO) Avviciniamo leggermente il puntatore e l'oggetto alla camera così che non intersechi il frigorifero
-        // → ora l'avvicinamento avviene solo all'inizio (BeginDrag)
-
-        transform.position = curWorldPos; // Spostamento del transform dell'oggetto 3d
-
-        // Se il nodo visivo non coincide con il transform principale, aggiorniamo anche lui.
         if (visualRoot != null && visualRoot != transform)
-            visualRoot.position = curWorldPos;
+        {
+            visualRoot.position = originalPosition;
+            visualRoot.rotation = originalRotation;
+        }
 
-        // Aggiorna evidenziazione delle SnapZone sotto il puntatore.
-        UpdateSnapZoneHighlight(screenPos);
+        // Ripristina scala originale
+        if (visualRoot != null)
+            visualRoot.localScale = originalScale;
+
+        // Riattiva la fisica
+        rb.isKinematic = false;
+
+        // Ripristina Animator
+        if (visualAnimator != null)
+            visualAnimator.enabled = visualAnimatorWasEnabled;
+
+        // Rimuove highlight
+        SetHighlightedZone(null);
+
+        isSelected = false;
+        if (CurrentSelected == this)
+            CurrentSelected = null;
     }
-
 
     /// <summary>
     /// Termina il drag: prova ad agganciare l'oggetto a una SnapZone sotto il puntatore,
     /// riattiva la fisica e ripristina l'Animator.
     /// </summary>
-    public void EndDrag(Vector2 screenPos)
+    public void ReleaseSelectedObjectToZone(FridgeSnapZone zone, Vector2 screenPos)
     {
-        // Tenta di agganciare l'oggetto alla SnapZone sotto il puntatore (se presente).
-        SnapIntoZoneUnderPointer(screenPos);
+        Debug.Log("[Selectable] ReleaseSelectedObjectToZone CHIAMATO");
 
-        // Riattiva la fisica così l'oggetto torna ad essere governato dal Rigidbody.
+        if (zone == null)
+        {
+            CancelSelection();
+            return;
+        }
+
+        if (cam == null) cam = Camera.main;
+
+        // Posizione di snap definita dalla SnapZone + shelf + X del click
+        Vector3 snapPos = zone.GetSnapWorldPosition(cam, screenPos, 0.001f);
+
+        // Applichiamo la posizione di snap all'oggetto.
+        transform.position = snapPos;
+
+        if (visualRoot != null && visualRoot != transform)
+            visualRoot.position = snapPos;
+
+        // Riattiva la fisica
         rb.isKinematic = false;
 
-        // Rimuove eventuale evidenziazione residua.
+        // Rimuove highlight
         SetHighlightedZone(null);
 
-        // Ripristina lo stato dell'Animator (se esisteva).
+        // Ripristina Animator
         if (visualAnimator != null)
             visualAnimator.enabled = visualAnimatorWasEnabled;
 
+        // Ripristina scala originale
         if (visualRoot != null)
-        {
             visualRoot.localScale = originalScale;
+
+        isSelected = false;
+
+        if (CurrentSelected == this)
+            CurrentSelected = null;
+
+        // >>> QUI: notifica logica di gioco Frigo 1 <<<
+        var food = GetComponent<FoodItem>();
+        if (Fridge1GameManager.Instance != null && food != null)
+        {
+            Fridge1GameManager.Instance.OnItemSnapped(food, zone);
         }
     }
+
+
+
+
 
     // =====================================================================
     //  GESTIONE SNAP ZONE (HIGHLIGHT + SNAP FINALE)
