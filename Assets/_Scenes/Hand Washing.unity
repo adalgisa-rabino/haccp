@@ -729,14 +729,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7835105af717416a867e688957d91e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handImage: {fileID: 1562890326}
-  udpReceive: {fileID: 535774225}
-  autoPullFromUdp: 1
-  udpValueKey: errorCount
-  udpPollInterval: 0.05
-  logUdpParsingErrors: 0
-  maxErrorCount: 441
-  lerpSpeed: 5
+  udpTot: {fileID: 535774225}
+  handCleanUI: {fileID: 2071989796}
+  fillImage: {fileID: 1562890326}
 --- !u!114 &1562890326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -761,7 +756,7 @@ MonoBehaviour:
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 1
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0

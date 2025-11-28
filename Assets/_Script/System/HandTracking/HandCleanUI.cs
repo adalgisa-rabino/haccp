@@ -1,138 +1,35 @@
-using System;
-using System.Globalization;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UI; // Assicurati di avere questa using!
 
 public class HandCleanUI : MonoBehaviour
 {
-    [Header("Immagine della mano (type = Filled)")]
-    [SerializeField] private Image handImage;
+    [SerializeField] private UDPReceive udpTot;
+    [SerializeField] private GameObject handCleanUI;
+    [SerializeField] private Image fillImage;
 
-    [Header("Sorgente dati UDP")]
-    [SerializeField] private UDPReceive udpReceive;
-    [SerializeField] private bool autoPullFromUdp = true;
-    [Tooltip("Chiave da cercare nel payload UDP (es. 'errorCount'). Lasciare vuoto se il payload è solo il numero.")]
-    [SerializeField] private string udpValueKey = "errorCount";
-    [SerializeField, Min(0.01f)] private float udpPollInterval = 0.05f;
-    [SerializeField] private bool logUdpParsingErrors = false;
+    private const float maxPoints = 441f;
+    private const float minPoints = 220f;
 
-    [Header("Valore massimo di sporco (21^2 = 441)")]
-    [SerializeField] private float maxErrorCount = 441f;
-
-    [Header("Smoothing (0 = istantaneo, 5-10 = morbido)")]
-    [SerializeField] private float lerpSpeed = 5f;
-
-    private float currentCleanRatio = 0f;
-    private float targetCleanRatio = 0f;
-    private float udpPollTimer = 0f;
-
-    void Update()
+    public void Start()
     {
-        if (autoPullFromUdp)
-            TryReadUdpValue();
 
-        currentCleanRatio = Mathf.Lerp(currentCleanRatio, targetCleanRatio, Time.deltaTime * lerpSpeed);
-        UpdateVisual(currentCleanRatio);
     }
 
-    public void UpdateFromErrorCount(int errorCount)
+    public void Update()
     {
-        float clamped = Mathf.Clamp(errorCount, 0f, maxErrorCount);
-
-        float dirtyRatio = clamped / maxErrorCount;
-        targetCleanRatio = 1f - dirtyRatio;          // 0 sporco, 1 pulito
-    }
-
-    private void UpdateVisual(float ratio)
-    {
-        ratio = Mathf.Clamp01(ratio);
-
-        // colore rosso → verde
-        Color color = Color.Lerp(Color.red, Color.green, ratio);
-
-        if (handImage != null)
+        if (udpTot != null && !string.IsNullOrWhiteSpace(udpTot.data))
         {
-            handImage.fillAmount = ratio;  // RIEMPIMENTO
-            handImage.color = color;       // COLORE
-        }
-    }
-
-    public void ResetHand()
-    {
-        currentCleanRatio = 0f;
-        targetCleanRatio  = 0f;
-        UpdateVisual(0f);
-    }
-
-    private void TryReadUdpValue()
-    {
-        if (udpReceive == null)
-            return;
-
-        udpPollTimer -= Time.deltaTime;
-        if (udpPollTimer > 0f)
-            return;
-
-        udpPollTimer = udpPollInterval;
-
-        string payload = udpReceive.data;
-        if (string.IsNullOrEmpty(payload))
-            return;
-
-        if (TryParseErrorCount(payload, out int errorCount))
-        {
-            UpdateFromErrorCount(errorCount);
-        }
-        else if (logUdpParsingErrors)
-        {
-            Debug.LogWarning($"[HandCleanUI] Impossibile estrarre errorCount dal payload UDP: {payload}");
-        }
-    }
-
-    private bool TryParseErrorCount(string payload, out int errorCount)
-    {
-        payload = payload.Trim();
-        if (payload.Length == 0)
-        {
-            errorCount = 0;
-            return false;
-        }
-
-        if (int.TryParse(payload, NumberStyles.Integer, CultureInfo.InvariantCulture, out errorCount))
-            return true;
-
-        if (!string.IsNullOrEmpty(udpValueKey))
-        {
-            int keyIndex = payload.IndexOf(udpValueKey, StringComparison.OrdinalIgnoreCase);
-            if (keyIndex >= 0)
+            // Prova a convertire il dato ricevuto in float
+            if (float.TryParse(udpTot.data, out float currentPoints))
             {
-                keyIndex += udpValueKey.Length;
-                keyIndex = payload.IndexOfAny(new[] { ':', '=' }, keyIndex);
-                if (keyIndex >= 0)
-                    keyIndex++;
+                // Calcola la percentuale di riempimento tra minPoints e maxPoints
+                float fillAmount = Mathf.InverseLerp(maxPoints, minPoints, currentPoints);
+                fillImage.fillAmount = fillAmount;
 
-                while (keyIndex < payload.Length && char.IsWhiteSpace(payload[keyIndex]))
-                    keyIndex++;
-
-                int end = keyIndex;
-                while (end < payload.Length && (char.IsDigit(payload[end]) || payload[end] == '-'))
-                    end++;
-
-                if (end > keyIndex)
-                {
-                    string numberSlice = payload.Substring(keyIndex, end - keyIndex);
-                    if (int.TryParse(numberSlice, NumberStyles.Integer, CultureInfo.InvariantCulture, out errorCount))
-                        return true;
-                }
+                fillImage.color = Color.Lerp(Color.red, Color.green, fillAmount);
             }
         }
-
-        string sanitized = payload.Trim('[', ']', '{', '}', '(', ')');
-        string[] tokens = sanitized.Split(new[] { ',', ';', ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-        if (tokens.Length == 1 && int.TryParse(tokens[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out errorCount))
-            return true;
-
-        errorCount = 0;
-        return false;
     }
 }
