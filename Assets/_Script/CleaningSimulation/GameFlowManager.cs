@@ -1,0 +1,157 @@
+using UnityEngine;
+
+public class GameFlowManager : MonoBehaviour
+{
+
+    public enum WashGameState
+    {
+        FoodWasteRemoval,   // scarti sul piano
+        FaucetTouchToStart, // tocco rubinetto per iniziare temp
+        TemperatureGame,    // slider min/max
+        WaterRunning,       // acqua aperta
+        HandWashing,        // lavaggio mani
+        SurfaceCleaning,    // pulizia piano di lavoro
+        DisinfectionQuiz,   // quiz finale
+        Finished            // fine
+    }
+    public static GameFlowManager Instance { get; private set; }
+
+    [SerializeField] private WashGameState _currentState = WashGameState.FoodWasteRemoval;
+
+    [Header("Controllers")]
+    [SerializeField] private FoodWasteController _wasteController;
+    [SerializeField] private TemperatureController _temperatureController;
+    //[SerializeField] private HandWashController _handWashController;
+    [SerializeField] private SurfaceCleaningController _surfaceController;
+    //[SerializeField] private QuizController _quizController;
+
+    [Header("Animators")]
+    [SerializeField] private Animator _faucetAnimator;
+    [SerializeField] private Animator _waterAnimator;
+
+    [Header("UI")]
+    [SerializeField] private GameObject _temperatureUI;
+    [SerializeField] private GameObject _handHintUI;
+    [SerializeField] private GameObject _surfaceUI;
+    [SerializeField] private GameObject _quizUI;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    private void Start()
+    {
+        // ALL'INIZIO: solo la fase scarti è attiva
+        _temperatureUI.SetActive(false);
+        // _handHintUI.SetActive(false);
+        //_surfaceUI.SetActive(false);
+        //_quizUI.SetActive(false);
+
+        // registriamo callback
+        _wasteController.OnAllWasteRemoved += OnFoodWasteRemoved;
+        _temperatureController.OnTemperatureCompleted = OnTemperatureSolved;
+        //_handWashController.OnHandWashCompleted = OnHandWashCompleted;
+        _surfaceController.OnSurfaceCleaned = OnSurfaceCleaned;
+        //_quizController.OnQuizCompleted = OnQuizCompleted;
+
+        _currentState = WashGameState.FoodWasteRemoval;
+    }
+
+    // --------------------------------------------------
+    // 1) SCARTI RIMOSSI
+    // --------------------------------------------------
+    private void OnFoodWasteRemoved()
+    {
+        Debug.Log("Scarti rimossi → Tocca il rubinetto");
+        _currentState = WashGameState.FaucetTouchToStart;
+    }
+
+    // --------------------------------------------------
+    // 2) TOCCO RUBINETTO (viene chiamato dal tuo script pointer)
+    // --------------------------------------------------
+    public void OnFaucetTouched()
+    {
+        Debug.Log("Rubinetto toccato in stato: " + _currentState);
+
+        if (_currentState == WashGameState.FaucetTouchToStart)
+        {
+            StartTemperatureGame();
+        }
+        else if (_currentState == WashGameState.WaterRunning)
+        {
+            StopWaterAndStartWashing();
+        }
+    }
+
+    private void StartTemperatureGame()
+    {
+        Debug.Log("Avvio minigioco temperatura");
+        _currentState = WashGameState.TemperatureGame;
+
+        _temperatureUI.SetActive(true);
+        _temperatureController.StartTemperatureMinigame();
+    }
+
+    // --------------------------------------------------
+    // 3) COMPLETATA TEMPERATURA
+    // --------------------------------------------------
+    private void OnTemperatureSolved()
+    {
+        if (_currentState != WashGameState.TemperatureGame) return;
+
+        Debug.Log("Temperatura corretta → apri acqua");
+        _temperatureUI.SetActive(false);
+
+        _currentState = WashGameState.WaterRunning;
+
+        _faucetAnimator.SetBool("Open", true);
+        //_waterAnimator.SetTrigger("StartWater");
+    }
+
+    // --------------------------------------------------
+    // 4) UTENTE RITOCCA RUBINETTO PER CHIUDERE L’ACQUA
+    // --------------------------------------------------
+    private void StopWaterAndStartWashing()
+    {
+        Debug.Log("Chiudo acqua → lavaggio superficie");
+        _faucetAnimator.SetBool("Open", false);
+        //_waterAnimator.SetTrigger("StopWater");
+
+        _currentState = WashGameState.SurfaceCleaning;
+
+        _surfaceController.StartSurfaceCleaning();
+    }
+
+    // --------------------------------------------------
+    // 5) SUPERFICIE PULITA
+    // --------------------------------------------------
+
+    private void OnSurfaceCleaned()
+    {
+        Debug.Log("Superficie pulita → quiz disinfezione");
+        _surfaceUI.SetActive(false);
+
+        _currentState = WashGameState.DisinfectionQuiz;
+
+        _quizUI.SetActive(true);
+        //_quizController.StartQuiz();
+        
+    }
+
+    // --------------------------------------------------
+    // 6) QUIZ COMPLETATO
+    // --------------------------------------------------
+    private void OnQuizCompleted()
+    {
+        Debug.Log("Quiz completato → processo finito");
+        _quizUI.SetActive(false);
+
+        _currentState = WashGameState.Finished;
+    }
+    
+    public WashGameState GetCurrentState()
+    {
+        return _currentState;
+    }
+}
