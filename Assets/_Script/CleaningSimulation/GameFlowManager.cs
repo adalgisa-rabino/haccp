@@ -32,7 +32,7 @@ public class GameFlowManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private GameObject _temperatureUI;
     [SerializeField] private GameObject _handHintUI;
-    [SerializeField] private GameObject _surfaceUI;
+    //[SerializeField] private GameObject _surfaceUI;
     [SerializeField] private GameObject _quizUI;
 
     private void Awake()
@@ -50,9 +50,9 @@ public class GameFlowManager : MonoBehaviour
 
         // registriamo callback
         _wasteController.OnAllWasteRemoved += OnFoodWasteRemoved;
-        _temperatureController.OnTemperatureCompleted = OnTemperatureSolved;
+        _temperatureController.OnTemperatureCompleted += OnTemperatureSolved;
         //_handWashController.OnHandWashCompleted = OnHandWashCompleted;
-        _surfaceController.OnSurfaceCleaned = OnSurfaceCleaned;
+        _surfaceController.OnSurfaceCleaned += OnSurfaceCleaned;
         //_quizController.OnQuizCompleted = OnQuizCompleted;
 
         _currentState = WashGameState.FoodWasteRemoval;
@@ -103,10 +103,9 @@ public class GameFlowManager : MonoBehaviour
         Debug.Log("Temperatura corretta → apri acqua");
         _temperatureUI.SetActive(false);
 
-        _currentState = WashGameState.WaterRunning;
-
         _faucetAnimator.SetBool("Open", true);
-        //_waterAnimator.SetTrigger("StartWater");
+        _currentState = WashGameState.WaterRunning;
+        
     }
 
     // --------------------------------------------------
@@ -116,7 +115,6 @@ public class GameFlowManager : MonoBehaviour
     {
         Debug.Log("Chiudo acqua → lavaggio superficie");
         _faucetAnimator.SetBool("Open", false);
-        //_waterAnimator.SetTrigger("StopWater");
 
         _currentState = WashGameState.SurfaceCleaning;
 
@@ -130,7 +128,7 @@ public class GameFlowManager : MonoBehaviour
     private void OnSurfaceCleaned()
     {
         Debug.Log("Superficie pulita → quiz disinfezione");
-        _surfaceUI.SetActive(false);
+        
 
         _currentState = WashGameState.DisinfectionQuiz;
 

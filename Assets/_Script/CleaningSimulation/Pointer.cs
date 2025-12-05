@@ -34,6 +34,7 @@ public class Pointer : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             else if (_gameFlowManager.GetCurrentState() == GameFlowManager.WashGameState.WaterRunning)
             {
                 Debug.Log("Pointer DOWN sull'acqua in WaterRunning!");
+                GameFlowManager.Instance.OnFaucetTouched();
                 
             }
         }
