@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-public class Fridge1GameManager : MonoBehaviour
+/// <summary>
+/// controllo del gioco del frigo 1: gestione punteggio HACCP in base al posizionamento degli oggetti nel frigo.
+/// </summary>
+public class FridgeItemPositionControl : MonoBehaviour
 {
-    public static Fridge1GameManager Instance { get; private set; }
-
-    [Header("Stato di gioco Frigo 1")]
-    public int haccpScore = 0;
+    public static FridgeItemPositionControl Instance; 
 
     private void Awake()
     {
@@ -17,9 +17,6 @@ public class Fridge1GameManager : MonoBehaviour
         Instance = this;
     }
 
-    /// <summary>
-    /// Chiamato quando un oggetto viene posizionato in una SnapZone del Frigo 1.
-    /// </summary>
     public void OnItemSnapped(FoodItem item, FridgeSnapZone zone)
     {
         if (item == null || zone == null)
@@ -27,17 +24,36 @@ public class Fridge1GameManager : MonoBehaviour
 
         bool isCorrect = IsPlacementCorrect(item, zone);
 
-        if (isCorrect)
+        int delta = isCorrect ? +10 : -5;
+
+        if (HaccpScoreState.Instance != null)
         {
-            haccpScore += 10;
-            Debug.Log($"[Frigo1] CORRETTO: {item.displayName} su {zone.area}. Score = {haccpScore}");
+            HaccpScoreState.Instance.AddScore(delta);
+            Debug.Log($"[Frigo1] {(isCorrect ? "CORRETTO" : "ERRORE")}: {item.displayName} su {zone.area}");
         }
         else
         {
-            haccpScore -= 5;
-            Debug.Log($"[Frigo1] ERRORE: {item.displayName} su {zone.area}. Score = {haccpScore}");
+            Debug.LogWarning("[Frigo1] HaccpScoreState.Instance è null, score non aggiornato.");
         }
+
+            //se posizionamento corretto, questo alimento non è più selezionabile
+        if (isCorrect)
+        {
+            var selectable = item.GetComponent<Selectable>();
+            if (selectable != null)
+            {
+                selectable.LockSelection();
+            }
+
+            // 🔥 Qui notifichiamo a Fridge1State che un item corretto è stato posizionato
+            if (Fridge1State.Instance != null)
+            {
+                Fridge1State.Instance.NotifyCorrectPlacement(item);
+            }
+        }
+
     }
+
 
     private bool IsPlacementCorrect(FoodItem item, FridgeSnapZone zone)
     {
@@ -45,19 +61,14 @@ public class Fridge1GameManager : MonoBehaviour
         {
             case FridgeArea.ShelfTop:
                 return item.placementCategory == FoodPlacementCategory.TopShelfGroup;
-
             case FridgeArea.ShelfUpperMid:
                 return item.placementCategory == FoodPlacementCategory.UpperMidShelfGroup;
-
             case FridgeArea.ShelfLowerMid:
                 return item.placementCategory == FoodPlacementCategory.LowerMidShelfGroup;
-
             case FridgeArea.ShelfBottom:
                 return item.placementCategory == FoodPlacementCategory.BottomShelfGroup;
-
             case FridgeArea.Door:
                 return item.placementCategory == FoodPlacementCategory.DoorGroup;
-
             default:
                 return false;
         }

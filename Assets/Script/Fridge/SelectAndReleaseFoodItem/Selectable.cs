@@ -6,6 +6,9 @@ using UnityEngine.EventSystems;
 
 public class Selectable : MonoBehaviour, IPointerDownHandler
 {
+    [Header("Camera di interazione (fronte frigo)")]
+    [SerializeField] private Camera interactionCamera; 
+
     // Camera usata per convertire coordinate schermo → mondo
     private Camera cam;
 
@@ -44,6 +47,10 @@ public class Selectable : MonoBehaviour, IPointerDownHandler
     bool isSelected = false;
     public static Selectable CurrentSelected;
 
+    bool isLocked = false; // nuovo: oggetto “definitivamente posizionato”
+    public static bool GlobalInteractionBlocked = false; // per blocco totale gioco
+
+
     private Vector3 originalScale;
 
     // Posizione/rotazione al momento della selezione (per poter tornare "dov'era")
@@ -53,7 +60,10 @@ public class Selectable : MonoBehaviour, IPointerDownHandler
     void Awake()
     {
         // Se non è impostata una camera, usa la main camera
-        cam = Camera.main;
+        if (interactionCamera == null)
+            interactionCamera = Camera.main;
+
+        cam = interactionCamera;
 
         rb = GetComponent<Rigidbody>();
         myCol = GetComponent<Collider>();
@@ -78,6 +88,9 @@ public class Selectable : MonoBehaviour, IPointerDownHandler
     /// </summary>
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (GlobalInteractionBlocked) return;
+        if (isLocked) return;
+        
         if (cam == null) cam = Camera.main;
 
         // 1. Verifica che il "click" sia davvero su questo oggetto
@@ -166,7 +179,15 @@ public class Selectable : MonoBehaviour, IPointerDownHandler
         {
             visualRoot.localScale = originalScale * 1.2f;
         }
-    }
+
+        // >>> QUI: mostra pannello oggetto selezionato, se è un FoodItem
+        var food = GetComponent<FoodItem>();
+        if (food != null && SelectedFoodPanelController.Instance != null)
+        {
+            SelectedFoodPanelController.Instance.Show(food, this);
+        }
+
+   }
 
 
     /// <summary>
@@ -201,6 +222,9 @@ public class Selectable : MonoBehaviour, IPointerDownHandler
         isSelected = false;
         if (CurrentSelected == this)
             CurrentSelected = null;
+
+        if (SelectedFoodPanelController.Instance != null)
+            SelectedFoodPanelController.Instance.Hide();
     }
 
     /// <summary>
@@ -247,12 +271,42 @@ public class Selectable : MonoBehaviour, IPointerDownHandler
         if (CurrentSelected == this)
             CurrentSelected = null;
 
+        if (SelectedFoodPanelController.Instance != null)
+            SelectedFoodPanelController.Instance.Hide();
+
+
         // >>> QUI: notifica logica di gioco Frigo 1 <<<
         var food = GetComponent<FoodItem>();
-        if (Fridge1GameManager.Instance != null && food != null)
+        if (FridgeItemPositionControl.Instance != null && food != null)
         {
-            Fridge1GameManager.Instance.OnItemSnapped(food, zone);
+            FridgeItemPositionControl.Instance.OnItemSnapped(food, zone);
         }
+    }
+
+
+    public void ThrowToTrash()
+    {
+        Debug.Log($"[Selectable] ThrowToTrash su {name}");
+
+        // Disattivo la selezione
+        isSelected = false;
+        if (CurrentSelected == this)
+            CurrentSelected = null;
+
+        // Ripristino scala originale
+        if (visualRoot != null)
+            visualRoot.localScale = originalScale;
+
+        // Riattivo fisica e gravità in modo che "cada"
+        rb.isKinematic = false;
+        rb.useGravity = true;
+
+        // impulso leggero verso il basso/avanti, giusto per feedback visivo
+        rb.AddForce(Vector3.down * 2f + cam.transform.forward * 1.5f, ForceMode.Impulse);
+        rb.AddTorque(Random.insideUnitSphere * 2f, ForceMode.Impulse);
+
+        // opzionale: disabilito selezione futura
+        this.enabled = false;
     }
 
 
@@ -327,24 +381,24 @@ public class Selectable : MonoBehaviour, IPointerDownHandler
             if (zone == null)
                 return;
 
-            // Partiamo dalla posizione attuale e modifichiamo solo alcuni assi.
-            Vector3 snapPos = transform.position;
+            // Lasciamo che sia la SnapZone a calcolare la posizione corretta
+            Vector3 snapPos = zone.GetSnapWorldPosition(cam, screenPos, 0.001f);
 
-            // Imposta la Z target in base alla SnapZone.
-            float targetZ = zone.GetTargetZ();
-            snapPos.z = targetZ;
-
-            // Ray verso il basso per trovare la mensola sottostante.
+            // (Opzionale) rifinitura sull'asse Y usando la mensola sotto
             Vector3 rayOrigin = snapPos + Vector3.up * 0.5f;
             float maxDistance = 2f;
 
-            if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit shelfHit, maxDistance, shelfLayerMask, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(rayOrigin,
+                                Vector3.down,
+                                out RaycastHit shelfHit,
+                                maxDistance,
+                                shelfLayerMask,
+                                QueryTriggerInteraction.Ignore))
             {
-                // Piazziamo l'oggetto appena sopra la superficie della mensola.
                 snapPos.y = shelfHit.point.y + 0.001f;
             }
 
-            // Applichiamo la posizione di snap all'oggetto.
+            // Applichiamo la posizione di snap all'oggetto
             transform.position = snapPos;
 
             if (visualRoot != null && visualRoot != transform)
@@ -352,7 +406,14 @@ public class Selectable : MonoBehaviour, IPointerDownHandler
         }
         else
         {
-            Debug.Log("[Draggable] Nessuna SnapZone colpita al rilascio.");
+            Debug.Log("[Selectable] Nessuna SnapZone colpita al rilascio.");
         }
     }
+
+    public void LockSelection()
+    {
+        isLocked = true;
+        // opzionale: ripristina scala, disabilita pannello, ecc.
+    }
+
 }

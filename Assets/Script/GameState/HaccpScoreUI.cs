@@ -10,19 +10,19 @@ public class HaccpScoreUI : MonoBehaviour
         if (scoreText == null)
             scoreText = GetComponent<TMP_Text>();
 
-        if (HaccpGameState.Instance != null)
+        if (HaccpScoreState.Instance != null)
         {
             // inizializza
-            UpdateScore(HaccpGameState.Instance.Score);
+            UpdateScore(HaccpScoreState.Instance.Score);
 
-            HaccpGameState.Instance.OnScoreChanged += UpdateScore;
+            HaccpScoreState.Instance.OnScoreChanged += UpdateScore;
         }
     }
 
     private void OnDestroy()
     {
-        if (HaccpGameState.Instance != null)
-            HaccpGameState.Instance.OnScoreChanged -= UpdateScore;
+        if (HaccpScoreState.Instance != null)
+            HaccpScoreState.Instance.OnScoreChanged -= UpdateScore;
     }
 
     private void UpdateScore(int newScore)

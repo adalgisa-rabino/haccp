@@ -13,6 +13,9 @@ public enum FridgeArea
 [ExecuteAlways]
 public class FridgeSnapZone : MonoBehaviour, IPointerDownHandler
 {
+    [Header("Camera di interazione (fronte frigo)")]
+    [SerializeField] private Camera interactionCamera;
+
     public Color normalColor = new Color(0f, 1f, 0f, 0.2f);
     public Color highlightColor = new Color(1f, 1f, 0f, 0.4f);
 
@@ -65,58 +68,72 @@ public class FridgeSnapZone : MonoBehaviour, IPointerDownHandler
     }
 
     /// <summary>
-    /// Ritorna la Z del GO che definisce il piano del ripiano.
+    /// Ritorna la coordinata di profondità del ripiano rispetto all'asse scelto (X o Z),
+    /// in base all'orientamento della camera.
+    /// Il nome resta GetTargetZ per compatibilità.
     /// </summary>
-    public float GetTargetZ()
+    public float GetTargetZ(Camera cam)
     {
         Transform root = snapRoot;
-
         if (root == null)
             root = transform.parent != null ? transform.parent : transform;
 
-        return root.position.z;
+        if (cam == null) cam = Camera.main;
+        if (cam == null) return root.position.z; // fallback
+
+        Vector3 fwd = cam.transform.forward;
+
+        // se la camera guarda più lungo X che lungo Z → profondità = X
+        bool useXAsDepth = Mathf.Abs(fwd.x) > Mathf.Abs(fwd.z);
+
+        return useXAsDepth ? root.position.x : root.position.z;
     }
 
     /// <summary>
     /// Calcola la posizione di snap usando:
-    /// - X dal click (proiettato sul piano dello shelf),
-    /// - Y e Z dallo shelf (snapRoot).
+    /// - profondità sull'asse (X o Z) più allineato alla forward della camera,
+    /// - l'altro asse preso dal click,
+    /// - Y dal ripiano.
     /// </summary>
     public Vector3 GetSnapWorldPosition(Camera cam, Vector2 screenPos, float yOffset = 0.001f)
     {
-        if (cam == null)
-            cam = Camera.main;
+        Camera usedCam = interactionCamera != null ? interactionCamera : cam;
+        if (usedCam == null) usedCam = Camera.main;
 
-        if (box == null)
-            box = GetComponent<BoxCollider>();
-
-        // Shelf corrispondente (impostato in inspector, oppure parent)
         Transform root = snapRoot;
         if (root == null)
             root = transform.parent != null ? transform.parent : transform;
 
-        // Distanza dello shelf dalla camera lungo la direzione di vista
-        Vector3 toShelf = root.position - cam.transform.position;
-        float distanceToShelf = Vector3.Dot(cam.transform.forward, toShelf);
+        // 1. Decide quale asse del mondo usare come profondità in base alla camera
+        Vector3 fwd = usedCam.transform.forward;
+        bool useXAsDepth = Mathf.Abs(fwd.x) > Mathf.Abs(fwd.z);
 
-        // Punto 3D sotto il click sul piano alla distanza dello shelf
-        Vector3 worldFromClick = cam.ScreenToWorldPoint(new Vector3(
-            screenPos.x,
-            screenPos.y,
-            distanceToShelf
-        ));
+        float depth = useXAsDepth ? root.position.x : root.position.z;
 
-        // X: dal click
-        // Y: altezza dello shelf + offset
-        // Z: profondità dello shelf
-        Vector3 pos = new Vector3(
-            worldFromClick.x,
-            root.position.y + yOffset,
-            root.position.z
-        );
+        // 2. Costruisce il piano di snap:
+        //    - se uso X come profondità → piano X = depth
+        //    - se uso Z come profondità → piano Z = depth
+        Ray ray = usedCam.ScreenPointToRay(screenPos);
+        Plane plane = useXAsDepth
+            ? new Plane(Vector3.right, new Vector3(depth, 0f, 0f))
+            : new Plane(Vector3.forward, new Vector3(0f, 0f, depth));
 
-        return pos;
+        if (plane.Raycast(ray, out float enter))
+        {
+            Vector3 pos = ray.GetPoint(enter);
+
+            // 3. Y dal ripiano + offset
+            pos.y = root.position.y + yOffset;
+
+            return pos;
+        }
+
+        // fallback
+        return root.position;
     }
+
+
+
 
     /// <summary>
     /// Quando clicco/tocco la SnapZone, se c'è un Selectable selezionato,
