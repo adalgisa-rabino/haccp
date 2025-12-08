@@ -35,6 +35,10 @@ public class GameFlowManager : MonoBehaviour
     //[SerializeField] private GameObject _surfaceUI;
     [SerializeField] private GameObject _quizUI;
 
+    [Header("Timer and Scoring")]
+    private float _temperatureTimer = 0f;
+    private bool _temperatureTimerRunning = false;
+
     private void Awake()
     {
         Instance = this;
@@ -56,6 +60,16 @@ public class GameFlowManager : MonoBehaviour
         //_quizController.OnQuizCompleted = OnQuizCompleted;
 
         _currentState = WashGameState.FoodWasteRemoval;
+    }
+
+    private void Update()
+    {
+        // Timer per il minigioco della temperatura
+        if (_temperatureTimerRunning)
+        {
+            _temperatureTimer += Time.deltaTime;
+            //Debug.Log("Timer temperatura: " + _temperatureTimer);
+        }
     }
 
     // --------------------------------------------------
@@ -91,6 +105,13 @@ public class GameFlowManager : MonoBehaviour
 
         _temperatureUI.SetActive(true);
         _temperatureController.StartTemperatureMinigame();
+        //faccio partire un timer e collego al calcolo dei punti; 
+
+        _temperatureTimer = 0f;
+        _temperatureTimerRunning = true;
+        
+
+
     }
 
     // --------------------------------------------------
@@ -102,8 +123,12 @@ public class GameFlowManager : MonoBehaviour
 
         Debug.Log("Temperatura corretta → apri acqua");
         _temperatureUI.SetActive(false);
+        _temperatureTimerRunning = false;
+        Debug.Log("Tempo impiegato per temperatura: " + _temperatureTimer + " secondi");
+        
 
         _faucetAnimator.SetBool("Open", true);
+
         _currentState = WashGameState.WaterRunning;
         
     }
