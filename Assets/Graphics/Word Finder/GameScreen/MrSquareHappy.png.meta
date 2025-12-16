@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Graphics/Word Finder/GameScreen/MrSquareHappy.png.meta
 guid: 0afcfa1f860054fa092b930f97dc6de9
+========
+guid: d29befc3b27634400927e77233296249
+>>>>>>>> haccp/feature/player-wasd-teleport:Assets/Graphics/temperatureMiniGame/1f53a_flat-Photoroom.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -49,7 +53,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteBorder: {x: 0, y: 0, z: 232, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -101,7 +105,7 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 0
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []

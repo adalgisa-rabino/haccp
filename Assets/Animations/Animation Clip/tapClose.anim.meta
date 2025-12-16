@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/TextMesh Pro/Resources/Fonts & Materials/DeliusSwashCaps-Regular SDF.asset.meta
-guid: 9f4580e4ebac8408cae794809e56f699
+<<<<<<<< HEAD:Assets/Animations/Animation Clip/PackageAnimation.anim.meta
+guid: 4d21e1a6274684c4aa3bd2a1b1470990
 ========
 guid: d400d5ef6963945229aefa3dfbec65b4
->>>>>>>> feature/player-wasd-teleport:Assets/Animations/Animation Clip/tapClose.anim.meta
+>>>>>>>> haccp/feature/player-wasd-teleport:Assets/Animations/Animation Clip/tapClose.anim.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 7400000

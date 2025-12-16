@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Rust Key.meta
-guid: 81d6c9d3140084dc8880910fa0f75254
+<<<<<<<< HEAD:Assets/Script/GameState.meta
+guid: 831c58902b1438b498352ebf7e04e751
 ========
 guid: c10c6228009f04bb4802bcc7a63c0c8b
->>>>>>>> feature/player-wasd-teleport:Assets/Script/CleaningSimulation.meta
+>>>>>>>> haccp/feature/player-wasd-teleport:Assets/Script/CleaningSimulation.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/MenuBoard.meta
-guid: e6bdafcf970af4ea99596e7db28dc1a1
+<<<<<<<< HEAD:Assets/Prefabs.meta
+guid: 9a1c6e728020d4172b061bb66b1c8429
 ========
 guid: cd29bc11db2f34847b4c7488fd5cedcf
->>>>>>>> feature/player-wasd-teleport:Assets/Graphics/temperatureMiniGame.meta
+>>>>>>>> haccp/feature/player-wasd-teleport:Assets/Graphics/temperatureMiniGame.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

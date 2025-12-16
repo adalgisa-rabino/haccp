@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Graphics/Word Finder/GameScreen/CategoryUnlocked.png.meta
-guid: 69acebef12fd8477791795a31ba24b5f
+<<<<<<<< HEAD:Assets/Graphics/Word Finder/GameScreen/GameOver.png.meta
+guid: ed2545932ea73402698b53c2aac7aa9e
 ========
 guid: e2730532cdf1e4c63848ef376a73a75a
->>>>>>>> feature/player-wasd-teleport:Assets/Graphics/temperatureMiniGame/gratis-png-software-de-computadora-triangle-gimp-triangulo-verde-thumbnail-Photoroom.png.meta
+>>>>>>>> haccp/feature/player-wasd-teleport:Assets/Graphics/temperatureMiniGame/gratis-png-software-de-computadora-triangle-gimp-triangulo-verde-thumbnail-Photoroom.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

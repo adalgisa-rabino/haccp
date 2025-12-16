@@ -1,12 +1,15 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/MenuBoard/Font/Bad Gong SDF.asset.meta
-guid: 2576563f0b373401d976321c34b73aad
+<<<<<<<< HEAD:Assets/Animations/Animation Controller/Package_AnimationController.controller.meta
+guid: 739f84ededc3a2a4087b5234a9dfedda
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
 ========
 guid: dceb43ee75b7a4b0db7acd795c3eb753
->>>>>>>> feature/player-wasd-teleport:Assets/Animations/Animation Clip/tapOpen.anim.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 7400000
+>>>>>>>> haccp/feature/player-wasd-teleport:Assets/Animations/Animation Clip/tapOpen.anim.meta
   userData: 
   assetBundleName: 
   assetBundleVariant: 

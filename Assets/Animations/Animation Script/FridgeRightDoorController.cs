@@ -11,7 +11,7 @@ public class FridgeDoorController : MonoBehaviour
     [SerializeField] private Animator animator;
 
 <<<<<<< HEAD
-    // Indica se questa porta è la destra o la sinistra
+    // Indica se questa porta ï¿½ la destra o la sinistra
     [SerializeField] private DoorSide side;
 
     private bool isOpen;

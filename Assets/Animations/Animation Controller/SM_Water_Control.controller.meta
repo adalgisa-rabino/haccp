@@ -1,15 +1,12 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Animations/Animation Clip/BinAnimation.anim.meta
-guid: 66bbb3803c7c048b4a9ca1e2a21bbec1
-NativeFormatImporter:
-  externalObjects: {}
-  mainObjectFileID: 7400000
+<<<<<<<< HEAD:Assets/Animations/Animation Controller/Trashbin_Lid_AnimatorController.controller.meta
+guid: 84a1154fd8d52af46b2f11a350a29a34
 ========
 guid: 05e82ead1e9574e159505c9fbdabe219
+>>>>>>>> haccp/feature/player-wasd-teleport:Assets/Animations/Animation Controller/SM_Water_Control.controller.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 9100000
->>>>>>>> feature/player-wasd-teleport:Assets/Animations/Animation Controller/SM_Water_Control.controller.meta
   userData: 
   assetBundleName: 
   assetBundleVariant: 

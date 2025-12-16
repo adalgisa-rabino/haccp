@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Script/PlayerActions/Draggable.meta
 guid: 57cf0e1ba00671e4aa5a866d3f63e3c5
+========
+guid: 7a243a6377ea4401783c4a6f49c0d401
+>>>>>>>> haccp/feature/player-wasd-teleport:Assets/Script/Cluedo.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

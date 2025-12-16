@@ -4,9 +4,7 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Hand
-  - Waste
-  - Touchable
+  - Anchor
   layers:
   - Default
   - TransparentFX
