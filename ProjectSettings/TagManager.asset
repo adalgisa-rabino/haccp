@@ -6,6 +6,18 @@ TagManager:
   tags:
   - Anchor
   - Hand
+  - "using UnityEngine;\r\nusing UnityEngine.EventSystems;\r\n\r\npublic class PackagingStationButton
+    : MonoBehaviour, IPointerDownHandler\r\n{\r\n    public void OnPointerDown(PointerEventData
+    eventData)\r\n    {\r\n        // Deve esserci un oggetto selezionato \u2192
+    \xE8 in avanti rispetto al frigo\r\n        var selected = Selectable.CurrentSelected;\r\n       
+    if (selected == null)\r\n            return;\r\n\r\n        var food = selected.GetComponent<FoodItem>();\r\n       
+    if (food == null)\r\n            return;\r\n\r\n        // Deve essere \"unpackaged\"
+    secondo la logica del tuo inspector\r\n        if (!food.isUnpackaged)\r\n           
+    return;\r\n\r\n        // Lo confezioniamo: aggiornamento visuale + stato logico\r\n       
+    food.SetPackaged(true);\r\n\r\n        // Se vuoi, qui puoi aumentare un punteggio,
+    o loggare qualcosa.\r\n    }\r\n}\r\n"
+  - Waste
+  - Touchable
   layers:
   - Default
   - TransparentFX
