@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 1cda9db71456e4ebe83a1778249fd380
+=======
+guid: 141f780ca499d4186bc17ba8aad9121e
+>>>>>>> feature/player-wasd-teleport
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
