@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Graphics/Word Finder/GameScreen/ExitButton.png.meta
-guid: 4070b99f516b14ef897ddd8a91a37746
+<<<<<<<< HEAD:Assets/Resources/Sprite/bg.png.meta
+guid: 907624f10932c4dfdb8ab814b5f01875
 ========
-guid: d29befc3b27634400927e77233296249
->>>>>>>> feature/player-wasd-teleport:Assets/Graphics/temperatureMiniGame/1f53a_flat-Photoroom.png.meta
+guid: e6c23257628a841e884e43b47586aec6
+>>>>>>>> feature/player-wasd-teleport:Assets/Graphics/temperatureMiniGame/png-clipart-isosceles-triangle-equilateral-triangle-shape-pyramid-angle-triangle-thumbnail.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -53,7 +53,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 0, y: 0, z: 232, w: 0}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -105,7 +105,7 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    internalID: 0
     vertices: []
     indices: 
     edges: []
