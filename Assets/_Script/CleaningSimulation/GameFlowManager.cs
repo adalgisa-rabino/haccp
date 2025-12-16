@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class GameFlowManager : MonoBehaviour
@@ -34,10 +35,13 @@ public class GameFlowManager : MonoBehaviour
     [SerializeField] private GameObject _handHintUI;
     //[SerializeField] private GameObject _surfaceUI;
     [SerializeField] private GameObject _quizUI;
+    [SerializeField] private GameObject _timerUI;
+    [SerializeField] private TextMeshProUGUI _timerLabel;
 
     [Header("Timer and Scoring")]
     private float _temperatureTimer = 0f;
     private bool _temperatureTimerRunning = false;
+
 
     private void Awake()
     {
@@ -48,6 +52,9 @@ public class GameFlowManager : MonoBehaviour
     {
         // ALL'INIZIO: solo la fase scarti è attiva
         _temperatureUI.SetActive(false);
+        if (_timerUI != null)
+            _timerUI.SetActive(false);
+        UpdateTimerLabel();
         // _handHintUI.SetActive(false);
         //_surfaceUI.SetActive(false);
         //_quizUI.SetActive(false);
@@ -68,6 +75,7 @@ public class GameFlowManager : MonoBehaviour
         if (_temperatureTimerRunning)
         {
             _temperatureTimer += Time.deltaTime;
+            UpdateTimerLabel();
             //Debug.Log("Timer temperatura: " + _temperatureTimer);
         }
     }
@@ -109,6 +117,9 @@ public class GameFlowManager : MonoBehaviour
 
         _temperatureTimer = 0f;
         _temperatureTimerRunning = true;
+        if (_timerUI != null)
+            _timerUI.SetActive(true);
+        UpdateTimerLabel();
         
 
 
@@ -124,6 +135,7 @@ public class GameFlowManager : MonoBehaviour
         Debug.Log("Temperatura corretta → apri acqua");
         _temperatureUI.SetActive(false);
         _temperatureTimerRunning = false;
+        UpdateTimerLabel();
         Debug.Log("Tempo impiegato per temperatura: " + _temperatureTimer + " secondi");
         
 
@@ -176,5 +188,18 @@ public class GameFlowManager : MonoBehaviour
     public WashGameState GetCurrentState()
     {
         return _currentState;
+    }
+
+    private void UpdateTimerLabel()
+    {
+        if (_timerLabel == null)
+            return;
+
+        float totalSeconds = Mathf.Max(0f, _temperatureTimer);
+        int minutes = Mathf.FloorToInt(totalSeconds / 60f);
+        int seconds = Mathf.FloorToInt(totalSeconds % 60f);
+        int centiseconds = Mathf.FloorToInt((totalSeconds - Mathf.Floor(totalSeconds)) * 100f);
+
+        _timerLabel.text = $"{minutes:00}:{seconds:00}.{centiseconds:00}";
     }
 }

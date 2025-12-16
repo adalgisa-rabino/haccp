@@ -1,0 +1,8 @@
+2025-12-15T23:40:20.9085650Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-16T09:15:28.5988380Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-16T09:21:06.7460010Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-16T09:40:00.7930190Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-16T09:40:16.6817400Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-16T09:41:35.6782400Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-16T09:43:56.7884720Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-16T09:47:40.7660810Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
