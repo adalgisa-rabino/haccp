@@ -28,8 +28,8 @@ RectTransform:
   m_GameObject: {fileID: 7384119640644791096}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.99999976, y: 1, z: 0.99999976}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5504322503689131836}
   m_Father: {fileID: 0}
@@ -225,3 +225,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 0}
+  mainCoin: {fileID: 0}
+  coinBurstRoot: {fileID: 0}
+  miniCoinPrefab: {fileID: 0}
+  burstDuration: 0.6
+  scatterX: 20
+  travelY: 50
+  maxCoinsPerEvent: 10

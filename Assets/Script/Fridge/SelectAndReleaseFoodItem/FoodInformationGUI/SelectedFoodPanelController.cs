@@ -13,6 +13,7 @@ public class SelectedFoodPanelController : MonoBehaviour
 
     [Header("Preview 3D")]
     [SerializeField] private Transform previewAnchor;   // un empty davanti alla GUICamera, vicino al testo
+    [SerializeField] private Transform previewContainer; // contenitore neutro a scala 1 (figlio di previewAnchor)
     [SerializeField] private string previewLayerName = "SelectedFood3D";
     [SerializeField] private float previewRotationSpeed = 30f;
 
@@ -84,6 +85,12 @@ public class SelectedFoodPanelController : MonoBehaviour
         StartPopupAnimation(opening: true);
     }
 
+    public void Refresh()
+    {
+        if (currentFood != null)
+            SpawnPreview(currentFood);
+    }
+
     /// <summary>
     /// Nasconde popup e preview con animazione.
     /// </summary>
@@ -134,23 +141,34 @@ public class SelectedFoodPanelController : MonoBehaviour
         }
 
         GameObject prefab = null;
+
         if (food != null)
         {
-            if (food.previewPrefab != null)
-            {
-                prefab = food.previewPrefab;
-            }
-            else
-            {
-                // fallback: usa il GameObject dell'alimento
+            // Se è già confezionato, clona l'oggetto reale in scena per rispettare i visual attivi
+            if (!food.isUnpackaged)
                 prefab = food.gameObject;
-            }
+            else if (food.previewPrefab != null)
+                prefab = food.previewPrefab;
+            else
+                prefab = food.gameObject;
         }
+
 
         if (prefab == null)
             return;
 
-        currentPreviewInstance = Instantiate(prefab, previewAnchor.position, previewAnchor.rotation, previewAnchor);
+        // Se non è assegnato, usa previewAnchor come contenitore
+        if (previewContainer == null)
+            previewContainer = previewAnchor;
+
+        // Reset contenitore: qui puoi scalare tutto insieme senza alterare la scala interna del prefab
+        previewContainer.localPosition = Vector3.zero;
+        previewContainer.localRotation = Quaternion.identity;
+        previewContainer.localScale = Vector3.one;
+
+        currentPreviewInstance = Instantiate(prefab, previewContainer);
+        currentPreviewInstance.transform.localPosition = Vector3.zero;
+        currentPreviewInstance.transform.localRotation = Quaternion.identity;
 
         // se stai clonando l'oggetto di scena, rimuovi componenti che non servono (Rigidbody, Selectable, ecc.)
         var rb = currentPreviewInstance.GetComponent<Rigidbody>();
@@ -165,8 +183,8 @@ public class SelectedFoodPanelController : MonoBehaviour
             SetLayerRecursively(currentPreviewInstance, previewLayer);
         }
 
-        // reset scala locale a 1 (la regoli tu in editor sulla anchor)
-        currentPreviewInstance.transform.localScale = Vector3.one;
+        // OPZIONE 2: NON forziamo la scala della preview.
+        // La scala rimane quella del prefab. Se vuoi ridimensionare tutto, scala previewContainer/previewAnchor.
     }
 
     private void SetLayerRecursively(GameObject obj, int layer)

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7411a3e6552f815438c6dbd4c0738dfb
+timeCreated: 1508583450
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 101989
+  packageName: Menu Chalk Board
+  packageVersion: 1.1
+  assetPath: Assets/MenuBoard/DemoScene/demo.unity
+  uploadId: 240619

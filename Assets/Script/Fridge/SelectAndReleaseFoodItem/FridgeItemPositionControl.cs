@@ -5,7 +5,16 @@
 /// </summary>
 public class FridgeItemPositionControl : MonoBehaviour
 {
-    public static FridgeItemPositionControl Instance; 
+    public static FridgeItemPositionControl Instance;
+
+    [Header("HACCP - Punteggi Snap")]
+    [SerializeField] private int pointsCorrectFirstTime = 10;
+    [SerializeField] private int pointsCorrectAfterAlreadyRewarded = 0;
+    [SerializeField] private int pointsWrongShelf = -5;
+    [SerializeField] private int pointsSameZone = -1;
+    public static System.Action<FoodItem, FridgeSnapZone> OnAnySnapped;
+
+
 
     private void Awake()
     {
@@ -22,37 +31,73 @@ public class FridgeItemPositionControl : MonoBehaviour
         if (item == null || zone == null)
             return;
 
-        bool isCorrect = IsPlacementCorrect(item, zone);
+        // Se è già stato snappato almeno una volta e il ripiano è lo stesso → nessuna variazione punti
+        //if (item.hasBeenSnappedAtLeastOnce && item.lastSnappedArea == zone.area)
+        //{
+        //    Debug.Log($"[Frigo1] STESSO RIPIANO: {item.displayName} su {zone.area} → nessuna variazione HACCP");
+        //    return;
+        //}
 
-        int delta = isCorrect ? +10 : -5;
+        //if (item.hasBeenSnappedAtLeastOnce && item.lastSnappedArea == zone.area)
+        //{
+        //    int deltaSameZone = pointsSameZone; // es. -1 o -2 configurabile
+        //    HaccpScoreState.Instance?.AddScore(deltaSameZone);
 
-        if (HaccpScoreState.Instance != null)
+        //    if (logDebug)
+        //        Debug.Log($"[Frigo1] STESSO RIPIANO: {item.displayName} su {zone.area} (delta {deltaSameZone})");
+
+        //    return;
+        //}
+
+
+        bool isCorrectPosition = IsPlacementCorrect(item, zone);
+
+        // aggiorna stato posizione
+        item.isCorrectlyPlaced = isCorrectPosition;
+
+        // Punteggio: +10 solo la prima volta che va nel ripiano giusto, -5 se sbagliato
+        int delta;
+
+        if (isCorrectPosition)
         {
-            HaccpScoreState.Instance.AddScore(delta);
-            Debug.Log($"[Frigo1] {(isCorrect ? "CORRETTO" : "ERRORE")}: {item.displayName} su {zone.area}");
+            if (!item.hasReceivedCorrectPlacementReward)
+            {
+                delta = pointsCorrectFirstTime;
+                item.hasReceivedCorrectPlacementReward = true;
+            }
+            else
+            {
+                delta = pointsCorrectAfterAlreadyRewarded;
+            }
         }
         else
         {
-            Debug.LogWarning("[Frigo1] HaccpScoreState.Instance è null, score non aggiornato.");
+            delta = pointsWrongShelf;
         }
 
-            //se posizionamento corretto, questo alimento non è più selezionabile
-        if (isCorrect)
-        {
-            var selectable = item.GetComponent<Selectable>();
-            if (selectable != null)
-            {
-                selectable.LockSelection();
-            }
 
-            // 🔥 Qui notifichiamo a Fridge1State che un item corretto è stato posizionato
-            if (Fridge1State.Instance != null)
-            {
-                Fridge1State.Instance.NotifyCorrectPlacement(item);
-            }
-        }
+        if (HaccpScoreState.Instance != null)
+            HaccpScoreState.Instance.AddScore(delta);
+
+        Debug.Log($"[Frigo1] {(isCorrectPosition ? "POSIZIONE OK" : "POSIZIONE ERRATA")}: {item.displayName} su {zone.area} (delta {delta})");
+
+        // Aggiorna tracking ripiano
+        item.hasBeenSnappedAtLeastOnce = true;
+        item.lastSnappedArea = zone.area;
+
+        // Aggiorna indicatori
+        item.UpdateIndicators();
+
+        // Se ora è “HACCP ok”, allora si finalizza (lock + conteggio vittoria)
+        if (Fridge1State.Instance != null)
+            Fridge1State.Instance.TryFinalizeItem(item);
+
+        OnAnySnapped?.Invoke(item, zone);
 
     }
+
+
+
 
 
     private bool IsPlacementCorrect(FoodItem item, FridgeSnapZone zone)

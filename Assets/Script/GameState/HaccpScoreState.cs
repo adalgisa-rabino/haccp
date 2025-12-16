@@ -14,7 +14,8 @@ public class HaccpScoreState : MonoBehaviour
     public int Score { get; private set; }
 
     // Evento per aggiornare le UI di tutte le scene
-    public event Action<int> OnScoreChanged;
+    public System.Action<int> OnScoreChanged;
+    public System.Action<int> OnScoreDelta; // delta (+ o -)
     public event Action OnScoreDepleted;
 
     [Header("Debug")]
@@ -41,12 +42,20 @@ public class HaccpScoreState : MonoBehaviour
         if (Score < 0)
             Score = 0;
 
+        Debug.Log($"[HaccpScoreState] AddScore chiamato. delta={delta}, score prima={Score}");
+
         OnScoreChanged?.Invoke(Score);
+        OnScoreDelta?.Invoke(delta);
+
+        Debug.Log($"[HaccpScoreState] Eventi emessi. delta={delta}, score dopo={Score}");
+
 
         if (Score == 0)
         {
             Debug.Log("[HACCP] Punteggio a 0: gioco bloccato.");
-            OnScoreDepleted?.Invoke();
+            Debug.Log($"[HaccpScoreState] AddScore delta={delta}, Score={Score}");
+            OnScoreDelta?.Invoke(delta);
+
         }
     }
 

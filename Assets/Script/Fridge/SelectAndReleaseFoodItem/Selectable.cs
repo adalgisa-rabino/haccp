@@ -50,6 +50,7 @@ public class Selectable : MonoBehaviour, IPointerDownHandler
     bool isLocked = false; // nuovo: oggetto “definitivamente posizionato”
     public static bool GlobalInteractionBlocked = false; // per blocco totale gioco
 
+    public static System.Action<Selectable> OnAnySelected;
 
     private Vector3 originalScale;
 
@@ -124,6 +125,8 @@ public class Selectable : MonoBehaviour, IPointerDownHandler
         SelectObject(eventData.position);
         isSelected = true;
         CurrentSelected = this;
+        OnAnySelected?.Invoke(this);
+
     }
 
 
@@ -188,6 +191,44 @@ public class Selectable : MonoBehaviour, IPointerDownHandler
         }
 
    }
+
+    public void ConsumeToTrash()
+    {
+        Debug.Log($"[Selectable] ConsumeToTrash su {name}");
+
+        // Disattivo la selezione
+        isSelected = false;
+        if (CurrentSelected == this)
+            CurrentSelected = null;
+
+        // Chiudo subito il pannello (evita animazioni che poi si interrompono)
+        if (SelectedFoodPanelController.Instance != null)
+            SelectedFoodPanelController.Instance.HideImmediate();
+
+        // Stop fisica
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        // Disabilito collider per evitare interazioni
+        if (myCol != null)
+            myCol.enabled = false;
+
+        // Disabilito renderers (sparisce)
+        var rends = GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < rends.Length; i++)
+            rends[i].enabled = false;
+
+        // Disabilito lo script per sicurezza
+        this.enabled = false;
+
+        // Se preferisci: puoi proprio disattivare il GO
+        // gameObject.SetActive(false);
+    }
 
 
     /// <summary>

@@ -13,6 +13,11 @@ public class FridgeThermometerView : MonoBehaviour, IPointerDownHandler
     [Tooltip("Stato logico del frigo 1 (temperatura, carne, freeze).")]
     [SerializeField] private Fridge1State fridgeState;
 
+    [Header("Colori")]
+    [SerializeField] private Renderer temperatureRenderer;
+    [SerializeField] private Color normalColor = Color.red;
+    [SerializeField] private Color frozenColor = Color.cyan;
+
     [Tooltip("Cilindro rosso che rappresenta la colonna di temperatura.")]
     [SerializeField] private Transform temperatureCylinder;
 
@@ -29,10 +34,18 @@ public class FridgeThermometerView : MonoBehaviour, IPointerDownHandler
     private Vector3 baseScale;
     private Vector3 baseLocalPos;
 
+
+    private Material _mat;
+
+
     void Awake()
     {
         if (temperatureCylinder == null)
             temperatureCylinder = transform; // fallback
+
+        if (temperatureRenderer != null)
+            _mat = temperatureRenderer.material; // istanza materiale per questo oggetto
+
 
         baseScale = temperatureCylinder.localScale;      // es. (0.05, 0.14, 0.14)
         baseLocalPos = temperatureCylinder.localPosition;
@@ -56,6 +69,12 @@ public class FridgeThermometerView : MonoBehaviour, IPointerDownHandler
         Vector3 s = baseScale;
         s.y = newY;
         temperatureCylinder.localScale = s;
+
+        // Colore in base a freeze
+        if (_mat != null && fridgeState != null)
+        {
+            _mat.color = fridgeState.IsTemperatureFrozen ? frozenColor : normalColor;
+        }
 
         // 2) Compensa il pivot al centro: sposta il cilindro in su di metà
         //    della variazione di scala rispetto alla scala di riferimento.

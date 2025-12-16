@@ -72,6 +72,9 @@ public class Fridge1State : MonoBehaviour
     [Tooltip("Durata massima del blocco in secondi (0 = illimitato finché ci sono punti).")]
     [SerializeField] private float freezeMaxDuration = 0f;
 
+    public bool IsTemperatureFrozen => tempFrozen;
+
+
     // ---------------------------------------------------------------------
     // Luce di warning + luci ambiente (opzionale)
     // ---------------------------------------------------------------------
@@ -110,6 +113,15 @@ public class Fridge1State : MonoBehaviour
     private bool victoryUnlocked = false;
 
     // ---------------------------------------------------------------------
+    // Penalty
+    // ---------------------------------------------------------------------
+
+    [SerializeField] private int penaltyWrongShelfOnCheck = 5;
+    [SerializeField] private int penaltyUnpackagedOnCheck = 5;
+    [SerializeField] private int penaltyExpiredNotDiscardedOnCheck = 10;
+    [SerializeField] private int bonusPerfectCheck = 10;
+
+    // ---------------------------------------------------------------------
     // Debug / eventi
     // ---------------------------------------------------------------------
     [Header("Debug")]
@@ -128,6 +140,11 @@ public class Fridge1State : MonoBehaviour
     float freezeTimer;
     float freezeDurationTimer;
 
+
+    // --- Modalità tutorial temperatura ---
+    bool tutorialTempMode = false;
+    float normalTempIncreasePerSecondC;
+
     bool gameEnded = false;
 
     // ---------------------------------------------------------------------
@@ -145,6 +162,9 @@ public class Fridge1State : MonoBehaviour
 
     void Start()
     {
+
+        // Salva valore normale per ripristino dopo tutorial
+        normalTempIncreasePerSecondC = temperatureIncreasePerSecondC;
         // Inizializza slider
         if (temperatureSlider != null)
         {
@@ -205,12 +225,10 @@ public class Fridge1State : MonoBehaviour
         {
             HandleFreezeCost();
         }
-
-        if (currentTemperatureC >= failTemperatureC)
+        if (!tutorialTempMode && currentTemperatureC >= failTemperatureC)
         {
             HandleFridgeFail();
         }
-
         // 2. Deterioramento carne
         currentMeatDecay01 = Mathf.Clamp01(
             currentMeatDecay01 + meatDecayPerSecond01 * Time.deltaTime
@@ -251,6 +269,14 @@ public class Fridge1State : MonoBehaviour
         if (warningLight == null)
             return;
 
+
+        if (tutorialTempMode)
+        {
+            // In tutorial non mostriamo warning/fail visivi
+            warningLight.enabled = false;
+            DimAmbientLights(false);
+            return;
+        }
         // Zona di fallimento → luce accesa fissa
         if (currentTemperatureC >= failTemperatureC)
         {
@@ -381,6 +407,30 @@ public class Fridge1State : MonoBehaviour
     // ---------------------------------------------------------------------
     // API pubblica per freeze (chiamata da UI / termometro)
     // ---------------------------------------------------------------------
+
+    /// <summary>
+    /// Abilita/disabilita una modalità tutorial in cui:
+    /// - la temperatura cresce molto lentamente
+    /// - non viene mai innescato il fallimento per temperatura
+    /// - vengono disattivati warning light e dimming ambientale
+    /// </summary>
+    public void SetTutorialTemperatureMode(bool enabled, float tutorialIncreasePerSecondC = 0.01f)
+    {
+        tutorialTempMode = enabled;
+
+        if (enabled)
+        {
+            temperatureIncreasePerSecondC = Mathf.Max(0f, tutorialIncreasePerSecondC);
+        }
+        else
+        {
+            temperatureIncreasePerSecondC = normalTempIncreasePerSecondC;
+        }
+
+        HandleWarningLight(initial: true);
+        UpdateUI();
+    }
+
     public void SetTemperatureFreeze(bool value)
     {
         if (value == tempFrozen)
@@ -429,14 +479,26 @@ public class Fridge1State : MonoBehaviour
     {
         if (victoryUnlocked || gameEnded) return;
         if (requiredItems == null || requiredItems.Length == 0) return;
+        if (item == null) return;
 
         // verifica se l'item è tra quelli richiesti
         for (int i = 0; i < requiredItems.Length; i++)
         {
             if (requiredItems[i] == item)
-            {   
-                if(logDebug)
+            {
+                // Evita di contare lo stesso item più volte
+                if (item.hasBeenCountedCorrectly)
+                {
+                    if (logDebug)
+                        Debug.Log($"[Fridge1State] Item già conteggiato: {item.name}");
+                    break;
+                }
+
+                item.hasBeenCountedCorrectly = true;
+
+                if (logDebug)
                     Debug.Log($"[Fridge1State] Oggetto posizionato correttamente: {item.name}");
+
                 correctlyPlacedCount++;
                 break;
             }
@@ -445,18 +507,20 @@ public class Fridge1State : MonoBehaviour
         CheckVictory();
     }
 
+
+
     void CheckVictory()
     {
-        if (logDebug)
-            Debug.Log("hei sono nel checkvictory");
+        //if (logDebug)
+        //    Debug.Log("hei sono nel checkvictory");
 
         if (victoryUnlocked || gameEnded) return;
 
         bool allItemsPlaced = correctlyPlacedCount >= totalRequired;
         bool temperatureOk = currentTemperatureC < failTemperatureC;
         bool pointsOk = (HaccpScoreState.Instance != null && HaccpScoreState.Instance.Score > 0);
-        if (logDebug)
-            Debug.Log($"[Fridge1State] Verifica vittoria: ItemsPlaced={allItemsPlaced}, TempOk={temperatureOk}, PointsOk={pointsOk}");
+        //if (logDebug)
+        //    Debug.Log($"[Fridge1State] Verifica vittoria: ItemsPlaced={allItemsPlaced}, TempOk={temperatureOk}, PointsOk={pointsOk}");
 
 
         if (allItemsPlaced && temperatureOk && pointsOk)
@@ -493,7 +557,91 @@ public class Fridge1State : MonoBehaviour
         var rotator = spawnedKey.AddComponent<RotateKey>();
         rotator.rotationSpeed = keyRotationSpeed;
     }
+
+    public void TryFinalizeItem(FoodItem item)
+    {
+        if (item == null) return;
+        if (victoryUnlocked || gameEnded) return;
+
+        // Finalizza SOLO se è "corretto HACCP"
+        // (Serve che FoodItem abbia IsHaccpOk(), come abbiamo aggiunto)
+        if (!item.IsHaccpOk())
+            return;
+
+        // Blocca la selezione (niente farming / niente spostamenti)
+        var selectable = item.GetComponent<Selectable>();
+        if (selectable != null)
+            selectable.LockSelection();
+
+        // Conteggia per la vittoria UNA VOLTA
+        if (!item.hasBeenCountedCorrectly)
+        {
+            item.hasBeenCountedCorrectly = true;
+            NotifyCorrectPlacement(item);  // il tuo metodo, già con controllo anti-duplicato
+        }
+
+        // Aggiorna indicatori se li usi
+        item.UpdateIndicators();
+    }
+
+    public string CheckChallengeAndApplyScore()
+    {
+        if (requiredItems == null || requiredItems.Length == 0)
+            return "Nessun oggetto da controllare.";
+
+        int wrongShelf = 0;
+        int unpackagedPending = 0;
+        int expiredPending = 0;
+
+        foreach (var item in requiredItems)
+        {
+            if (item == null)
+                continue;
+
+            // Se è stato buttato correttamente, non genera errori
+            if (item.isDiscarded)
+                continue;
+
+            if (!item.isCorrectlyPlaced)
+                wrongShelf++;
+
+            if (item.isCorrectlyPlaced && item.isUnpackaged)
+                unpackagedPending++;
+
+            if (item.isExpired && !item.isDiscarded)
+                expiredPending++;
+        }
+
+        int penalty = 0;
+        penalty += wrongShelf * penaltyWrongShelfOnCheck;
+        penalty += unpackagedPending * penaltyUnpackagedOnCheck;
+        penalty += expiredPending * penaltyExpiredNotDiscardedOnCheck;
+
+        if (penalty > 0)
+            HaccpScoreState.Instance?.AddScore(-penalty);
+        else
+            HaccpScoreState.Instance?.AddScore(bonusPerfectCheck);
+
+        // Feedback livello 2 (categorie)
+        if (penalty > 0)
+        {
+            return
+                $"Controllo HACCP:\n" +
+                $"- Ripiani errati: {wrongShelf}\n" +
+                $"- Non impacchettati: {unpackagedPending}\n" +
+                $"- Scaduti da smaltire: {expiredPending}\n" +
+                $"Penalità: -{penalty}";
+        }
+        else
+        {
+            return "Controllo HACCP: tutto conforme ✔\nBonus applicato.";
+        }
+    }
+
+
 }
+
+
 
 /// <summary>
 /// Semplice rotazione continua attorno all'asse Y.

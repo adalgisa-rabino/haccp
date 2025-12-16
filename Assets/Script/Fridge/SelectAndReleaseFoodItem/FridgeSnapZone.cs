@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 public enum FridgeArea
 {
-    ShelfTop,        // ripiano alto
-    ShelfUpperMid,   // ripiano medio-alto
-    ShelfLowerMid,   // ripiano medio-basso
-    ShelfBottom,     // ripiano basso
-    Door             // scaffaliera porta
+    ShelfTop,
+    ShelfUpperMid,
+    ShelfLowerMid,
+    ShelfBottom,
+    Door
 }
 
 [ExecuteAlways]
@@ -20,13 +21,24 @@ public class FridgeSnapZone : MonoBehaviour, IPointerDownHandler
     public Color highlightColor = new Color(1f, 1f, 0f, 0.4f);
 
     [Header("GO da usare come riferimento per la Z di appoggio (es. il ripiano).")]
-    public Transform snapRoot;   // se null, userà il parent
+    public Transform snapRoot;
 
     [Header("Area logica del frigo (per HACCP)")]
     public FridgeArea area;
 
     private bool highlighted = false;
     private BoxCollider box;
+
+    // ====== NUOVO: highlight visivo in Game View ======
+    [Header("Highlight (Game View)")]
+    [SerializeField] private Renderer highlightRenderer; // assegna il Renderer del child HighlightPlane
+    [SerializeField] private string emissionColorProperty = "_EmissionColor";
+    [SerializeField] private float highlightDuration = 0.2f;
+    [SerializeField] private Color glowColor = new Color(1f, 1f, 0f, 1f);
+    [SerializeField] private float glowIntensity = 2.0f;
+
+    private Material highlightMatInstance;
+    private Coroutine glowRoutine;
 
     void Awake()
     {
@@ -36,9 +48,56 @@ public class FridgeSnapZone : MonoBehaviour, IPointerDownHandler
             Debug.LogError("FridgeSnapZone richiede un BoxCollider (trigger).", this);
             return;
         }
-
         box.isTrigger = true;
+
+        PrepareHighlightMaterial();
+        SetGlowActive(false);
     }
+
+    private void PrepareHighlightMaterial()
+    {
+        if (highlightRenderer == null) return;
+
+        // istanzia materiale per non toccare quello condiviso
+        highlightMatInstance = Application.isPlaying ? highlightRenderer.material : highlightRenderer.sharedMaterial;
+    }
+
+    private void SetGlowActive(bool active)
+    {
+        if (highlightMatInstance == null) return;
+
+        // Se il materiale supporta emission, accendiamo/spegniamo
+        if (active)
+        {
+            Color c = glowColor * glowIntensity;
+            highlightMatInstance.SetColor(emissionColorProperty, c);
+        }
+        else
+        {
+            highlightMatInstance.SetColor(emissionColorProperty, Color.black);
+        }
+    }
+
+    private IEnumerator GlowPulse()
+    {
+        SetGlowActive(true);
+        yield return new WaitForSeconds(highlightDuration);
+        SetGlowActive(false);
+        glowRoutine = null;
+    }
+
+    public void PlayGlow()
+    {
+        if (!Application.isPlaying) return;
+        if (highlightMatInstance == null) PrepareHighlightMaterial();
+        if (highlightMatInstance == null) return;
+
+        if (glowRoutine != null)
+            StopCoroutine(glowRoutine);
+
+        glowRoutine = StartCoroutine(GlowPulse());
+    }
+    // ====== FINE NUOVO ======
 
     public void SetHighlighted(bool active)
     {
@@ -67,11 +126,6 @@ public class FridgeSnapZone : MonoBehaviour, IPointerDownHandler
         return box.bounds;
     }
 
-    /// <summary>
-    /// Ritorna la coordinata di profondità del ripiano rispetto all'asse scelto (X o Z),
-    /// in base all'orientamento della camera.
-    /// Il nome resta GetTargetZ per compatibilità.
-    /// </summary>
     public float GetTargetZ(Camera cam)
     {
         Transform root = snapRoot;
@@ -79,22 +133,14 @@ public class FridgeSnapZone : MonoBehaviour, IPointerDownHandler
             root = transform.parent != null ? transform.parent : transform;
 
         if (cam == null) cam = Camera.main;
-        if (cam == null) return root.position.z; // fallback
+        if (cam == null) return root.position.z;
 
         Vector3 fwd = cam.transform.forward;
-
-        // se la camera guarda più lungo X che lungo Z → profondità = X
         bool useXAsDepth = Mathf.Abs(fwd.x) > Mathf.Abs(fwd.z);
 
         return useXAsDepth ? root.position.x : root.position.z;
     }
 
-    /// <summary>
-    /// Calcola la posizione di snap usando:
-    /// - profondità sull'asse (X o Z) più allineato alla forward della camera,
-    /// - l'altro asse preso dal click,
-    /// - Y dal ripiano.
-    /// </summary>
     public Vector3 GetSnapWorldPosition(Camera cam, Vector2 screenPos, float yOffset = 0.001f)
     {
         Camera usedCam = interactionCamera != null ? interactionCamera : cam;
@@ -104,15 +150,11 @@ public class FridgeSnapZone : MonoBehaviour, IPointerDownHandler
         if (root == null)
             root = transform.parent != null ? transform.parent : transform;
 
-        // 1. Decide quale asse del mondo usare come profondità in base alla camera
         Vector3 fwd = usedCam.transform.forward;
         bool useXAsDepth = Mathf.Abs(fwd.x) > Mathf.Abs(fwd.z);
 
         float depth = useXAsDepth ? root.position.x : root.position.z;
 
-        // 2. Costruisce il piano di snap:
-        //    - se uso X come profondità → piano X = depth
-        //    - se uso Z come profondità → piano Z = depth
         Ray ray = usedCam.ScreenPointToRay(screenPos);
         Plane plane = useXAsDepth
             ? new Plane(Vector3.right, new Vector3(depth, 0f, 0f))
@@ -121,26 +163,18 @@ public class FridgeSnapZone : MonoBehaviour, IPointerDownHandler
         if (plane.Raycast(ray, out float enter))
         {
             Vector3 pos = ray.GetPoint(enter);
-
-            // 3. Y dal ripiano + offset
             pos.y = root.position.y + yOffset;
-
             return pos;
         }
 
-        // fallback
         return root.position;
     }
 
-
-
-
-    /// <summary>
-    /// Quando clicco/tocco la SnapZone, se c'è un Selectable selezionato,
-    /// gli chiedo di rilasciarsi su questa zona usando la posizione del click.
-    /// </summary>
     public void OnPointerDown(PointerEventData eventData)
     {
+        // Glow sempre quando clicchi
+        PlayGlow();
+
         if (Selectable.CurrentSelected == null)
             return;
 
