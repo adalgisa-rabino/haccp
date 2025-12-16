@@ -1,5 +1,9 @@
 fileFormatVersion: 2
-guid: 4733c9f16a5427a4a853f92252b683d2
+<<<<<<<< HEAD:Assets/Resources/Sprite/bg.png.meta
+guid: 891c56235d4304127be25948545e0a04
+========
+guid: e6c23257628a841e884e43b47586aec6
+>>>>>>>> feature/player-wasd-teleport:Assets/Graphics/temperatureMiniGame/png-clipart-isosceles-triangle-equilateral-triangle-shape-pyramid-angle-triangle-thumbnail.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
-guid: 8597ecb54c3bb4f699781e5ca8f263a2
+<<<<<<<< HEAD:Assets/Graphics/Word Finder/GameScreen/Back.png.meta
+guid: 89a287c7a6fb54713801326febe959f6
+========
+guid: 78ccf0d3a0d504054899a5bd55e1e87c
+>>>>>>>> feature/player-wasd-teleport:Assets/Graphics/temperatureMiniGame/c2ea14d8a8fa3f3a8501e84286f29cd9.jpg.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
