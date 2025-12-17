@@ -198582,6 +198582,8 @@ GameObject:
   - component: {fileID: 1999200059365252208}
   - component: {fileID: 3237788882105160515}
   - component: {fileID: 792700367}
+  - component: {fileID: 4672447408332914344}
+  - component: {fileID: 4672447408332914343}
   m_Layer: 0
   m_Name: SM_Fridge_1_d_1
   m_TagString: Untagged
@@ -198828,6 +198830,42 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3901787339750679632}
   m_Mesh: {fileID: -2334188039125832417, guid: ecc8b5bea8d0dbf43a9cc1abff5bfd54, type: 3}
+--- !u!95 &4672447408332914343
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3901787339750679632}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c8d026466a1c0f14d8c9b153c91e7075, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4672447408332914344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3901787339750679632}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66fe8a94a38317346ae40f76de5e95f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 4672447408332914343}
+  openTriggerName: Open
 --- !u!1 &4784520592981824493
 GameObject:
   m_ObjectHideFlags: 0
@@ -199718,6 +199756,8 @@ GameObject:
   - component: {fileID: 7241969963622619421}
   - component: {fileID: 7455609277173406480}
   - component: {fileID: 1767239006}
+  - component: {fileID: 7588847886719238121}
+  - component: {fileID: 7588847886719238122}
   m_Layer: 0
   m_Name: SM_Fridge_1_d_2
   m_TagString: Untagged
@@ -199725,6 +199765,42 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
+--- !u!114 &7588847886719238121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7588847886719238120}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66fe8a94a38317346ae40f76de5e95f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 7588847886719238122}
+  openTriggerName: Open
+--- !u!95 &7588847886719238122
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7588847886719238120}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bcee952f67fe4c84783cdb63a03fc867, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!23 &7738526587779113158
 MeshRenderer:
   m_ObjectHideFlags: 0
