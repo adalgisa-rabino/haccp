@@ -1,38 +1,15 @@
 using UnityEngine;
 
-public enum DoorSide { Left, Right }
-
-[RequireComponent(typeof(Collider))]
-public class FridgeDoorController : MonoBehaviour
+public class FridgeDoorAutoOpen : MonoBehaviour
 {
     [SerializeField] private Animator animator;
+    [SerializeField] private string openTriggerName = "Open";
 
-    // Indica se questa porta � la destra o la sinistra
-    [SerializeField] private DoorSide side;
-
-    private bool isOpen;
-    private Collider col;
-
-    void Awake()
+    void Start()
     {
-        col = GetComponent<Collider>();
+        if (animator == null)
+            animator = GetComponent<Animator>();
 
-        // Porta inizialmente chiusa
-        isOpen = false;
-        animator.SetBool("Open", false);
-
-        // Forza lo stato "chiuso" corretto al frame finale
-        if (side == DoorSide.Right)
-            animator.Play("FridgeRightDoorClosed", 0, 1f);
-        else
-            animator.Play("FridgeLeftDoorClosed", 0, 1f);
-
-        animator.Update(0f);
-    }
-
-    void OnMouseDown()
-    {
-        isOpen = !isOpen;
-        animator.SetBool("Open", isOpen);
+        animator.SetTrigger(openTriggerName);
     }
 }

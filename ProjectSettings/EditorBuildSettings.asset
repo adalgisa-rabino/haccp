@@ -8,12 +8,18 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/CalibrationScene.unity
     guid: 704bede1fe479304288dc8d8ef4efdd8
-  - enabled: 0
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: abe3a5d2c568f412ca72dea2f85368e1
+  - enabled: 1
     path: Assets/Scenes/RestaurantScene.unity
     guid: eec3e9acacb38d2408888a50e47dc369
   - enabled: 1
     path: Assets/Scenes/FridgeScene.unity
     guid: c5d0af2d403a07f4281aada85e768703
+  - enabled: 1
+    path: Assets/Scenes/Hand Washing.unity
+    guid: 66ac43d5413624546baafc0dff16e98c
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260, type: 2}
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: dc5a169419fa04987b057f65238cf3ba, type: 2}
