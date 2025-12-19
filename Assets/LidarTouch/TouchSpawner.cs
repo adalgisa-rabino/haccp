@@ -1,14 +1,22 @@
 ﻿using LidarTouch.Core.Tracking;
 using LidarTouch.Unity;
+using System;
+using System.Collections.Generic; // Added for Dictionary and Queue
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Collections.Generic; // Added for Dictionary and Queue
 
 public class TouchSpawner : StandaloneInputModule
 {
     public DebugClickDot debugClickDot;
     private Dictionary<int, int> lidarIdToFingerId = new Dictionary<int, int>();
     private Queue<int> freeFingerIds = new Queue<int>();
+
+    private CalibrationOrder currentOrder;
+    private Dictionary<CalibrationOrder, Vector2> calibrationPoints = new();
+    public bool Calibrating { get; set; }
+    public bool NeedsCalibration { get; private set; }
+    public string CalibrationFilePath = "calibration.json";
+
 
     protected override void OnEnable()
     {
@@ -18,10 +26,26 @@ public class TouchSpawner : StandaloneInputModule
         {
             freeFingerIds.Enqueue(i);
         }
+        var file = System.IO.Path.Combine(Application.persistentDataPath, CalibrationFilePath);
+        if (System.IO.File.Exists(file))
+        {
+            var fileContents = System.IO.File.ReadAllText(file);
+            calibrationPoints = JsonUtility.FromJson<Dictionary<CalibrationOrder, Vector2>>(fileContents);
+            Calibrating = false;
+            NeedsCalibration = false;
+            Debug.Log($"[TouchSpawner] Calibration file found at {file}. Calibration not needed.");
+        }
+        else
+        {
+            Calibrating = true;
+            NeedsCalibration = true;
+            Debug.Log($"[TouchSpawner] Calibration file not found at {file}. Starting calibration.");
+        }
     }
 
     Vector2 RemapProjectorPositionToScreenPosition(Vector2 projectorPosition)
     {
+        // Usare la mappatura calibrata se disponibile
         var screenWidth = Screen.width;
         var screenHeight = Screen.height;
         var x = (projectorPosition.x / 2500.0f) * screenWidth;
@@ -130,9 +154,54 @@ public class TouchSpawner : StandaloneInputModule
         }
     }
 
+    enum CalibrationOrder
+    {
+        None,
+        TopLeft,
+        TopCenter,
+        TopRight,
+        MiddleLeft,
+        MiddleCenter,
+        MiddleRight,
+        BottomLeft,
+        BottomCenter,
+        BottomRight,
+        Finished
+    }
+
+    public void StartCalibration()
+    {
+        Calibrating = true;
+        currentOrder = CalibrationOrder.TopLeft;
+        calibrationPoints.Clear();
+    }
+
+    [Serializable]
+    public sealed class CalibrationFinishedEvent : UnityEngine.Events.UnityEvent { }
+
+    public CalibrationFinishedEvent OnCalibrationFinished;
+
     public void HandleTouch(LidarTouchUnityDriver.UnityGestureEvent evt)
     {
-        var screenPos = RemapProjectorPositionToScreenPosition(evt.Position);
-        ClickAt(screenPos, evt.Type, evt.TrackId);
+        if (Calibrating)
+        {
+            calibrationPoints[currentOrder] = evt.Position;
+            currentOrder++;
+            if (currentOrder == CalibrationOrder.Finished)
+            {
+                var file = System.IO.Path.Combine(Application.persistentDataPath, CalibrationFilePath);
+                var fileContents = JsonUtility.ToJson(calibrationPoints, true);
+                System.IO.File.WriteAllText(file, fileContents);
+                Calibrating = false;
+                NeedsCalibration = false;
+                OnCalibrationFinished?.Invoke();
+                Debug.Log("Calibration completed.");
+            }
+        }
+        else
+        {
+            var screenPos = RemapProjectorPositionToScreenPosition(evt.Position);
+            ClickAt(screenPos, evt.Type, evt.TrackId);
+        }
     }
 }

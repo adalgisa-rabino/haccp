@@ -134,7 +134,7 @@ namespace LidarTouch.Unity
                 EnableDebugLogging = true,
                 LogToConsole = false,
                 // Percorso del file di log (puoi modificarlo in base alle tue esigenze)
-                LogFilePath = "C:\\Users\\adalgisa rabino\\Desktop\\lidartouch_log.txt"
+                LogFilePath = "lidartouchLog.txt"
             }
         };
 
