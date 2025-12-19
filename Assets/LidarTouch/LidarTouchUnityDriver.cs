@@ -12,7 +12,6 @@ namespace LidarTouch.Unity
 {
     public enum CalibrationOrder
     {
-        None,
         TopLeft,
         TopCenter,
         TopRight,
@@ -35,9 +34,9 @@ namespace LidarTouch.Unity
             if (System.IO.File.Exists(file))
             {
                 var fileContents = System.IO.File.ReadAllText(file);
-                var points = JsonUtility.FromJson<Dictionary<CalibrationOrder, Vector2>>(fileContents);
+                var points = JsonUtility.FromJson<CalibrationWrapper>(fileContents);
                 Debug.Log($"[TouchSpawner] Calibration file found at {file}. Calibration not needed.");
-                return points;
+                return points.ToDictionary();
             }
             else
             {
@@ -49,7 +48,7 @@ namespace LidarTouch.Unity
         public static void SaveCalibration(Dictionary<CalibrationOrder, Vector2> points)
         {
             var file = System.IO.Path.Combine(Application.persistentDataPath, CalibrationFilePath);
-            var fileContents = JsonUtility.ToJson(points);
+            var fileContents = JsonUtility.ToJson(new CalibrationWrapper(points));
             System.IO.File.WriteAllText(file, fileContents);
             Debug.Log($"[TouchSpawner] Calibration file saved at {file}.");
         }
