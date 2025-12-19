@@ -110,10 +110,6 @@ public class TemperatureController : MonoBehaviour
             }
 
             
-            
-
-           
-            
             if (_maxSlider != null)
             {
                 Debug.Log("Sbloccato slider MAX");
@@ -126,11 +122,16 @@ public class TemperatureController : MonoBehaviour
                 // mi assicuro che il triangolino rosso del MAX sia acceso
                 if (_maxSlider.handleRect != null)
                 {
+
                     Debug.Log("Attivato triangolino rosso MAX");
-                    _maxSlider.handleRect.gameObject.SetActive(true);}
+                    _maxSlider.handleRect.gameObject.SetActive(true);
+
+                }
                 else
                 {
+
                     Debug.LogWarning("HandleRect del MAX Slider è null!");
+
                 }
             }
 
@@ -152,13 +153,16 @@ public class TemperatureController : MonoBehaviour
         _maxCorrect = Mathf.Abs(newValue - _correctMaxTemperature) <= _tolerance;
 
         if(_maxCorrect)
+
         {
             Debug.Log("Temperatura MAX indovinata!");
 
             // blocca il triangolino rosso alla temperatura trovata
             _maxSlider.interactable = false;
 
-            if(_correctMaxHandle != null){
+            if(_correctMaxHandle != null)
+            
+            {
 
                 // salva la posizione del triangolino rosso
                 Vector3 oldPos = _maxSlider.handleRect.localPosition;
@@ -175,9 +179,9 @@ public class TemperatureController : MonoBehaviour
 
         
         }
+
         // il text ora mostra la temperatura massima che stai scegliendo
         UpdateTemperatureLabel(newValue + 5f);
-
         CheckWin();
     }
 
@@ -191,6 +195,7 @@ public class TemperatureController : MonoBehaviour
 
         if (_minCorrect && _maxCorrect)
         {
+
             _alreadyWon = true;
             _temperatureLabel.text = "CORRETTO!";
             Debug.Log("Hai indovinato MIN e MAX!");
@@ -235,7 +240,7 @@ public class TemperatureController : MonoBehaviour
             tick.anchorMin = aMin;
             tick.anchorMax = aMax;
 
-            tick.anchoredPosition = new Vector2(0f, tick.anchoredPosition.y);
+            tick.anchoredPosition = new Vector2(tick.anchoredPosition.y, 0f);
         }
     }
 
