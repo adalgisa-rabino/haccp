@@ -24522,6 +24522,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2132413437964740725, guid: a5a8048c3779dc640a256746ce776b0d, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: ed44f5ab7739a93469283fd527417518, type: 2}
+    - target: {fileID: 2132413437964740725, guid: a5a8048c3779dc640a256746ce776b0d, type: 3}
       propertyPath: m_FadeFactor
       value: 0.551
       objectReference: {fileID: 0}
@@ -24537,6 +24541,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0.4404496
       objectReference: {fileID: 0}
+    - target: {fileID: 4629192897928924596, guid: a5a8048c3779dc640a256746ce776b0d, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: ed44f5ab7739a93469283fd527417518, type: 2}
     - target: {fileID: 4629192897928924596, guid: a5a8048c3779dc640a256746ce776b0d, type: 3}
       propertyPath: m_FadeFactor
       value: 0.344
