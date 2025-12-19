@@ -1,14 +1,58 @@
-using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
 using LidarTouch.Core.Configuration;
 using LidarTouch.Core.Integration;
 using LidarTouch.Core.Tracking;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace LidarTouch.Unity
 {
+    public enum CalibrationOrder
+    {
+        TopLeft,
+        TopCenter,
+        TopRight,
+        MiddleLeft,
+        MiddleCenter,
+        MiddleRight,
+        BottomLeft,
+        BottomCenter,
+        BottomRight,
+        Finished
+    }
+
+    public static class LidarConstants
+    {
+        public const string CalibrationFilePath = "calibration.json";
+
+        public static Dictionary<CalibrationOrder, Vector2> LoadCalibration()
+        {
+            var file = System.IO.Path.Combine(Application.persistentDataPath, CalibrationFilePath);
+            if (System.IO.File.Exists(file))
+            {
+                var fileContents = System.IO.File.ReadAllText(file);
+                var points = JsonUtility.FromJson<CalibrationWrapper>(fileContents);
+                Debug.Log($"[TouchSpawner] Calibration file found at {file}. Calibration not needed.");
+                return points.ToDictionary();
+            }
+            else
+            {
+                Debug.Log($"[TouchSpawner] Calibration file not found at {file}. Starting calibration.");
+                return new();
+            }
+        }
+
+        public static void SaveCalibration(Dictionary<CalibrationOrder, Vector2> points)
+        {
+            var file = System.IO.Path.Combine(Application.persistentDataPath, CalibrationFilePath);
+            var fileContents = JsonUtility.ToJson(new CalibrationWrapper(points));
+            System.IO.File.WriteAllText(file, fileContents);
+            Debug.Log($"[TouchSpawner] Calibration file saved at {file}.");
+        }
+    }
     // Componente Unity che gestisce la comunicazione tra il LidarTouch e Unity
     public sealed class LidarTouchUnityDriver : MonoBehaviour
     {
@@ -134,7 +178,7 @@ namespace LidarTouch.Unity
                 EnableDebugLogging = true,
                 LogToConsole = false,
                 // Percorso del file di log (puoi modificarlo in base alle tue esigenze)
-                LogFilePath = "C:\\Users\\adalgisa rabino\\Desktop\\lidartouch_log.txt"
+                LogFilePath = "lidartouchLog.txt"
             }
         };
 

@@ -1,14 +1,17 @@
 ﻿using LidarTouch.Core.Tracking;
 using LidarTouch.Unity;
+using System;
+using System.Collections.Generic; // Added for Dictionary and Queue
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Collections.Generic; // Added for Dictionary and Queue
 
-public class TouchSpawner : StandaloneInputModule
+public class TouchSpawner : StandaloneInputModule, INeedsCalibration
 {
     public DebugClickDot debugClickDot;
     private Dictionary<int, int> lidarIdToFingerId = new Dictionary<int, int>();
     private Queue<int> freeFingerIds = new Queue<int>();
+
+    public Dictionary<CalibrationOrder, Vector2> CalibrationPoints { get; set; }
 
     protected override void OnEnable()
     {
@@ -18,10 +21,12 @@ public class TouchSpawner : StandaloneInputModule
         {
             freeFingerIds.Enqueue(i);
         }
+        CalibrationPoints = LidarConstants.LoadCalibration();
     }
 
     Vector2 RemapProjectorPositionToScreenPosition(Vector2 projectorPosition)
     {
+        // Usare calibrationPoints.
         var screenWidth = Screen.width;
         var screenHeight = Screen.height;
         var x = (projectorPosition.x / 2500.0f) * screenWidth;
