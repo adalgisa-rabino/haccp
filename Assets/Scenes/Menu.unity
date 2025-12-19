@@ -553,10 +553,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneMenu: 0
-  sceneIntro: 4
-  sceneRistorante: 1
-  sceneMinigioocoLavandino: 3
-  sceneMinigiocoFrigo: 2
+  sceneIntro: 1
+  sceneRistorante: 2
+  sceneMinigioocoLavandino: 4
+  sceneMinigiocoFrigo: 3
 --- !u!1 &1317141229
 GameObject:
   m_ObjectHideFlags: 0

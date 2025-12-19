@@ -99,7 +99,7 @@ public sealed class GameManager : MonoBehaviour
         OnProgressChanged?.Invoke();
 
         //MODIFICO QUI E INSERISCO SCENA DI INTRODUZIONE 
-        LoadScene(sceneRistorante);
+        LoadScene(sceneIntro);
     }
 
     public void QuitGame()

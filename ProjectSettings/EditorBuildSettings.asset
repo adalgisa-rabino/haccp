@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: abe3a5d2c568f412ca72dea2f85368e1
   - enabled: 1
+    path: Assets/Scenes/Intro.unity
+    guid: a7f83bbfdf02d8f4e85edba06290104b
+  - enabled: 1
     path: Assets/Scenes/RestaurantScene.unity
     guid: eec3e9acacb38d2408888a50e47dc369
   - enabled: 1
