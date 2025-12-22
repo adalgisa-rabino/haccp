@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DialogTrigger : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class DialogTrigger : MonoBehaviour
     {
         public int actorId;
         [TextArea(2, 6)]
-        
+
         public string text;
     }
 
@@ -33,9 +34,18 @@ public class DialogTrigger : MonoBehaviour
 
     void Start()
     {
-        if (playOnStart && dialogManager != null)
-        {
-            dialogManager.OpenDialogue(actors, messages);
-        }
+        //il dialogo parte automaticamente ==> devo 
+        if (playOnStart)
+            PlayDialogue();
+    }
+
+    //per far partire manualmente il dialogo 
+
+    public void PlayDialogue()
+    {
+        if (dialogManager == null) return;
+        if (dialogManager.IsActive) return;
+
+        dialogManager.OpenDialogue(actors, messages);
     }
 }
