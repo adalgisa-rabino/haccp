@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class KitchenPointer : MonoBehaviour, IPointerDownHandler
+public class KitchenPointer : MonoBehaviour, IPointerUpHandler
 {
     public enum Target
     {
@@ -12,7 +12,7 @@ public class KitchenPointer : MonoBehaviour, IPointerDownHandler
     [SerializeField] private Target target;
     [SerializeField] private GameManager gameManager;
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void OnPointerUp(PointerEventData eventData)
     {
         if (gameManager == null) gameManager = GameManager.Instance;
 

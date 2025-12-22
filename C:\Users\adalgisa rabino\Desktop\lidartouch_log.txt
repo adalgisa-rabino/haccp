@@ -54,3 +54,22 @@
 2025-12-22T10:25:50.0168120Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
 2025-12-22T10:26:41.2433620Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
 2025-12-22T10:27:16.1701940Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T11:02:14.5131180Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T11:10:28.0454860Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T11:10:57.5275520Z [udp] Received 23 bytes from 192.168.0.151:62210: 02 52 50 4C 49 44 41 52 5F 53 33 00 00 00 00 00 00 C0 A8 00 97 0D 05
+2025-12-22T11:10:57.5287140Z [udp] Discovered device 'RPLIDAR_S3' (192.168.0.151:3333)
+2025-12-22T11:10:57.5322930Z [tcp] Connecting to 192.168.0.151:3333
+2025-12-22T11:10:57.9162330Z [tcp] Connected to 192.168.0.151:3333
+2025-12-22T11:15:29.3579370Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T11:19:01.4133380Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T11:19:14.7648770Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T11:19:36.7678900Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T11:27:57.0756650Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T11:39:12.4783600Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T14:01:34.8503440Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T14:02:32.1107630Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T14:02:51.1992830Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T14:03:44.8280690Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T14:09:22.6826130Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T14:25:22.3280760Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
+2025-12-22T14:36:21.1144860Z [logger] Debug logging enabled. File='C:\Users\adalgisa rabino\Desktop\lidartouch_log.txt', Console=False
