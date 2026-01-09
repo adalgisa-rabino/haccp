@@ -1,5 +1,6 @@
 using UnityEngine;
 using LidarTouch.Core.Tracking;
+using LidarTouch.Unity;
 using System;
 
 public class FakeLidarGestureSource : MonoBehaviour

@@ -1,173 +1,117 @@
-﻿using LidarTouch.Core.Configuration;
-using LidarTouch.Core.Integration;
-using LidarTouch.Core.Tracking;
 using System;
-using System.IO;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using LidarTouch.Core.Configuration;
+using LidarTouch.Core.Integration;
+using LidarTouch.Core.Tracking;
 using UnityEngine;
 
-
-/// <summary>
-/// Gestisce la comunicazione tra il LidarTouch e Unity
-/// </summary>
-public sealed class LidarTouchUnityDriver : MonoBehaviour
+namespace LidarTouch.Unity
 {
-    [Header("Discovery Settings")]
-    // Se true, prova a individuare automaticamente il dispositivo Lidar in rete
-    public bool EnableDiscovery = true;
-    // Porta di broadcast usata per la discovery (UDP)
-    public int BroadcastPort = 8000;
-    // Tipo di dispositivo (codice definito dalla libreria LidarTouch)
-    public byte DeviceType = 2;
-
-    [Header("Network Settings")]
-    // Indirizzo IP o hostname del dispositivo / server Lidar
-    public string Host = "127.0.0.1";
-    // Porta TCP su cui il Lidar / server è in ascolto
-    public int Port = 2112;
-    // Dimensione del buffer di ricezione in byte
-    public int ReceiveBufferSize = 64 * 1024;
-
-    [Header("Tracking Settings")]
-    // Frequenza di aggiornamento del tracking (frame al secondo)
-    public double FrameRate = 110;
-
-    [Header("Events")]
-    // Evento Unity che viene invocato ogni volta che viene ricevuto un gesto dal Lidar
-    public UnityEventGesture OnTouch;
-
-    // Client che gestisce la comunicazione con il sistema LidarTouch
-    private UnityTouchClient? _client;
-    // Sorgente del token di cancellazione per fermare il client asincrono
-    private CancellationTokenSource? _cts;
-    // Coda thread-safe che contiene i GestureEvent in attesa di essere processati nel main thread
-    private readonly ConcurrentQueue<GestureEvent> _pending = new();
-
-    // Chiamato quando il componente viene abilitato (ad esempio quando il GameObject viene attivato)
-    private void OnEnable()
+    public sealed class LidarTouchUnityDriver : MonoBehaviour
     {
-        // Costruisce le impostazioni di progetto partendo dai campi pubblici
-        var settings = BuildSettings();
+        [Header("Discovery Settings")]
+        public bool EnableDiscovery = true;
+        public int BroadcastPort = 8000;
+        public byte DeviceType = 2;
 
-        // Crea il client che comunicherà con il Lidar
-        _client = new UnityTouchClient(settings);
+        [Header("Network Settings")]
+        public string Host = "127.0.0.1";
+        public int Port = 2112;
+        public int ReceiveBufferSize = 64 * 1024;
 
-        // Si sottoscrive all'evento che segnala l'arrivo di un gesto
-        _client.GestureReceived += OnGesture;
+        [Header("Tracking Settings")]
+        public double FrameRate = 60;
 
-        // Crea una sorgente di token di cancellazione per fermare il client in modo controllato
-        _cts = new CancellationTokenSource();
+        [Header("Events")]
+        public UnityEventGesture OnTouch;
 
-        // Avvia il client in maniera asincrona
-        // Il risultato del task non viene usato, per questo è assegnato a "_ ="
-        _ = _client.StartAsync(_cts.Token);
-    }
+        private UnityTouchClient? _client;
+        private CancellationTokenSource? _cts;
+        private readonly ConcurrentQueue<GestureEvent> _pending = new();
 
-    // Chiamato quando il componente viene disabilitato (es. GameObject disattivato o scena cambiata)
-    private void OnDisable()
-    {
-        // Chiede al task asincrono di fermarsi
-        _cts?.Cancel();
-
-        if (_client is not null)
+        private void OnEnable()
         {
-            // Ferma il client in modo sincrono, aspettando la conclusione del task
-            _client.StopAsync().GetAwaiter().GetResult();
-
-            // Rimuove la sottoscrizione all'evento dei gesti
-            _client.GestureReceived -= OnGesture;
-
-            // Libera il riferimento al client
-            _client = null;
+            var settings = BuildSettings();
+            _client = new UnityTouchClient(settings);
+            _client.GestureReceived += OnGesture;
+            _cts = new CancellationTokenSource();
+            _ = _client.StartAsync(_cts.Token);
         }
 
-        // Rilascia le risorse del CancellationTokenSource
-        _cts?.Dispose();
-        _cts = null;
-
-        // Svuota eventuali eventi ancora in coda
-        while (_pending.TryDequeue(out _)) { }
-    }
-
-    // Viene chiamato ogni frame dal main thread di Unity
-    private void Update()
-    {
-        // Processa tutti i gesti in attesa nella coda
-        while (_pending.TryDequeue(out var gesture))
+        private void OnDisable()
         {
-            // Converte il GestureEvent in un UnityGestureEvent (tipo serializzabile con Vector2, ecc.)
-            // e invoca l'evento Unity OnTouch, se qualcuno è iscritto
-            OnTouch?.Invoke(new UnityGestureEvent(gesture));
-        }
-    }
+            _cts?.Cancel();
+            if (_client is not null)
+            {
+                _client.StopAsync().GetAwaiter().GetResult();
+                _client.GestureReceived -= OnGesture;
+                _client = null;
+            }
 
-    // Handler chiamato dal client quando riceve un gesto dal Lidar
-    // ATTENZIONE: viene eseguito su un thread in background, non sul main thread di Unity
-    private void OnGesture(object? sender, GestureEvent e)
-    {
-        // Non si toccano direttamente gli oggetti Unity qui, ma si mette l'evento in coda
-        // per poi essere processato nel metodo Update (che gira sul main thread)
-        _pending.Enqueue(e);
-    }
-
-    // Costruisce l'oggetto ProjectSettings usando i valori configurati nell'Inspector
-    private ProjectSettings BuildSettings() => new()
-    {
-        Discovery = new DiscoverySettings
-        {
-            EnableDiscovery = EnableDiscovery,
-            BroadcastPort = BroadcastPort,
-            DeviceType = DeviceType
-        },
-        Network = new NetworkSettings
-        {
-            Host = Host,
-            Port = Port,
-            ReceiveBufferSize = ReceiveBufferSize
-        },
-        Tracking = new TrackingSettings
-        {
-            FrameRate = FrameRate
-        },
-        Logging = new LoggingSettings
-        {
-            EnableDebugLogging = true,
-            LogToConsole = false,
-            // Percorso del file di log (puoi modificarlo in base alle tue esigenze)
-            LogFilePath = "lidartouchLog.txt"
-        }
-    };
-
-    // Tipo di evento Unity personalizzato che trasporta un UnityGestureEvent
-    [Serializable]
-    public sealed class UnityEventGesture : UnityEngine.Events.UnityEvent<UnityGestureEvent> { }
-
-    // Struttura serializzabile che rappresenta un gesto in un formato comodo per Unity
-    [Serializable]
-    public readonly struct UnityGestureEvent
-    {
-        // Costruttore che copia i dati da un GestureEvent della libreria LidarTouch
-        public UnityGestureEvent(GestureEvent gesture)
-        {
-            Type = gesture.Type;
-            TrackId = gesture.TrackId;
-            Position = new Vector2(gesture.Position.X, gesture.Position.Y);
-            Velocity = new Vector2(gesture.Velocity.X, gesture.Velocity.Y);
-            TimestampUtc = gesture.TimestampUtc;
+            _cts?.Dispose();
+            _cts = null;
+            while (_pending.TryDequeue(out _)) { }
         }
 
-        // Tipo di gesto (es. down, move, up, ecc.)
-        public GestureType Type { get; }
-        // Identificatore della traccia (utile per multi-touch)
-        public int TrackId { get; }
-        // Posizione del gesto in coordinate 2D
-        public Vector2 Position { get; }
-        // Velocità del gesto in coordinate 2D
-        public Vector2 Velocity { get; }
-        // Istante temporale (UTC) in cui il gesto è stato rilevato
-        public DateTime TimestampUtc { get; }
+        private void Update()
+        {
+            while (_pending.TryDequeue(out var gesture))
+            {
+                OnTouch?.Invoke(new UnityGestureEvent(gesture));
+            }
+        }
+
+        private void OnGesture(object? sender, GestureEvent e)
+        {
+            _pending.Enqueue(e);
+        }
+
+        private ProjectSettings BuildSettings() => new()
+        {
+            Discovery = new DiscoverySettings
+            {
+                EnableDiscovery = EnableDiscovery,
+                BroadcastPort = BroadcastPort,
+                DeviceType = DeviceType
+            },
+            Network = new NetworkSettings
+            {
+                Host = Host,
+                Port = Port,
+                ReceiveBufferSize = ReceiveBufferSize
+            },
+            Tracking = new TrackingSettings
+            {
+                FrameRate = FrameRate
+            },
+            Baseline = new BaselineSettings
+            {
+                EnableBaselineSuppression = false
+            }
+        };
+
+        [Serializable]
+        public sealed class UnityEventGesture : UnityEngine.Events.UnityEvent<UnityGestureEvent> { }
+
+        [Serializable]
+        public readonly struct UnityGestureEvent
+        {
+            public UnityGestureEvent(GestureEvent gesture)
+            {
+                Type = gesture.Type;
+                TrackId = gesture.TrackId;
+                Position = new Vector2(gesture.Position.X, gesture.Position.Y);
+                Velocity = new Vector2(gesture.Velocity.X, gesture.Velocity.Y);
+                TimestampUtc = gesture.TimestampUtc;
+            }
+
+            public GestureType Type { get; }
+            public int TrackId { get; }
+            public Vector2 Position { get; }
+            public Vector2 Velocity { get; }
+            public DateTime TimestampUtc { get; }
+        }
     }
 }
