@@ -8,12 +8,21 @@ public class ChecklistItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     public Image redCross;
     public bool puoSegnareConX = true;
     public Image polaroidImage;
+    
+    public RectTransform clipTransform;
 
     public void Setup(string nome)
     {
-        infoText.text = nome;
-        if (redCross != null) redCross.enabled = false; 
-        else {
+        if (infoText != null)
+        {
+            infoText.text = nome;
+            infoText.rectTransform.localRotation = Quaternion.Euler(0, 0, Random.Range(-5f, 5f));
+            
+        }
+        
+        if (redCross != null) redCross.enabled = false;
+        else
+        {
             Debug.LogWarning("RedCross Image reference is missing in ChecklistItem.");
         }
 
@@ -29,6 +38,13 @@ public class ChecklistItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
             {
                 Debug.LogWarning("Immagine Polaroid non trovata per: " + nome);
             }
+        }
+
+        if (clipTransform != null) 
+        {
+            // Ruota la puntina in modo casuale tra -15 e 15 gradi
+            float rotazionePuntina = Random.Range(-15f, 15f);
+            clipTransform.localRotation = Quaternion.Euler(0, 0, rotazionePuntina);
         }
 
 

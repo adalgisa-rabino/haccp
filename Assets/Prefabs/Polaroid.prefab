@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7079313123406789395}
   - component: {fileID: 426419282760850400}
   - component: {fileID: 380735494108629006}
+  - component: {fileID: 7779986487553166623}
   m_Layer: 10
   m_Name: Polaroid
   m_TagString: Untagged
@@ -99,6 +100,7 @@ MonoBehaviour:
   redCross: {fileID: 3495617541635106267}
   puoSegnareConX: 1
   polaroidImage: {fileID: 5150929971841507540}
+  clipTransform: {fileID: 7989568191407528255}
 --- !u!223 &7079313123406789395
 Canvas:
   m_ObjectHideFlags: 0
@@ -183,6 +185,21 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &7779986487553166623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2441960929512582089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0.084905684, g: 0.07816676, b: 0.07809721, a: 0.7607843}
+  m_EffectDistance: {x: 5, y: -5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &2462374653054460267
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,8 +492,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'nome '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: da6a6aa0e292345748c20c74362ecdfe, type: 2}
+  m_sharedMaterial: {fileID: 5144119378645504858, guid: da6a6aa0e292345748c20c74362ecdfe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -500,7 +517,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 11.8
+  m_fontSize: 9.25
   m_fontSizeBase: 10
   m_fontWeight: 400
   m_enableAutoSizing: 1
