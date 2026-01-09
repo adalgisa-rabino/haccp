@@ -3,36 +3,41 @@ using LidarTouch.Unity;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class LidarTouchCalibrator : MonoBehaviour, INeedsCalibration
+public class LidarTouchCalibrator : MonoBehaviour
 {
-    //attributi pubblici che definiscono lo stato della calibrazione
-    //public CalibrationOrder CurrentCalibrationPoint { get; private set; }
-    //public Dictionary<CalibrationOrder, Vector2> CalibrationPoints { get; set; }
+    // Riferimento allo script che gestisce la UI della calibrazione
+    [SerializeField] private CalibrationUIController _uiController;
 
-    //indica se la calibrazione è valida (tutti i punti sono stati acquisiti)
-    private bool _isValidCalibration;
-    public bool IsValidCalibration => _isValidCalibration; //implementazione dell'interfaccia che espone lo stato della calibrazione,
-                                                           //se si usasse solo una variabile pubblica ci sarebbe il rischio che venga modificata dall'esterno
-    [SerializeField]
-    private CalibrationUIController _uiController;
+    // Numero di punti di calibrazione da acquisire
+    [SerializeField] private int targetSamples = 20;
 
-    public List<CalibrationSample> Samples = new List<CalibrationSample>(20);
+    private bool _isValidCalibration = false;
+    public bool IsValidCalibration => _isValidCalibration;
+
+    // Lista delle coppie di punti di calibrazione acquisiti
+    public List<CalibrationSample> Samples { get; private set; }
+
+    // Target corrente di calibrazione mostrato dalla UI (in pixel schermo)
     private Vector2 _currentTargetScreenPx;
+
+    // Evento chiamato quando la calibrazione è completata
+    [Serializable]
+    public sealed class CalibrationFinishedEvent : UnityEngine.Events.UnityEvent { }
+    public CalibrationFinishedEvent OnCalibrationFinished;
 
     protected void OnEnable()
     {
-        // Inizializzo il dizionario dei punti di calibrazione
-        CalibrationPoints = new Dictionary<CalibrationOrder, Vector2>();
-        CurrentCalibrationPoint = CalibrationOrder.TopLeft;
-
         _isValidCalibration = false;
 
-        _uiController?.HideStatusMessage();
+        // Inizializza la lista dei campioni di calibrazione
+        Samples = new List<CalibrationSample>(targetSamples);
 
-        // Notifica subito il punto corrente da acquisire (TopLeft) alla UI
-        OnCalibration?.Invoke(CurrentCalibrationPoint);
+        // Mostra il primo target random e memorizza le sue coordinate schermo
+        if (_uiController != null)
+            _currentTargetScreenPx = _uiController.PlaceMarkerRandom();
+        else
+            Debug.LogError("[LidarTouchCalibrator] _uiController non assegnato.");
     }
 
     void Update()
@@ -43,13 +48,13 @@ public class LidarTouchCalibrator : MonoBehaviour, INeedsCalibration
             CancelCalibration();
         }
 
-        //R reset manuale della calibrazione senza salvare (utile se si sbagli un punto)
+        // R reset manuale della calibrazione senza salvare
         if (Input.GetKeyDown(KeyCode.R))
         {
             ResetCalibration();
         }
 
-        //Q esci solo se la calibrazione è valida (completa e salvata)
+        // Q esci solo se la calibrazione è valida
         if (Input.GetKeyDown(KeyCode.Q))
         {
             if (_isValidCalibration)
@@ -63,67 +68,53 @@ public class LidarTouchCalibrator : MonoBehaviour, INeedsCalibration
         }
     }
 
-    [Serializable]
-    public sealed class CalibrationEvent : UnityEngine.Events.UnityEvent<CalibrationOrder> //evento che quando invocato passa il punto di calibrazione corrente al listener
-    { }
-
-    [Serializable]
-    public sealed class CalibrationFinishedEvent : UnityEngine.Events.UnityEvent
-    { }
-
-    public CalibrationEvent OnCalibration;
-    public CalibrationFinishedEvent OnCalibrationFinished;
-
     // metodo chiamato quando si riceve un tocco dal Lidar
     public void HandleTouch(LidarTouchUnityDriver.UnityGestureEvent evt)
     {
-        // conto solo i TouchDown per acquisire i punti di calibrazione
         if (evt.Type != GestureType.TouchDown) return;
 
-        // Salva il punto nella chiave corrispondente al punto corrente da acquisire
-        CalibrationPoints[CurrentCalibrationPoint] = evt.Position;
-
-        // Avanza al prossimo punto
-        CurrentCalibrationPoint++;
-
-        // Se ho finito, salvo e segnalo completamento
-        if (CurrentCalibrationPoint == CalibrationOrder.Finished)
+        // Salva SEMPRE la coppia (target schermo corrente, tocco lidar)
+        Samples.Add(new CalibrationSample
         {
-            LidarConstants.SaveCalibration(CalibrationPoints);
-            _isValidCalibration = true; // ora la calibrazione è valida, tutti i punti sono stati acquisiti
-            OnCalibrationFinished?.Invoke();
-            _uiController?.ShowStatusMessage("Calibrazione completata.\nPremi Q per uscire.");
-        }
-        else
+            screenPx = _currentTargetScreenPx,
+            lidarRaw = evt.Position
+        });
+
+        // Se ho raggiunto il numero di campioni, finisco
+        if (Samples.Count >= targetSamples)
         {
-            // Notifica il nuovo punto corrente da acquisire (il prossimo marker)
-            OnCalibration?.Invoke(CurrentCalibrationPoint);
+            FinishCalibration();
+            return;
         }
+
+        // Altrimenti: genera il prossimo target random
+        if (_uiController != null)
+            _currentTargetScreenPx = _uiController.PlaceMarkerRandom();
+    }
+
+    private void FinishCalibration()
+    {
+        _isValidCalibration = true;
+
+        OnCalibrationFinished?.Invoke();
+        Debug.Log("Calibrazione completata.");
     }
 
     private void CancelCalibration()
     {
-        Debug.Log("Calibration canceled by user.");
         ResetCalibration();
-        _uiController?.ShowStatusMessage("Calibrazione annullata.\nPremi R per riprovare.");
+        Debug.Log("Calibrazione annullata.");
     }
 
     private void ResetCalibration()
     {
         Debug.Log("Calibration reset, restarting from first point.");
 
-        if (CalibrationPoints == null)
-            CalibrationPoints = new Dictionary<CalibrationOrder, Vector2>();
-        else
-            CalibrationPoints.Clear();
-
-        CurrentCalibrationPoint = CalibrationOrder.TopLeft;
+        Samples?.Clear();
         _isValidCalibration = false;
 
-        _uiController?.ShowStatusMessage("Calibrazione resettata.\nRiparti dal primo punto.");
-
-        // Aggiorna subito la UI per mostrare il punto corrente da acquisire (TopLeft)
-        OnCalibration?.Invoke(CurrentCalibrationPoint);
+        if (_uiController != null)
+            _currentTargetScreenPx = _uiController.PlaceMarkerRandom();
     }
 
     private void QuitApp()
