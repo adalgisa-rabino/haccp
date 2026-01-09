@@ -13,6 +13,8 @@ public class TouchSpawner : StandaloneInputModule, INeedsCalibration
 
     public Dictionary<CalibrationOrder, Vector2> CalibrationPoints { get; set; }
 
+    private CalibrationMapper calibrationMapper;
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -22,6 +24,17 @@ public class TouchSpawner : StandaloneInputModule, INeedsCalibration
             freeFingerIds.Enqueue(i);
         }
         CalibrationPoints = LidarConstants.LoadCalibration();
+        var tl = CalibrationPoints[CalibrationOrder.TopLeft];
+        var tr = CalibrationPoints[CalibrationOrder.TopRight];
+        var bl = CalibrationPoints[CalibrationOrder.BottomLeft];
+
+        calibrationMapper = new CalibrationMapper(
+            tl,
+            tr,
+            bl,
+            Screen.width,
+            Screen.height
+        );
     }
 
     Vector2 RemapProjectorPositionToScreenPosition(Vector2 projectorPosition)
@@ -137,7 +150,8 @@ public class TouchSpawner : StandaloneInputModule, INeedsCalibration
 
     public void HandleTouch(LidarTouchUnityDriver.UnityGestureEvent evt)
     {
-        var screenPos = RemapProjectorPositionToScreenPosition(evt.Position);
+        //var screenPos = RemapProjectorPositionToScreenPosition(evt.Position);
+        var screenPos = calibrationMapper.MapToScreenPixels(evt.Position);
         ClickAt(screenPos, evt.Type, evt.TrackId);
     }
 }

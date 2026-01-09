@@ -9,8 +9,8 @@ public class FridgeTutorialManager : MonoBehaviour
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private TMP_Text bodyText;
     [SerializeField] private GameObject backgroundPanel;
-    [SerializeField] private Button nextButton;
-    [SerializeField] private Button skipButton;
+    [SerializeField] private Button nextButton; //PULSANTTE AVANTI
+    [SerializeField] private Button skipButton; //PULSANTE SALTA TUTORIAL
 
     [Header("Start Tutorial Button (DEVE stare FUORI dal panel)")]
     [SerializeField] private Button tutorialStartButton;
@@ -119,7 +119,7 @@ public class FridgeTutorialManager : MonoBehaviour
         if (nextButton) nextButton.gameObject.SetActive(false);
         if (skipButton) skipButton.gameObject.SetActive(false);
 
-        // IMPORTANTISSIMO: spegni gli item mostrati dal tutorial
+        // Spegni gli item mostrati dal tutorial
         SetOnlyItemVisible(null);
 
         // Riattiva il pulsante tutorial nel gioco

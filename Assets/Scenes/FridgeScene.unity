@@ -58961,7 +58961,7 @@ GameObject:
   - component: {fileID: 654223751}
   - component: {fileID: 654223750}
   m_Layer: 0
-  m_Name: LidarTouchController
+  m_Name: LidarTouchUnityDriver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -38,14 +38,14 @@ public class HaccpScoreState : MonoBehaviour
 
     public void AddScore(int delta)
     {
-        Score += delta;
+        Score += delta; //aggiorna punteggio con delta (positivo o negativo)
         if (Score < 0)
             Score = 0;
 
         Debug.Log($"[HaccpScoreState] AddScore chiamato. delta={delta}, score prima={Score}");
 
-        OnScoreChanged?.Invoke(Score);
-        OnScoreDelta?.Invoke(delta);
+        OnScoreChanged?.Invoke(Score); //notifica aggiornamento punteggio
+        OnScoreDelta?.Invoke(delta); //notifica aggiornamento delta punteggio
 
         Debug.Log($"[HaccpScoreState] Eventi emessi. delta={delta}, score dopo={Score}");
 
@@ -53,9 +53,7 @@ public class HaccpScoreState : MonoBehaviour
         if (Score == 0)
         {
             Debug.Log("[HACCP] Punteggio a 0: gioco bloccato.");
-            Debug.Log($"[HaccpScoreState] AddScore delta={delta}, Score={Score}");
-            OnScoreDelta?.Invoke(delta);
-
+            OnScoreDepleted?.Invoke();
         }
     }
 
@@ -70,12 +68,18 @@ public class HaccpScoreState : MonoBehaviour
     /// </summary>
     public bool TrySpendScore(int amount)
     {
+        // niente da spendere, operazione sempre valida
         if (amount <= 0)
             return true;
 
+        // non ci sono abbastanza punti
         if (Score < amount)
+        {
+            Debug.Log("[HACCP] Tentativo di spesa senza punti sufficienti");
             return false;
+        }
 
+        // spendo i punti
         AddScore(-amount);
         return true;
     }
