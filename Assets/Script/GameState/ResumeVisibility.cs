@@ -1,17 +1,19 @@
 using UnityEngine;
 
+/*
+
 public class ResumeVisibility : MonoBehaviour
 {
     void OnEnable()
     {
         if (GameManager.Instance != null)
-            GameManager.Instance.OnPauseChanged += HandlePause;
+            //GameManager.Instance.OnPauseChanged += HandlePause;
     }
 
     void OnDisable()
     {
         if (GameManager.Instance != null)
-            GameManager.Instance.OnPauseChanged -= HandlePause;
+            //GameManager.Instance.OnPauseChanged -= HandlePause;
     }
 
     void Start()
@@ -24,3 +26,4 @@ public class ResumeVisibility : MonoBehaviour
         gameObject.SetActive(paused);
     }
 }
+*/

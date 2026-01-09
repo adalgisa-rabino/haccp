@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public enum GameFlowState
 {
     InMenu,
+
+    InPause,
     InIntro,
     InRistorante,
     InMinigioco
@@ -19,8 +21,8 @@ public sealed class GameManager : MonoBehaviour
     [SerializeField] int sceneMenu = 0;
     [SerializeField] int sceneIntro = 1;
     [SerializeField] int sceneRistorante = 2;
-    [SerializeField] int sceneMinigioocoLavandino = 3;
-    [SerializeField] int sceneMinigiocoFrigo = 4;
+    [SerializeField] int sceneMinigioocoLavandino = 4;
+    [SerializeField] int sceneMinigiocoFrigo = 3;
 
     public GameFlowState FlowState { get; private set; } = GameFlowState.InMenu;
 
@@ -39,7 +41,6 @@ public sealed class GameManager : MonoBehaviour
 
     // ---- PAUSA (aggiunto) ----
     public bool IsPaused { get; private set; }
-    public event Action<bool> OnPauseChanged;
     // --------------------------
 
     bool isLoading;
@@ -132,23 +133,19 @@ public sealed class GameManager : MonoBehaviour
 #endif
     }
 
-    // ---- PAUSA (implementato) ----
-    public void TogglePause()
-    {
-        // se vuoi impedire la pausa nel menu, lascia questa riga
-        if (FlowState == GameFlowState.InMenu) return;
-
-        SetPause(!IsPaused);
-    }
 
     public void SetPause(bool pause)
     {
+
         if (IsPaused == pause) return;
 
         IsPaused = pause;
         Time.timeScale = pause ? 0f : 1f;
 
-        OnPauseChanged?.Invoke(IsPaused);
+        //voglio disabilitare i tasti per muovermi all'interno del gioco quando sono in pausa
+
+
+
     }
     // ------------------------------
 
@@ -241,5 +238,11 @@ public sealed class GameManager : MonoBehaviour
         {
             Debug.Log("Loading scene index: " + buildIndex);
         }
+    }
+
+    public void ExitMinigame()
+    {
+        // Torniamo semplicemente al ristorante senza cambiare lo stato dei progressi
+        LoadScene(sceneRistorante);
     }
 }
