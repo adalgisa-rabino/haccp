@@ -160647,7 +160647,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1917562497}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f4145e2e7a9d2440aad3ef07d53ded9, type: 3}
+  m_Script: {fileID: 11500000, guid: 13e02ecad6a63445db3eb7a279e44663, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1917562504
@@ -160659,19 +160659,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1917562497}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a411e6c6cd53a74abd5a3a2dc513037, type: 3}
+  m_Script: {fileID: 11500000, guid: 5061f0f0a4e004bb3abfd7b30cad34be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clue:
-    id: 
-    tipo: 
-    categoria: 
-    effetto: 
-    bersaglioColpevole: 
-    bersaglioArma: 
-    bersaglioLuogo: 
-    testo: 
-  clueId: 
 --- !u!4 &1918050028 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8350871377767709752, guid: d83870ea6e607c840b16cbfcc0862d68, type: 3}

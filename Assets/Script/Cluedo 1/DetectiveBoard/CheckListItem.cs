@@ -4,29 +4,44 @@ using TMPro;
 using UnityEngine.EventSystems;
 
 public class ChecklistItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
-    public TextMeshProUGUI nomeTesto;
-    public Image croceRossa;
+    public TextMeshProUGUI infoText;
+    public Image redCross;
     public bool puoSegnareConX = true;
+    public Image polaroidImage;
 
-    public void Setup(string nome) {
-        nomeTesto.text = nome;
-        if (croceRossa != null) croceRossa.enabled = false;
-        
-        // Se è un indizio, adatta l'altezza (aggiungi qui la chiamata se serve)
-        // if (!puoSegnareConX) AdattaAltezzaPostIt(); 
+    public void Setup(string nome)
+    {
+        infoText.text = nome;
+        if (redCross != null) redCross.enabled = false;
+
+        if (polaroidImage != null)
+        {
+            // Carica l'immagine dalla cartella Resources/Polaroids
+            Sprite loadedSprite = Resources.Load<Sprite>("Polaroids/" + nome);
+            if (loadedSprite != null)
+            {
+                polaroidImage.sprite = loadedSprite;
+            }
+                else
+            {
+                Debug.LogWarning("Immagine Polaroid non trovata per: " + nome);
+            }
+        }
+
+
     }
 
     public void OnPointerDown(PointerEventData eventData) {
         // Se non è abilitato il segno o manca la X, non fare nulla
-        if (!puoSegnareConX || croceRossa == null) return;
+        if (!puoSegnareConX || redCross == null) return;
 
         // Inverte lo stato della X (Acceso -> Spento / Spento -> Acceso)
-        croceRossa.enabled = !croceRossa.enabled;
+        redCross.enabled = !redCross.enabled;
         
         // La porta in primo piano rispetto ad altri elementi della card
-        croceRossa.transform.SetAsLastSibling(); 
+        redCross.transform.SetAsLastSibling(); 
         
-        Debug.Log("X impostata su: " + croceRossa.enabled);
+        Debug.Log("X impostata su: " + redCross.enabled);
     }
 
     // Lasciamo OnPointerUp vuoto: così quando rilasci il mouse non succede nulla
