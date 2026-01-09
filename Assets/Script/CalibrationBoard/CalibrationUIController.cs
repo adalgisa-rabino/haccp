@@ -4,10 +4,9 @@ using TMPro;
 
 public class CalibrationUIController : MonoBehaviour
 {
-    public RectTransform singleMarker;
+    [SerializeField]  public RectTransform singleMarker;
     public TMP_Text statusText;
-
-    private RectTransform _canvasRect;
+    [SerializeField] public RectTransform _canvasRect;
 
     private void Awake()
     {
@@ -19,8 +18,7 @@ public class CalibrationUIController : MonoBehaviour
     {
         if (statusText != null) statusText.gameObject.SetActive(false);
 
-        // Qui la funzione server per piazzare il primo punto quando inizia la calibrazione
-        PlaceMarkerRandom();
+        //HideMarker();
     }
 
     /// <summary>
@@ -48,10 +46,32 @@ public class CalibrationUIController : MonoBehaviour
             out Vector2 localPoint //out rende localPoint un valore di ritorno già definito
         );
 
+        Debug.Log($"[CalibrationUIController] PlaceMarkerRandom posizionando marker in pixel schermo {screenPx} corrispondente a locale {localPoint}");
         singleMarker.anchoredPosition = localPoint;
         singleMarker.gameObject.SetActive(true);
 
         //Ritorna le coordinate in pixel schermo del punto calcolato
         return screenPx;
     }
+
+    public void HideMarker()
+    {
+        if (singleMarker != null)
+            singleMarker.gameObject.SetActive(false);
+    }
+
+    public void ShowStatusMessage(string message)
+    {
+        if (statusText == null) return;
+        statusText.text = message;
+        statusText.gameObject.SetActive(true);
+    }
+
+    public void HideStatusMessage()
+    {
+        if (statusText == null) return;
+        statusText.gameObject.SetActive(false);
+    }
+
+
 }

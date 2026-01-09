@@ -21,11 +21,6 @@ public class LidarTouchCalibrator : MonoBehaviour
     // Target corrente di calibrazione mostrato dalla UI (in pixel schermo)
     private Vector2 _currentTargetScreenPx;
 
-    // Evento chiamato quando la calibrazione è completata
-    [Serializable]
-    public sealed class CalibrationFinishedEvent : UnityEngine.Events.UnityEvent { }
-    public CalibrationFinishedEvent OnCalibrationFinished;
-
     protected void OnEnable()
     {
         _isValidCalibration = false;
@@ -71,7 +66,11 @@ public class LidarTouchCalibrator : MonoBehaviour
     // metodo chiamato quando si riceve un tocco dal Lidar
     public void HandleTouch(LidarTouchUnityDriver.UnityGestureEvent evt)
     {
+        Debug.Log($"Tocco Lidar ricevuto a posizione {evt.Position} punto numero {Samples.Count}");
+
         if (evt.Type != GestureType.TouchDown) return;
+
+        Debug.Log($"Tocco Lidar ricevuto a posizione {evt.Position} punto numero {Samples.Count}");
 
         // Salva SEMPRE la coppia (target schermo corrente, tocco lidar)
         Samples.Add(new CalibrationSample
@@ -96,8 +95,11 @@ public class LidarTouchCalibrator : MonoBehaviour
     {
         _isValidCalibration = true;
 
-        OnCalibrationFinished?.Invoke();
         Debug.Log("Calibrazione completata.");
+        Debug.Log($"Campioni raccolti: {Samples}");
+
+        if (_uiController != null)
+            _uiController.ShowStatusMessage("Calibrazione completata!");
     }
 
     private void CancelCalibration()
