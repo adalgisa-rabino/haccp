@@ -22373,7 +22373,7 @@ GameObject:
   - component: {fileID: 275178790}
   - component: {fileID: 275178789}
   m_Layer: 5
-  m_Name: UIPausePanel
+  m_Name: PlayaCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33266,8 +33266,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 818b77e47e7aa423483ac8e778c6ef9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resumeButton: {fileID: 1155940813}
-  pauseButton: {fileID: 422033927}
 --- !u!114 &422033930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95535,9 +95533,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1155940814}
+  - component: {fileID: 1155940819}
+  - component: {fileID: 1155940818}
   - component: {fileID: 1155940817}
   - component: {fileID: 1155940816}
-  - component: {fileID: 1155940818}
   - component: {fileID: 1155940815}
   m_Layer: 5
   m_Name: Resume
@@ -95545,7 +95544,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1155940814
 RectTransform:
   m_ObjectHideFlags: 0
@@ -95657,11 +95656,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1155940813}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48987c66c4b69487bb39b1b6b5d7114a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1155940819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1155940813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3cee021326d244ae5bb0c3355e767bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseButton: {fileID: 422033927}
-  resumeButton: {fileID: 1155940813}
 --- !u!1001 &1156515774
 PrefabInstance:
   m_ObjectHideFlags: 0
