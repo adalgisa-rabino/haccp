@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public enum GameFlowState
 {
     InMenu,
+
+    InPause,
     InIntro,
     InRistorante,
     InMinigioco
@@ -19,8 +21,8 @@ public sealed class GameManager : MonoBehaviour
     [SerializeField] int sceneMenu = 0;
     [SerializeField] int sceneIntro = 1;
     [SerializeField] int sceneRistorante = 2;
-    [SerializeField] int sceneMinigioocoLavandino = 3;
-    [SerializeField] int sceneMinigiocoFrigo = 4;
+    [SerializeField] int sceneMinigioocoLavandino = 4;
+    [SerializeField] int sceneMinigiocoFrigo = 3;
 
     public GameFlowState FlowState { get; private set; } = GameFlowState.InMenu;
 
@@ -37,6 +39,10 @@ public sealed class GameManager : MonoBehaviour
     public event Action<string> OnClueFound;
     public event Action OnProgressChanged;
 
+    // ---- PAUSA (aggiunto) ----
+    public bool IsPaused { get; private set; }
+    // --------------------------
+
     bool isLoading;
 
     void Awake()
@@ -50,6 +56,10 @@ public sealed class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
+        // sicurezza: quando parte il gioco, timeScale deve essere normale
+        Time.timeScale = 1f;
+        IsPaused = false;
+
         SceneManager.sceneLoaded += HandleSceneLoaded;
         CurrentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         UpdateFlowStateForScene(CurrentSceneIndex);
@@ -59,6 +69,9 @@ public sealed class GameManager : MonoBehaviour
     {
         if (Instance == this)
             SceneManager.sceneLoaded -= HandleSceneLoaded;
+
+        // sicurezza: se distruggi il GameManager mentre eri in pausa, non lasciare timeScale a 0
+        Time.timeScale = 1f;
     }
 
     void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -66,6 +79,13 @@ public sealed class GameManager : MonoBehaviour
         isLoading = false;
         CurrentSceneIndex = scene.buildIndex;
         UpdateFlowStateForScene(CurrentSceneIndex);
+
+        // quando cambi scena, tolgo la pausa per evitare blocchi
+        if (IsPaused)
+            SetPause(false);
+
+        if (FlowState == GameFlowState.InIntro)
+            TryStartIntroDialogue();
     }
 
     void UpdateFlowStateForScene(int buildIndex)
@@ -98,18 +118,36 @@ public sealed class GameManager : MonoBehaviour
         OnCoinsChanged?.Invoke(Coins);
         OnProgressChanged?.Invoke();
 
+        // se riparti da nuovo gioco, assicurati che non sia in pausa
+        if (IsPaused) SetPause(false);
+
         //MODIFICO QUI E INSERISCO SCENA DI INTRODUZIONE 
         LoadScene(sceneIntro);
     }
 
     public void QuitGame()
     {
-    
         Application.Quit();
-        #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false; // Per fermare il Play in Editor
-        #endif
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false; // Per fermare il Play in Editor
+#endif
     }
+
+
+    public void SetPause(bool pause)
+    {
+
+        if (IsPaused == pause) return;
+
+        IsPaused = pause;
+        Time.timeScale = pause ? 0f : 1f;
+
+        //voglio disabilitare i tasti per muovermi all'interno del gioco quando sono in pausa
+
+
+
+    }
+    // ------------------------------
 
     public void GoToMenu()
     {
@@ -125,8 +163,6 @@ public sealed class GameManager : MonoBehaviour
     {
         LoadScene(sceneRistorante);
     }
-
-    
 
     public void EnterLavandinoMinigame()
     {
@@ -183,6 +219,13 @@ public sealed class GameManager : MonoBehaviour
         OnCoinsChanged?.Invoke(Coins);
     }
 
+    void TryStartIntroDialogue()
+    {
+        var dialogTrigger = FindObjectOfType<DialogTrigger>();
+        if (dialogTrigger != null)
+            dialogTrigger.PlayDialogue();
+    }
+
     public void LoadScene(int buildIndex)
     {
         if (isLoading) return;
@@ -190,5 +233,16 @@ public sealed class GameManager : MonoBehaviour
 
         isLoading = true;
         SceneManager.LoadScene(buildIndex);
+
+        if (SceneManager.GetActiveScene().buildIndex == sceneIntro)
+        {
+            Debug.Log("Loading scene index: " + buildIndex);
+        }
+    }
+
+    public void ExitMinigame()
+    {
+        // Torniamo semplicemente al ristorante senza cambiare lo stato dei progressi
+        LoadScene(sceneRistorante);
     }
 }

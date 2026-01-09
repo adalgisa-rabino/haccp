@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+<<<<<<< HEAD
+<<<<<<<< HEAD:Assets/Script/Cluedo/Test.meta
+guid: 35c928930f8c24ebab47e73873b554b9
+========
+guid: 7a243a6377ea4401783c4a6f49c0d401
+>>>>>>>> feature/player-wasd-teleport:Assets/Script/Cluedo.meta
+=======
+guid: d7e7337439770481ea1ba994adcbf385
+>>>>>>> feature/player-wasd-teleport
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
