@@ -8,8 +8,8 @@ using UnityEngine.EventSystems;
 public class LidarTouchCalibrator : MonoBehaviour, INeedsCalibration
 {
     //attributi pubblici che definiscono lo stato della calibrazione
-    public CalibrationOrder CurrentCalibrationPoint { get; private set; }
-    public Dictionary<CalibrationOrder, Vector2> CalibrationPoints { get; set; }
+    //public CalibrationOrder CurrentCalibrationPoint { get; private set; }
+    //public Dictionary<CalibrationOrder, Vector2> CalibrationPoints { get; set; }
 
     //indica se la calibrazione è valida (tutti i punti sono stati acquisiti)
     private bool _isValidCalibration;
@@ -18,11 +18,12 @@ public class LidarTouchCalibrator : MonoBehaviour, INeedsCalibration
     [SerializeField]
     private CalibrationUIController _uiController;
 
+    public List<CalibrationSample> Samples = new List<CalibrationSample>(20);
+    private Vector2 _currentTargetScreenPx;
+
     protected void OnEnable()
     {
-        // Carica eventuale calibrazione già salvata (da persistentDataPath/calibration.json)
-        // oppure dizionario vuoto se non esiste.
-        //CalibrationPoints = LidarConstants.LoadCalibration(); //non carico più la calibrazione esistente, parto da zero
+        // Inizializzo il dizionario dei punti di calibrazione
         CalibrationPoints = new Dictionary<CalibrationOrder, Vector2>();
         CurrentCalibrationPoint = CalibrationOrder.TopLeft;
 
@@ -73,10 +74,10 @@ public class LidarTouchCalibrator : MonoBehaviour, INeedsCalibration
     public CalibrationEvent OnCalibration;
     public CalibrationFinishedEvent OnCalibrationFinished;
 
-    // Collega questo metodo a LidarTouchUnityDriver.OnTouch
+    // metodo chiamato quando si riceve un tocco dal Lidar
     public void HandleTouch(LidarTouchUnityDriver.UnityGestureEvent evt)
     {
-        // se vuoi contare solo un tipo, tipicamente TouchDown:
+        // conto solo i TouchDown per acquisire i punti di calibrazione
         if (evt.Type != GestureType.TouchDown) return;
 
         // Salva il punto nella chiave corrispondente al punto corrente da acquisire

@@ -4,77 +4,54 @@ using TMPro;
 
 public class CalibrationUIController : MonoBehaviour
 {
-    [Header("Assegna i 9 marker X in ordine TopLeft → BottomRight")]
-    public GameObject[] markers; // length 9
-
-    [Header("Testo informativo sullo stato della calibrazione")]
+    public RectTransform singleMarker;
     public TMP_Text statusText;
+
+    private RectTransform _canvasRect;
+
+    private void Awake()
+    {
+        if (singleMarker != null)
+            _canvasRect = singleMarker.GetComponentInParent<Canvas>()?.GetComponent<RectTransform>();
+    }
 
     private void OnEnable()
     {
-        // All’avvio mostra il primo marker (TopLeft)
-        ShowMarkerIndex(0);
         if (statusText != null) statusText.gameObject.SetActive(false);
+
+        // Qui la funzione server per piazzare il primo punto quando inizia la calibrazione
+        PlaceMarkerRandom();
     }
 
-    // Collega questo metodo a LidarTouchCalibrator.OnCalibration (UnityEvent<CalibrationOrder>)
-    public void OnCalibrationStep(CalibrationOrder currentPointToAcquire)
+    /// <summary>
+    /// 1) calcola un punto random (pixel schermo)
+    /// 2) sposta il marker in quel punto random (coordinate locali canvas)
+    /// 3) ritorna le coordinate in pixel schermo di quel punto (Vecrot2 screenPx)
+    /// </summary>
+    public Vector2 PlaceMarkerRandom()
     {
-        // "currentPointToAcquire" è il punto corrente da acquisire.
-        // Mostra esattamente quel marker. Se è Finished, spegni tutto.
-        int index = (int)currentPointToAcquire;
+        if (singleMarker == null || _canvasRect == null)
+            return Vector2.zero;
 
-        if (index >= 0 && index < 9) // 0..8 sono i 9 punti
-        {
-            ShowMarkerIndex(index);
-        }
-        else
-        {
-            HideAllMarkers();
-        }
+        Vector2 screenPx = new Vector2(
+            Random.Range(0f, Screen.width),
+            Random.Range(0f, Screen.height)
+        );
 
-        // Quando riparti o avanzi, nascondi eventuali messaggi di stato
-        HideStatusMessage();
-    }
+        //Posiziona il marker sul canva nel punto calcolato
+        // Funzione di Unity che prende un punto in pixel schermo e indica dove cade nel sistema di coordinate locali di un RectTransform,
+        // serve solo per posizionare il marker dal momento che è figlio di un canva, non influenza i valori necessari per la calibrazione
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            _canvasRect,
+            screenPx,
+            null, // Overlay
+            out Vector2 localPoint //out rende localPoint un valore di ritorno già definito
+        );
 
-    // Collega questo metodo a LidarTouchCalibrator.OnCalibrationFinished
-    public void OnCalibrationFinished()
-    {
-        HideAllMarkers();
-        if (statusText != null)
-        {
-            statusText.text = "Calibrazione completata: premi Q per uscire.";
-            statusText.gameObject.SetActive(true);
-        }
-    }
+        singleMarker.anchoredPosition = localPoint;
+        singleMarker.gameObject.SetActive(true);
 
-    private void ShowMarkerIndex(int index)
-    {
-        if (markers == null) return;
-
-        for (int i = 0; i < markers.Length; i++)
-            markers[i].SetActive(i == index);
-    }
-
-    private void HideAllMarkers()
-    {
-        if (markers == null) return;
-
-        for (int i = 0; i < markers.Length; i++)
-            markers[i].SetActive(false);
-    }
-
-    public void ShowStatusMessage(string message)
-    {
-        if (statusText == null) return;
-
-        statusText.text = message;
-        statusText.gameObject.SetActive(true);
-    }
-
-    public void HideStatusMessage()
-    {
-        if (statusText == null) return;
-        statusText.gameObject.SetActive(false);
+        //Ritorna le coordinate in pixel schermo del punto calcolato
+        return screenPx;
     }
 }
