@@ -17,6 +17,8 @@ public class ChecklistManager : MonoBehaviour
     public Transform containerLuoghi;
     public Transform containerDestro; // Trascina qui l'oggetto 'dx' della Hierarchy
 
+    private List<Vector2> posizioniDisponibili = new List<Vector2>();
+
     void OnEnable()
     {
         // Ci colleghiamo all'evento che hai già nel tuo CluedoGameController
@@ -26,7 +28,7 @@ public class ChecklistManager : MonoBehaviour
     }
 
     void OnDisable()
-    
+
     {
         if (cluedoController != null)
             cluedoController.OnSetupComplete -= IniziaPopolamento;
@@ -53,46 +55,80 @@ public class ChecklistManager : MonoBehaviour
             float rotazioneCasuale = Random.Range(-5f, 5f); // Ruota tra -5 e +5 gradi
             nuovaCarta.transform.localRotation = Quaternion.Euler(0, 0, rotazioneCasuale);
             // -----------------------
-
             nuovaCarta.GetComponent<ChecklistItem>().Setup(nome);
         }
     }
 
+    void GeneraGrigliaPosizioni() {
+    RectTransform rect = containerDestro.GetComponent<RectTransform>();
+    // Definisci quante righe e colonne vuoi (es. 3x4)
+    int colonne = 3;
+    int righe = 4;
+    float stepX = rect.rect.width / colonne;
+    float stepY = rect.rect.height / righe;
+
+    for (int i = 0; i < colonne; i++) {
+        for (int j = 0; j < righe; j++) {
+            // Calcola il centro di ogni cella
+            float x = (-rect.rect.width / 2) + (i * stepX) + (stepX / 2);
+            float y = (-rect.rect.height / 2) + (j * stepY) + (stepY / 2);
+            posizioniDisponibili.Add(new Vector2(x, y));
+        }
+    }
+}
+
     void AggiungiIndizioAlMuro(Clue indizio)
-
     {
+        if (containerDestro == null || indizioPrefab == null) return;
 
-        Debug.Log($"Ricevuto indizio: {indizio.id} - Testo: {indizio.testo}");
-        if (containerDestro == null) return;
-
-        // Crea la Polaroid nel lato destro (dx)
+        // 1. Istanzia la Polaroid come figlia di 'dx'
         GameObject nuovaCard = Instantiate(indizioPrefab, containerDestro);
+        RectTransform rectCard = nuovaCard.GetComponent<RectTransform>();
+        RectTransform rectContainer = containerDestro.GetComponent<RectTransform>();
 
-        // Passa il testo dell'indizio alla card (usando il metodo Setup che hai già)
-        // Supponendo che 'Clue' abbia un campo 'description' o 'text'
+        // 2. Forza le ancore al centro per permettere il posizionamento casuale relativo
+        rectCard.anchorMin = new Vector2(0.5f, 0.5f);
+        rectCard.anchorMax = new Vector2(0.5f, 0.5f);
+        rectCard.pivot = new Vector2(0.5f, 0.5f);
+
+        // 3. Calcola i limiti (Width e Height del rettangolo blu 'dx')
+        // Sottraiamo un margine (es. 80) per evitare che i post-it tocchino il legno
+        float margine = 80f;
+        float limiteX = (rectContainer.rect.width / 2) - margine;
+        float limiteY = (rectContainer.rect.height / 2) - margine;
+
+        // 4. Genera la posizione casuale
+        float posX = Random.Range(-limiteX, limiteX);
+        float posY = Random.Range(-limiteY, limiteY);
+
+        rectCard.anchoredPosition = new Vector2(posX, posY);
+
+        // 5. Applica la rotazione casuale
+        nuovaCard.transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-15f, 15f));
+
+        // 6. Setup e Animazione
         nuovaCard.GetComponent<ChecklistItem>().Setup(indizio.testo);
-
-        // Effetto bacheca: rotazione casuale
-        nuovaCard.transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-10f, 10f));
-
-        // --- AGGIUNGI QUESTO: Avvia l'animazione ---
         StartCoroutine(AnimazioneComparsa(nuovaCard.transform));
     }
 
     
-    IEnumerator AnimazioneComparsa(Transform target) {
+
+
+    IEnumerator AnimazioneComparsa(Transform target)
+    {
         float durata = 0.3f; // Durata dell'animazione
         float tempo = 0;
-        
+
         // Partiamo da scala zero
         target.localScale = Vector3.zero;
 
-        while (tempo < durata) {
+        while (tempo < durata)
+        {
             tempo += Time.deltaTime;
             float progresso = tempo / durata;
 
             // Effetto "Overshoot" (rimbalzo): va un po' oltre 1 e poi torna indietro
-            float scala = Mathf.Lerp(0, 1.1f, progresso); 
+            float scala = Mathf.Lerp(0, 1.1f, progresso);
             if (progresso > 0.8f) scala = Mathf.Lerp(1.1f, 1.0f, (progresso - 0.8f) * 5);
 
             target.localScale = new Vector3(scala, scala, 1);
@@ -101,4 +137,6 @@ public class ChecklistManager : MonoBehaviour
 
         target.localScale = Vector3.one;
     }
+    
+    
 }

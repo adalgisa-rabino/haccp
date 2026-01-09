@@ -12,7 +12,10 @@ public class ChecklistItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     public void Setup(string nome)
     {
         infoText.text = nome;
-        if (redCross != null) redCross.enabled = false;
+        if (redCross != null) redCross.enabled = false; 
+        else {
+            Debug.LogWarning("RedCross Image reference is missing in ChecklistItem.");
+        }
 
         if (polaroidImage != null)
         {
@@ -22,7 +25,7 @@ public class ChecklistItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
             {
                 polaroidImage.sprite = loadedSprite;
             }
-                else
+            else
             {
                 Debug.LogWarning("Immagine Polaroid non trovata per: " + nome);
             }

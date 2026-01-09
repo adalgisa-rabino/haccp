@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.0537033, y: 3.3654938}
-  m_SizeDelta: {x: 28.2493, y: 13.4664}
+  m_AnchoredPosition: {x: 1.0537033, y: 14.5326}
+  m_SizeDelta: {x: 142.6009, y: 55.4549}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8889138707497544282
 CanvasRenderer:
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 6.9
+  m_fontSize: 20
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -222,9 +222,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 930948020558349548}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ffb8d37a1a3a46d7a3f8f966e40bf20, type: 3}
+  m_Script: {fileID: 11500000, guid: 13e02ecad6a63445db3eb7a279e44663, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nomeTesto: {fileID: 7336808281461278554}
-  croceRossa: {fileID: 0}
-  puoSegnareConX: 0
+  infoText: {fileID: 7336808281461278554}
+  redCross: {fileID: 0}
+  puoSegnareConX: 1
+  polaroidImage: {fileID: 0}

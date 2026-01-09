@@ -11,6 +11,9 @@ GameObject:
   - component: {fileID: 3209528013026112034}
   - component: {fileID: 1956061063201504647}
   - component: {fileID: 4377961069516802381}
+  - component: {fileID: 2044368076893692362}
+  - component: {fileID: 506932717849685016}
+  - component: {fileID: 3844374470855335141}
   m_Layer: 6
   m_Name: Cake
   m_TagString: Untagged
@@ -86,3 +89,61 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2044368076893692362
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2864667687410624664}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.27015203, y: 0.15847929, z: 0.27015203}
+  m_Center: {x: 0.0069666132, y: 0.08616101, z: 0.0035700276}
+--- !u!114 &506932717849685016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2864667687410624664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5061f0f0a4e004bb3abfd7b30cad34be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clue:
+    id: 
+    tipo: 
+    categoria: 
+    effetto: 
+    bersaglioColpevole: 
+    bersaglioArma: 
+    bersaglioLuogo: 
+    testo: 
+  clueId: 
+--- !u!114 &3844374470855335141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2864667687410624664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8264ef254325c47bd846af04965c8e93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: 0
+  gameManager: {fileID: 0}
+  ClueTarget: {fileID: 0}

@@ -3,42 +3,37 @@ using UnityEngine.EventSystems;
 
 public class KitchenPointer : MonoBehaviour, IPointerDownHandler
 {
-    public enum Target
-    {
-        Frigo,
-        Lavandino
-    }
-
+    public enum Target { Frigo, Lavandino, Indizio }
     [SerializeField] private Target target;
-    [SerializeField] private GameManager gameManager;
+    [SerializeField] private ClueTarget ClueTarget;
+    
+    private Color originalColor;
+    private Renderer rend;
 
-    private void Start()
+    
+    
+    // Aggiungi questo dentro KitchenPointer.cs
+    public void Setup(Target nuovoTarget, ClueTarget nuovoClueTarget)
     {
-        if (gameManager == null) gameManager = GameManager.Instance;
+        this.target = nuovoTarget;
+        this.ClueTarget = nuovoClueTarget;
+        
+        // Inizializza i riferimenti ai renderer per il luccichio
+        this.rend = GetComponent<Renderer>() ?? GetComponentInChildren<Renderer>();
+        if (this.rend != null) this.originalColor = rend.material.color;
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void SetHighlight(Color c)
     {
-        // --- AGGIUNGI QUESTO CONTROLLO ---
-        // Se il puntatore è sopra un elemento della UI (come la tua Board), interrompi l'esecuzione.
-        if (EventSystem.current.IsPointerOverGameObject())
-        {
-            Debug.Log("Click bloccato: il cursore è sopra la UI.");
-            return;
-        }
-        // ---------------------------------
+        if (rend != null) rend.material.color = c;
+    }
 
-        if (gameManager == null) gameManager = GameManager.Instance;
-
-        if (target == Target.Frigo)
-        {
-            Debug.Log("Pointer DOWN sul frigo!");
-            gameManager.EnterFrigoMinigame();
-        }
-        else if (target == Target.Lavandino)
-        {
-            Debug.Log("Pointer DOWN sul lavandino!");
-            gameManager.EnterLavandinoMinigame();
+    public void OnPointerDown(PointerEventData eventData) {
+        if (target == Target.Indizio && ClueTarget != null) {
+            ClueTarget.Reveal();
+            if (rend != null) rend.material.color = originalColor; // Toglie il luccichio
+            GetComponent<Collider>().enabled = false; // Non più cliccabile
+            this.enabled = false;
         }
     }
 }
