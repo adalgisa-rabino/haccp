@@ -21,8 +21,9 @@ public sealed class GameManager : MonoBehaviour
     [SerializeField] int sceneMenu = 0;
     [SerializeField] int sceneIntro = 1;
     [SerializeField] int sceneRistorante = 2;
-    [SerializeField] int sceneMinigioocoLavandino = 4;
     [SerializeField] int sceneMinigiocoFrigo = 3;
+    [SerializeField] int sceneMinigioocoLavandino = 4;
+    [SerializeField] int sceneCalbibration = 5;
 
     public GameFlowState FlowState { get; private set; } = GameFlowState.InMenu;
 
@@ -152,6 +153,11 @@ public sealed class GameManager : MonoBehaviour
     public void GoToMenu()
     {
         LoadScene(sceneMenu);
+    }
+
+    public void GoToCalbrationScene()
+    {
+        LoadScene(sceneCalbibration);
     }
 
     public void SkipIntro()
