@@ -1,4 +1,4 @@
-ï»¿using LidarTouch.Core.Tracking;
+using LidarTouch.Core.Tracking;
 using LidarTouch.Unity;
 using System;
 using System.Collections.Generic; // Added for Dictionary and Queue
@@ -22,13 +22,13 @@ public class TouchSpawner : StandaloneInputModule, INeedsCalibration
 
         // Gestione "fingerId" per far funzionare StandaloneInputModule.
         // Qui ne abilitiamo uno solo (1 dito). Se in futuro vuoi multitouch,
-        // alza questo numero e gestisci piÃ¹ TrackId in parallelo.
+        // alza questo numero e gestisci più TrackId in parallelo.
         freeFingerIds.Clear();
         for (int i = 0; i < 1; i++)
             freeFingerIds.Enqueue(i);
 
-        // Mantengo la property per compatibilitÃ  con INeedsCalibration,
-        // ma NON usiamo piÃ¹ i punti pre-salvati (TopLeft/TopRight/BottomLeft).
+        // Mantengo la property per compatibilità con INeedsCalibration,
+        // ma NON usiamo più i punti pre-salvati (TopLeft/TopRight/BottomLeft).
         CalibrationPoints = new Dictionary<CalibrationOrder, Vector2>();
 
         // Carico (se esiste) la matrice salvata dalla calibrazione a 20 punti.
@@ -149,7 +149,7 @@ public class TouchSpawner : StandaloneInputModule, INeedsCalibration
     {
         // Il driver ci passa la posizione "raw" del Lidar (evt.Position).
         // Da qui in poi, tutto il progetto deve ragionare in coordinate "Screen pixel",
-        // perchÃ© Ã¨ quello che usa l'EventSystem (Canvas) e anche la Camera per il 3D.
+        // perché è quello che usa l'EventSystem (Canvas) e anche la Camera per il 3D.
 
         if (_calibrationService == null)
             _calibrationService = new CalibrationService();
