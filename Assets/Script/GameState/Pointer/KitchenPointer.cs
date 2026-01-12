@@ -3,9 +3,10 @@ using UnityEngine.EventSystems;
 
 public class KitchenPointer : MonoBehaviour, IPointerDownHandler
 {
-    public enum Target { Frigo, Lavandino, Indizio }
+    public enum Target { Frigo, Lavandino, Indizio}
     [SerializeField] private Target target;
     [SerializeField] private ClueTarget ClueTarget;
+    
     
     private Color originalColor;
     private Renderer rend;

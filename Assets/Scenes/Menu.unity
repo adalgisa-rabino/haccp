@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 461325396}
   - component: {fileID: 461325395}
   - component: {fileID: 461325394}
+  - component: {fileID: 461325397}
   m_Layer: 5
   m_Name: calibration button
   m_TagString: Untagged
@@ -240,6 +241,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 461325392}
   m_CullTransparentMesh: 1
+--- !u!114 &461325397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461325392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dfb911a0c568470780c6e4722f7da7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: 1
 --- !u!1 &470293942
 GameObject:
   m_ObjectHideFlags: 0
@@ -676,8 +690,9 @@ MonoBehaviour:
   sceneMenu: 0
   sceneIntro: 1
   sceneRistorante: 2
-  sceneMinigioocoLavandino: 4
   sceneMinigiocoFrigo: 3
+  sceneMinigioocoLavandino: 4
+  sceneCalbibration: 5
 --- !u!1 &1317141229
 GameObject:
   m_ObjectHideFlags: 0
