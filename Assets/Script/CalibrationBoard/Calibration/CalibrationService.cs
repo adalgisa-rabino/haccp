@@ -9,21 +9,14 @@ namespace CalibrationBoard.Calibration
     /// <summary>
     /// CalibrationService
     /// ----------------
-    /// Obiettivo:
-    /// - Stimare una trasformazione proiettiva (omografia / homography) che mappa:
+    /// - Stima una trasformazione proiettiva (omografia / homography) che mappa:
     ///     punto Lidar "raw" (Vector2) -> punto schermo normalizzato (Vector2 in [0..1])
-    /// - Salvare la trasformazione su file in Application.persistentDataPath
-    /// - Fornire un metodo Map() che converte un punto Lidar in pixel schermo/canvas
-    ///
-    /// Scelte pratiche:
-    /// - JSON: usiamo JsonUtility (Unity) per compatibilità massima con le versioni Unity/C#.
-    /// - Coordinate target: salviamo/risolviamo in NORMALIZZATO [0..1] così la calibrazione è stabile
-    ///   anche se cambia la risoluzione (poi in Map() riconvertiamo in pixel).
+    /// - Salva la trasformazione su file in Application.persistentDataPath ("C:\Users\NomeUtente\AppData\LocalLow\DefaultCompany\haccp\"
+    /// - Fornisce un metodo MapLidarToScreen() che converte un punto Lidar in pixel schermo/canvas
     /// </summary>
     public sealed class CalibrationService
     {
-        // File dove viene persistita la matrice (9 valori).
-        // Nota: per tua richiesta il nome NON contiene "_" (underscore).
+        // File dove viene salvata la matrice (9 valori).
         public const string DefaultFileName = "lidarCalibration.json";
 
         private readonly string _filePath;
@@ -42,12 +35,12 @@ namespace CalibrationBoard.Calibration
         }
 
         /// <summary>
-        /// True se abbiamo una calibrazione valida caricata in memoria.
+        /// True se abbiamo una calibrazione (matrice) valida caricata in memoria.
         /// </summary>
         public bool HasCalibration => _homography != null;
 
         /// <summary>
-        /// Cancella la calibrazione sia in memoria sia su disco.
+        /// Cancella la calibrazione (matrice) sia in memoria sia su disco.
         /// </summary>
         public void Clear()
         {
@@ -57,7 +50,6 @@ namespace CalibrationBoard.Calibration
 
         /// <summary>
         /// Calcola una nuova omografia usando i campioni.
-        /// Richiede almeno 4 campioni (il minimo matematico), ma 15-30 è meglio in pratica.
         /// </summary>
         public void ApplyNewCalibration(IReadOnlyList<CalibrationSample> samples)
         {
@@ -68,7 +60,7 @@ namespace CalibrationBoard.Calibration
             var homo = Homography.ComputeLeastSquares(samples);
             _homography = homo ?? throw new InvalidOperationException("Failed to compute calibration transform.");
 
-            // Persistenza su disco.
+            // Salva la matrice su disco.
             Save(_homography);
         }
 
@@ -78,7 +70,7 @@ namespace CalibrationBoard.Calibration
         /// - canvasSizePx: dimensione in pixel dello spazio target (tipicamente Screen.width/height)
         /// - output: pixel schermo
         /// </summary>
-        public Vector2 Map(Vector2 lidarRaw, Vector2 canvasSizePx)
+        public Vector2 MapLidarToScreen(Vector2 lidarRaw, Vector2 canvasSizePx)
         {
             if (_homography == null)
                 return default;
@@ -100,7 +92,6 @@ namespace CalibrationBoard.Calibration
         [Serializable]
         private sealed class HomographyDto
         {
-            // JsonUtility supporta bene array e tipi base; qui basta un array di double.
             public double[] matrix;
         }
 
@@ -146,7 +137,7 @@ namespace CalibrationBoard.Calibration
             }
             catch
             {
-                // cleanup best-effort: se non riesce, pazienza.
+                // cleanup best-effort: se non riesce non importa.
             }
         }
 
@@ -173,7 +164,7 @@ namespace CalibrationBoard.Calibration
         }
 
         // --------------------------------------------------------------------
-        // Core matematico: omografia
+        // Omografia
         // --------------------------------------------------------------------
 
         private sealed class Homography
@@ -214,8 +205,6 @@ namespace CalibrationBoard.Calibration
 
             /// <summary>
             /// Stima l'omografia con DLT + least squares.
-            /// Nota: questa implementazione è pensata per essere "autosufficiente" in Unity
-            /// (niente dipendenze esterne).
             /// </summary>
             public static Homography ComputeLeastSquares(IReadOnlyList<CalibrationSample> samples)
             {

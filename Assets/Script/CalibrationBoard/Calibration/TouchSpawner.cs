@@ -6,13 +6,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using CalibrationBoard.Calibration;
 
-public class TouchSpawner : StandaloneInputModule, INeedsCalibration
+public class TouchSpawner : StandaloneInputModule
 {
     public DebugClickDot debugClickDot;
     private Dictionary<int, int> lidarIdToFingerId = new Dictionary<int, int>();
     private Queue<int> freeFingerIds = new Queue<int>();
 
-    public Dictionary<CalibrationOrder, Vector2> CalibrationPoints { get; set; }
     // Servizio che carica/salva la matrice di calibrazione (omografia)
     // e fa il mapping Lidar -> Screen.
     private CalibrationService _calibrationService;
@@ -20,16 +19,10 @@ public class TouchSpawner : StandaloneInputModule, INeedsCalibration
     {
         base.OnEnable();
 
-        // Gestione "fingerId" per far funzionare StandaloneInputModule.
-        // Qui ne abilitiamo uno solo (1 dito). Se in futuro vuoi multitouch,
-        // alza questo numero e gestisci più TrackId in parallelo.
+        // Gestione "fingerId" per far funzionare StandaloneInputModule (è abilitato solo un tocco alla volta).
         freeFingerIds.Clear();
         for (int i = 0; i < 1; i++)
             freeFingerIds.Enqueue(i);
-
-        // Mantengo la property per compatibilità con INeedsCalibration,
-        // ma NON usiamo più i punti pre-salvati (TopLeft/TopRight/BottomLeft).
-        CalibrationPoints = new Dictionary<CalibrationOrder, Vector2>();
 
         // Carico (se esiste) la matrice salvata dalla calibrazione a 20 punti.
         _calibrationService = new CalibrationService();
@@ -147,22 +140,18 @@ public class TouchSpawner : StandaloneInputModule, INeedsCalibration
     }
     public void HandleTouch(LidarTouchUnityDriver.UnityGestureEvent evt)
     {
-        // Il driver ci passa la posizione "raw" del Lidar (evt.Position).
-        // Da qui in poi, tutto il progetto deve ragionare in coordinate "Screen pixel",
-        // perché è quello che usa l'EventSystem (Canvas) e anche la Camera per il 3D.
+        // Il driver passa la posizione "raw" del Lidar (evt.Position) che mappiamo in pixel schermo usando la matrice di calibrazione.
 
         if (_calibrationService == null)
             _calibrationService = new CalibrationService();
 
         if (!_calibrationService.HasCalibration)
         {
-            // Se vuoi, qui puoi mostrare un messaggio a schermo.
-            // Io per ora non genero eventi: senza calibrazione rischi click a caso.
             return;
         }
 
         // Mapping con la matrice calcolata dai 20 punti casuali (omografia).
-        var screenPos = _calibrationService.Map(evt.Position, new Vector2(Screen.width, Screen.height));
+        var screenPos = _calibrationService.MapLidarToScreen(evt.Position, new Vector2(Screen.width, Screen.height));
 
         // Questo metodo (StandaloneInputModule) genera gli eventi pointer:
         // IPointerDownHandler / IPointerUpHandler / IDragHandler ecc.

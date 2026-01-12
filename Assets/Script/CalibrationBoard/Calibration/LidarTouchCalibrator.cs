@@ -6,6 +6,18 @@ using System.Linq;
 using UnityEngine;
 using CalibrationBoard.Calibration;
 
+
+/// <summary>
+/// Per ottenere la calibrazione a 20 punti:
+/// ottengo i 20 punti sotto forma di coppie (valore lidar raw, valore schermo in pixel)
+/// normalizzo i valori in pixel schermo in [0..1] dividendo per larghezza/altezza schermo
+/// creo una lista con coppie valori lidar e valori pixel schermo normalizzati qiu chiamata "converted"
+/// passo la lista "converted" a CalibrationService.ApplyNewCalibration() che calcola la matrice di calibrazione
+/// Questa matrice viene:
+/// - salvata su file JSON
+/// - ricaricata all’avvio
+/// - usata per trasformare ogni nuovo tocco in TouchSpawner per mappare i valori raw del Lidar in coordinate schermo "calibrationServie.MapLidarToScreen()"
+/// </summary>
 public class LidarTouchCalibrator : MonoBehaviour
 {
     [Header("UI calibrazione")]
@@ -13,6 +25,8 @@ public class LidarTouchCalibrator : MonoBehaviour
 
     [Header("Campioni")]
     [SerializeField] private int targetSamples = 20;
+
+    [SerializeField] private GameObject eventSystemGO;
 
     private bool _inCalibrationMode;
     private Vector2 _currentTargetScreenPx;
@@ -45,6 +59,9 @@ public class LidarTouchCalibrator : MonoBehaviour
         _inCalibrationMode = true;
         _samples.Clear();
 
+        if (eventSystemGO != null)
+            eventSystemGO.SetActive(false);   // UI click OFF durante raccolta punti
+
         if (_uiController != null)
         {
             _uiController.SetEndButtonsVisible(false);
@@ -52,7 +69,6 @@ public class LidarTouchCalibrator : MonoBehaviour
             _currentTargetScreenPx = _uiController.PlaceMarkerRandom();
         }
     }
-
 
     /// <summary>
     /// Questo metodo va chiamato dal driver quando arriva un gesto dal Lidar.
@@ -66,14 +82,14 @@ public class LidarTouchCalibrator : MonoBehaviour
         if (evt.Type != GestureType.TouchDown)
             return;
 
-        // Salvo la coppia: dove era il marker (pixel) e dove ha “toccato” il Lidar (raw)
+        // La coppia  marker (in pixel schermo) e valore in coordinate Lidar (raw) viene salvata
         _samples.Add(new CalibrationSampleRaw
         {
             screenPx = _currentTargetScreenPx,
             lidarRaw = evt.Position
         });
 
-        // Aggiorno UI progress
+        // Il conteggio del numero di marker completati viene aggiornato.
         if (_uiController != null)
             _uiController.ShowStatusMessage($"Calibrazione: {_samples.Count}/{targetSamples}.");
 
@@ -92,8 +108,19 @@ public class LidarTouchCalibrator : MonoBehaviour
     private void FinishCalibration()
     {
         // Converto pixel -> normalizzato [0..1] e calcolo matrice.
+        //_samples è una lista di:
+
+        //CalibrationSampleRaw {
+        //    Vector2 screenPx;   // posizione del marker in PIXEL schermo
+        //    Vector2 lidarRaw;   // posizione del tocco vista dal LIDAR
+        //}
         var converted = _samples.Select(s =>
         {
+        //Prendo il valore in pixel e lo converto in normalizzato [0..1]
+        //e.g. se s.screenPx = (1530, 420) e lo schermo è 1920x1080 allora screenNorm = (
+                                                                                    //1530 / 1920 = 0.796,
+                                                                                    //420 / 1080 = 0.388
+                                                                                    //)
             var screenNorm = new Vector2(
                 s.screenPx.x / (float)Screen.width,
                 s.screenPx.y / (float)Screen.height
@@ -103,10 +130,11 @@ public class LidarTouchCalibrator : MonoBehaviour
                 world: s.lidarRaw,
                 screenNormalized: screenNorm
             );
-        }).ToList();
+        }).ToList(); // converted è una List<CalibrationService.CalibrationSample> cioè una lista di campioni
+                     // con coordinate Lidar raw e coordinate schermo normalizzate [0..1]
 
         // Calcola e salva su file (stesso nome => sovrascrive la precedente).
-        _calibrationService.ApplyNewCalibration(converted);
+        _calibrationService.ApplyNewCalibration(converted); // sovrascrive il file 
 
         _inCalibrationMode = false;
 
@@ -114,7 +142,13 @@ public class LidarTouchCalibrator : MonoBehaviour
         {
             _uiController.HideMarker();
             _uiController.ShowStatusMessage("Calibrazione completata e salvata.");
-            _uiController.SetEndButtonsVisible(true); // ORA compaiono
+            _uiController.SetEndButtonsVisible(true);
+        }
+
+        if (eventSystemGO != null)
+        {
+            eventSystemGO.SetActive(true);    // UI click ON per premere Recalibrate/Menu
+            Debug.Log("[LidarTouchCalibrator] Calibrazione completata, UI riabilitata.");
         }
 
 #if UNITY_EDITOR

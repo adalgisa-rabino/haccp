@@ -117,6 +117,7 @@ public class CalibrationUIController : MonoBehaviour
         {
             calibrateButton.onClick.RemoveAllListeners();
             calibrateButton.onClick.AddListener(() => onCalibrateAgain?.Invoke());
+            Debug.Log("[CalibrationUIController] Calibrate Again button bound.");
         }
     }
 
