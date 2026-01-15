@@ -26,7 +26,10 @@ public class LidarTouchCalibrator : MonoBehaviour
     [Header("Campioni")]
     [SerializeField] private int targetSamples = 20;
 
+    [SerializeField] private CalibrationShortcut shortcuts;
+
     [SerializeField] private GameObject eventSystemGO;
+
 
     private bool _inCalibrationMode;
     private Vector2 _currentTargetScreenPx;
@@ -39,13 +42,13 @@ public class LidarTouchCalibrator : MonoBehaviour
     {
         _calibrationService = new CalibrationService(CalibrationService.DefaultFileName);
 
-        if (_uiController != null)
-        {
-            _uiController.BindEndButtons(OnMenuPressed, StartCalibration);
-            _uiController.SetEndButtonsVisible(false);
-        }
+        //if (_uiController != null)
+        //{
+        //    _uiController.BindEndButtons(OnMenuPressed, StartCalibration);
+        //    _uiController.SetEndButtonsVisible(false);
+        //}
 
-        StartCalibration(); // auto-start entrando nella scena
+        StartCalibration();
     }
 
 
@@ -59,16 +62,18 @@ public class LidarTouchCalibrator : MonoBehaviour
         _inCalibrationMode = true;
         _samples.Clear();
 
-        if (eventSystemGO != null)
-            eventSystemGO.SetActive(false);   // UI click OFF durante raccolta punti
-
         if (_uiController != null)
         {
-            _uiController.SetEndButtonsVisible(false);
+            //_uiController.SetEndButtonsVisible(false);
+            _uiController.HideShortcutsText();
+            SetShortcutsEnabled(false);
+
+
             _uiController.ShowStatusMessage($"Calibrazione: 0/{targetSamples}. Tocca i marker.");
             _currentTargetScreenPx = _uiController.PlaceMarkerRandom();
         }
     }
+
 
     /// <summary>
     /// Questo metodo va chiamato dal driver quando arriva un gesto dal Lidar.
@@ -142,7 +147,10 @@ public class LidarTouchCalibrator : MonoBehaviour
         {
             _uiController.HideMarker();
             _uiController.ShowStatusMessage("Calibrazione completata e salvata.");
-            _uiController.SetEndButtonsVisible(true);
+            //_uiController.SetEndButtonsVisible(true);
+            _uiController.ShowShortcutsText();
+            SetShortcutsEnabled(true);
+
         }
 
         if (eventSystemGO != null)
@@ -150,6 +158,10 @@ public class LidarTouchCalibrator : MonoBehaviour
             eventSystemGO.SetActive(true);    // UI click ON per premere Recalibrate/Menu
             Debug.Log("[LidarTouchCalibrator] Calibrazione completata, UI riabilitata.");
         }
+
+        if (shortcuts != null)
+            shortcuts.enabled = true;
+
 
 #if UNITY_EDITOR
         Debug.Log("[LidarTouchCalibrator] Calibrazione completata e salvata (sovrascritta se esisteva).");
@@ -169,6 +181,15 @@ public class LidarTouchCalibrator : MonoBehaviour
         // Qui dopo collegherai:
         // SceneManager.LoadScene("Menu");
         Debug.Log("[LidarTouchCalibrator] Menu premuto (azione da collegare).");
+    }
+
+    private void SetShortcutsEnabled(bool enabled)
+    {
+        var all = FindObjectsOfType<CalibrationShortcut>(true); // include anche disattivati
+        foreach (var s in all)
+            s.enabled = enabled;
+
+        Debug.Log($"[Calibrator] Shortcuts enabled = {enabled} (found {all.Length})");
     }
 
 }

@@ -1,10 +1,11 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class CanvasPointer : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public enum Target { Play, Calibration, Menu}
     [SerializeField] private Target target;
+
 
 
     public void Start()
@@ -16,9 +17,7 @@ public class CanvasPointer : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         
     }
 
-
-
-    public void OnPointerDown(PointerEventData eventData)
+     public void OnPointerDown(PointerEventData eventData)
     {
 
 

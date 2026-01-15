@@ -19,10 +19,11 @@ public class CalibrationUIController : MonoBehaviour
     // RectTransform del canvas (se lasciato vuoto lo ricavo dal marker)
     [SerializeField] public RectTransform canvasRect;
 
-    [Header("Button di fine calibrazione")]
-    [SerializeField] private Button menuButton;
-    [SerializeField] private Button calibrateButton;
+    //[Header("Button di fine calibrazione")]
+    //[SerializeField] private Button menuButton;
+    //[SerializeField] private Button calibrateButton;
 
+    [SerializeField] private TMP_Text shortcutsText;
 
     private void Awake()
     {
@@ -32,15 +33,19 @@ public class CalibrationUIController : MonoBehaviour
             var canvas = singleMarker.GetComponentInParent<Canvas>();
             canvasRect = canvas != null ? canvas.GetComponent<RectTransform>() : null;
         }
+
+
     }
 
-    private void OnEnable()
-    {
-        if (statusText != null)
-            statusText.gameObject.SetActive(false);
+    //private void OnEnable()
+    //{
+    //    if (statusText != null)
+    //        statusText.gameObject.SetActive(false);
 
-        SetEndButtonsVisible(false); // all'inizio NON devono esserci
-    }
+    //    //HideShortcutsText();          // 👈 aggiungi
+    //    //SetEndButtonsVisible(false);
+    //}
+
 
 
     /// <summary>
@@ -99,26 +104,39 @@ public class CalibrationUIController : MonoBehaviour
         statusText.gameObject.SetActive(false);
     }
 
-    public void SetEndButtonsVisible(bool visible)
+    public void ShowShortcutsText()
     {
-        if (menuButton != null) menuButton.gameObject.SetActive(visible);
-        if (calibrateButton != null) calibrateButton.gameObject.SetActive(visible);
+        if (shortcutsText != null)
+            shortcutsText.gameObject.SetActive(true);
     }
 
-    public void BindEndButtons(Action onMenu, Action onCalibrateAgain)
+    public void HideShortcutsText()
     {
-        if (menuButton != null)
-        {
-            menuButton.onClick.RemoveAllListeners();
-            menuButton.onClick.AddListener(() => onMenu?.Invoke());
-        }
-
-        if (calibrateButton != null)
-        {
-            calibrateButton.onClick.RemoveAllListeners();
-            calibrateButton.onClick.AddListener(() => onCalibrateAgain?.Invoke());
-            Debug.Log("[CalibrationUIController] Calibrate Again button bound.");
-        }
+        if (shortcutsText != null)
+            shortcutsText.gameObject.SetActive(false);
     }
+
+
+    //public void SetEndButtonsVisible(bool visible)
+    //{
+    //    if (menuButton != null) menuButton.gameObject.SetActive(visible);
+    //    if (calibrateButton != null) calibrateButton.gameObject.SetActive(visible);
+    //}
+
+    //public void BindEndButtons(Action onMenu, Action onCalibrateAgain)
+    //{
+    //    if (menuButton != null)
+    //    {
+    //        menuButton.onClick.RemoveAllListeners();
+    //        menuButton.onClick.AddListener(() => onMenu?.Invoke());
+    //    }
+
+    //    if (calibrateButton != null)
+    //    {
+    //        calibrateButton.onClick.RemoveAllListeners();
+    //        calibrateButton.onClick.AddListener(() => onCalibrateAgain?.Invoke());
+    //        Debug.Log("[CalibrationUIController] Calibrate Again button bound.");
+    //    }
+    //}
 
 }
