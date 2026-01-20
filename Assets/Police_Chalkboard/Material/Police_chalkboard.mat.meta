@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 8bfe6f83ea56bd245a5bb4600f9c4215
+timeCreated: 1525203922
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 117876
+  packageName: Police Chalkboard
+  packageVersion: 1.0
+  assetPath: Assets/Police_Chalkboard/Material/Police_chalkboard.mat
+  uploadId: 243396

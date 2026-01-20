@@ -1,0 +1,37 @@
+An old vintage office!
+The Package contains a  small old vintage office room with 31 Models & Props. All the informations about the models are listed below!!
+NOTE!! All materials uses Unity's Build-in Shaders - Idial for Build-in , URP & HDRP projects!!!
+
+
+	----------- Models & Props -----------
+Book_1 -- VertexCount : 140 -- TextureRes : 1024x1024
+Book_2 -- VertexCount : 222 -- TextureRes : 1024x1024
+Book_3 -- VertexCount : 138 -- TextureRes : 1024x1024
+Book_4 -- VertexCount : 136 -- TextureRes : 1024x1024
+Book_5 -- VertexCount : 510 -- TextureRes : 1024x1024
+Book_6 -- VertexCount : 260 -- TextureRes : 1024x1024
+Book_7 -- VertexCount : 463 -- TextureRes : 1024x1024
+Book_8 -- VertexCount : 516 -- TextureRes : 1024x1024
+Book_9 -- VertexCount : 730 -- TextureRes : 1024x1024
+BookCase -- VertexCount : 1626 -- TextureRes : 512x512
+Box_1 -- VertexCount : 244 -- TextureRes : 2048x2048
+Box_2 -- VertexCount : 312 -- TextureRes : 2048x2048
+Box_3 -- VertexCount : 186 -- TextureRes : 2048x2048
+Box_4 -- VertexCount : 184 -- TextureRes : 2048x2048
+Box_5 -- VertexCount : 598 -- TextureRes : 2048x2048
+Chair -- VertexCount : 2087 -- TextureRes : 256x256
+Cigaret -- VertexCount : 766 -- TextureRes : None
+Clock -- VertexCount : 762 -- TextureRes : 2048x2048
+Cup -- VertexCount : 864 -- TextureRes : 512x512
+Desk -- VertexCount : 16669 -- TextureRes : 256x128
+Door -- VertexCount : 3427 -- TextureRes : 2048x2048
+Fan -- VertexCount : 4023 -- TextureRes : 1024x1024
+Hanger -- VertexCount : 884 -- TextureRes : 512x512
+Lamp -- VertexCount : 3736 -- TextureRes : 512x512
+MetalShelf -- VertexCount : 1152 -- TextureRes : 1024x1024
+Paper -- VertexCount : 139 -- TextureRes : 1024x512
+Portrait -- VertexCount : 494 -- TextureRes : 1024x512
+Room -- VertexCount : 176 -- TextureRes : 1024x1024
+Telephone -- VertexCount : 13415 -- TextureRes : 2048x2048
+Vinil -- VertexCount : 4387 -- TextureRes : 2048x2048
+Window -- VertexCount : 4692 -- TextureRes : 2048x2048
