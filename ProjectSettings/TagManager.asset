@@ -4,7 +4,12 @@
 TagManager:
   serializedVersion: 3
   tags:
+  - HelpObject
   - Anchor
+  - FxTemporaire
+  - zomBunny
+  - Touchable
+  - Waste
   layers:
   - Default
   - TransparentFX
@@ -22,6 +27,7 @@ TagManager:
   - 
   - 
   - 
+  - tagInvisibleToZED
   - 
   - 
   - 
@@ -35,8 +41,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - arlayer
   - 
   m_SortingLayers:
   - name: Default

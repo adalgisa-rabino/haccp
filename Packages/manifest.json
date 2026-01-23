@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.stereolabs.zed": "https://github.com/stereolabs/zed-unity.git?path=/ZEDCamera/Assets",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.cinemachine": "3.1.4",
     "com.unity.cloud.gltfast": "6.15.1",
