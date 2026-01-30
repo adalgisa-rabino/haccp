@@ -1251,7 +1251,6 @@ MonoBehaviour:
   _currentState: 0
   _wasteController: {fileID: 1379811715}
   _temperatureController: {fileID: 100407499}
-  _surfaceController: {fileID: 1803936213}
   _faucetAnimator: {fileID: 433650365}
   _waterAnimator: {fileID: 0}
   _temperatureUI: {fileID: 2018670410}
@@ -1507,6 +1506,52 @@ MonoBehaviour:
   _foodWasteController: {fileID: 1379811715}
   _gameFlowManager: {fileID: 785862696}
   tapTouchCount: 0
+--- !u!1 &909316109
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 909316111}
+  - component: {fileID: 909316110}
+  m_Layer: 0
+  m_Name: RT
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &909316110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 909316109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cf6921649d0f44009b631d0bddb6ace, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderTexture: {fileID: 8400000, guid: 705420ebdcb7f2a4483650df90120a66, type: 2}
+  fileName: SinkSurface.png
+--- !u!4 &909316111
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 909316109}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.64964, y: 14.28122, z: -13.56693}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &934011214
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2033,17 +2078,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8916223081338445707, guid: 082b603ae59d51e43ba3b0162c77fb8f, type: 3}
   m_PrefabInstance: {fileID: 19135488}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1213720562 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7523585596920546044, guid: 082b603ae59d51e43ba3b0162c77fb8f, type: 3}
-  m_PrefabInstance: {fileID: 19135488}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1213720560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0777d029ed3dffa4692f417d4aba19ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1213720564
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2077,11 +2111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67af6c4745e48454ea338a1877c19a0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  udpVelocity: {fileID: 0}
-  decal: {fileID: 1213720562}
-  minSpeed: 1
-  fadeAmount: 1
-  fadeSpeed: 0.1
 --- !u!1001 &1218306046
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3365,9 +3394,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7835105af717416a867e688957d91e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  udpTot: {fileID: 0}
-  handCleanUI: {fileID: 2071989796}
-  fillImage: {fileID: 1562890326}
 --- !u!114 &1562890326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3948,11 +3974,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67af6c4745e48454ea338a1877c19a0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  udpVelocity: {fileID: 0}
-  decal: {fileID: 1213720562}
-  minSpeed: 0.7
-  fadeAmount: 1
-  fadeSpeed: 0.4
 --- !u!4 &1803936214
 Transform:
   m_ObjectHideFlags: 0
@@ -4847,3 +4868,4 @@ SceneRoots:
   - {fileID: 1388136118}
   - {fileID: 1488290467}
   - {fileID: 1283442990}
+  - {fileID: 909316111}
