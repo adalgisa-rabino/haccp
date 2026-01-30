@@ -1,87 +1,84 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-public class SurfaceScrubMaskController : MonoBehaviour
+public class SurfaceScrubGridController : MonoBehaviour
 {
-    [Header("Surface")]
-    public RectTransform surfaceRect;
-    public RenderTexture dirtMask;
+    [Header("Target Grid")]
+    [SerializeField] private DirtGridController dirtGrid;
 
-    [Header("Hands")]
-    public Transform leftWrist;
-    public Transform rightWrist;
-    public Camera referenceCamera;
+    [Header("Hands input (ZED)")]
+    [SerializeField] private Transform leftWristAnchor;
+    [SerializeField] private Transform rightWristAnchor;
 
-    [Header("Scrub Settings")]
-    public float scrubRadiusUV = 0.05f;
-    public float scrubStrength = 0.6f;
-    public float minRelativeHandSpeed = 0.15f;
+    [Tooltip("La camera che usa la ZED/Virtual View. Serve per WorldToScreenPoint.")]
+    [SerializeField] private Camera referenceCamera;
 
-    [Header("Materials")]
-    public Material eraseMaterial;
+    [Header("UI / Canvas camera (solo se Canvas è Screen Space - Camera)")]
+    [Tooltip("Se il tuo Canvas NON è Overlay, metti qui la Canvas worldCamera. Se è Overlay lascia null.")]
+    [SerializeField] private Camera uiCamera;
 
-    private Vector3 lastLeftPos;
-    private Vector3 lastRightPos;
-    private bool firstFrame = true;
+    [Header("Hand gesture gate")]
+    [SerializeField] private bool enableHands = true;
+    [SerializeField] private float trackingWarmupSeconds = 0.4f;
+
+    [Tooltip("Velocità minima del punto medio (pixel/sec) per considerare lo sfregamento valido.")]
+    [SerializeField] private float minMidSpeedPxPerSec = 350f;
+
+    [Header("Mouse input")]
+    [SerializeField] private bool enableMouse = true;
+
+    private float warmupTimer;
+    private bool hadPrevMid;
+    private Vector2 prevMidScreen;
+
+    void OnEnable()
+    {
+        warmupTimer = 0f;
+        hadPrevMid = false;
+    }
 
     void Update()
     {
-        if (leftWrist == null || rightWrist == null) return;
+        if (dirtGrid == null) return;
 
-        if (firstFrame)
+        // 1) Mouse
+        if (enableMouse && Input.GetMouseButton(0))
         {
-            lastLeftPos = leftWrist.position;
-            lastRightPos = rightWrist.position;
-            firstFrame = false;
+            // MousePosition è già screen space
+            dirtGrid.EraseAtScreenPoint(Input.mousePosition, uiCamera);
+        }
+
+        // 2) Mani
+        if (!enableHands) return;
+        if (leftWristAnchor == null || rightWristAnchor == null || referenceCamera == null) return;
+
+        Vector2 l = referenceCamera.WorldToScreenPoint(leftWristAnchor.position);
+        Vector2 r = referenceCamera.WorldToScreenPoint(rightWristAnchor.position);
+        Vector2 mid = (l + r) * 0.5f;
+
+        // warm-up per evitare “wipe” al primo aggancio del tracking
+        warmupTimer += Time.deltaTime;
+        if (warmupTimer < trackingWarmupSeconds)
+        {
+            prevMidScreen = mid;
+            hadPrevMid = true;
             return;
         }
 
-        // velocità delle mani
-        float leftSpeed = Vector3.Distance(leftWrist.position, lastLeftPos) / Time.deltaTime;
-        float rightSpeed = Vector3.Distance(rightWrist.position, lastRightPos) / Time.deltaTime;
-        float relativeSpeed = Mathf.Abs(leftSpeed - rightSpeed);
-
-        lastLeftPos = leftWrist.position;
-        lastRightPos = rightWrist.position;
-
-        // serve movimento reale (sfregamento)
-        if (relativeSpeed < minRelativeHandSpeed)
+        // gate sul movimento per evitare jitter
+        if (!hadPrevMid)
+        {
+            prevMidScreen = mid;
+            hadPrevMid = true;
             return;
+        }
 
-        // punto medio tra le mani
-        Vector3 midWorld = (leftWrist.position + rightWrist.position) * 0.5f;
+        float dt = Mathf.Max(Time.deltaTime, 0.0001f);
+        float speed = (mid - prevMidScreen).magnitude / dt;
+        prevMidScreen = mid;
 
-        // world → screen
-        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(referenceCamera, midWorld);
+        if (speed < minMidSpeedPxPerSec) return;
 
-        // screen → local UI
-        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            surfaceRect,
-            screenPoint,
-            null,
-            out Vector2 localPoint))
-            return;
-
-        // local → UV (0–1)
-        Rect r = surfaceRect.rect;
-        float u = (localPoint.x - r.xMin) / r.width;
-        float v = (localPoint.y - r.yMin) / r.height;
-
-        if (u < 0 || u > 1 || v < 0 || v > 1)
-            return;
-
-        // applica pulizia sulla maschera
-        ApplyScrub(new Vector2(u, v));
-    }
-
-    void ApplyScrub(Vector2 uv)
-    {
-        eraseMaterial.SetVector("_Center", new Vector4(uv.x, uv.y, 0, 0));
-        eraseMaterial.SetFloat("_Radius", scrubRadiusUV);
-        eraseMaterial.SetFloat("_Strength", scrubStrength * Time.deltaTime);
-
-        RenderTexture current = RenderTexture.active;
-        Graphics.Blit(dirtMask, dirtMask, eraseMaterial);
-        RenderTexture.active = current;
+        // scrub sulla griglia usando lo screen point calcolato dalla camera
+        dirtGrid.EraseAtScreenPoint(mid, uiCamera);
     }
 }

@@ -100,6 +100,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _Hardness: 0.6
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -111,7 +112,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _Strength: 0.5
+    - _Strength: 0.00029523493
     - _Surface: 0
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1

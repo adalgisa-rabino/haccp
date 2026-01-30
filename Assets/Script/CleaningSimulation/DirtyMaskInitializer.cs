@@ -8,7 +8,10 @@ public class DirtMaskInitializer : MonoBehaviour
     {
         var prev = RenderTexture.active;
         RenderTexture.active = dirtMask;
-        GL.Clear(true, true, new Color(0,0,0,1)); // alpha = 1 -> tutto sporco
+
+        // Sporco pieno = bianco
+        GL.Clear(true, true, Color.white);
+
         RenderTexture.active = prev;
     }
 }

@@ -15,6 +15,8 @@ public class ZedWristAnchors : MonoBehaviour
     public bool leftTracked { get; private set; }
     public bool rightTracked { get; private set; }
 
+    
+
     void OnEnable()
     {
         if (zedManager == null) zedManager = FindObjectOfType<ZEDManager>();
