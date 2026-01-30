@@ -23,7 +23,7 @@ public class GameFlowManager : MonoBehaviour
     [SerializeField] private FoodWasteController _wasteController;
     [SerializeField] private TemperatureController _temperatureController;
     //[SerializeField] private HandWashController _handWashController;
-    [SerializeField] private SurfaceCleaningController _surfaceController;
+   //[SerializeField] private SurfaceCleaningController _surfaceController;
     //[SerializeField] private QuizController _quizController;
 
     [Header("Animators")]
@@ -63,7 +63,7 @@ public class GameFlowManager : MonoBehaviour
         _wasteController.OnAllWasteRemoved += OnFoodWasteRemoved;
         _temperatureController.OnTemperatureCompleted += OnTemperatureSolved;
         //_handWashController.OnHandWashCompleted = OnHandWashCompleted;
-        _surfaceController.OnSurfaceCleaned += OnSurfaceCleaned;
+        //_surfaceController.OnSurfaceCleaned += OnSurfaceCleaned;
         //_quizController.OnQuizCompleted = OnQuizCompleted;
 
         _currentState = WashGameState.FoodWasteRemoval;
@@ -155,7 +155,7 @@ public class GameFlowManager : MonoBehaviour
 
         _currentState = WashGameState.SurfaceCleaning;
 
-        _surfaceController.StartSurfaceCleaning();
+        //_surfaceController.StartSurfaceCleaning();
     }
 
     // --------------------------------------------------
