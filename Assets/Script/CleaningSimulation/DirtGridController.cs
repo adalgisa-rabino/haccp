@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit.Utilities.Tweenables.Primitives;
 
 public class DirtGridController : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class DirtGridController : MonoBehaviour
     [SerializeField] private RectTransform gridRoot;        // DirtGrid (figlio)
     [SerializeField] private int cols = 40;
     [SerializeField] private int rows = 25;
-    [SerializeField] private float eraseRadiusCells = 1.2f; // raggio in celle
+    [SerializeField] private float eraseRadiusCells = 2.2f; // raggio in celle
 
     [Header("Visual")]
     [SerializeField] private Color dirtColor = new Color(0.35f, 0.15f, 0.05f, 1f);
@@ -23,6 +24,16 @@ public class DirtGridController : MonoBehaviour
     private int clearedCount;
     private int totalCount;
 
+    [SerializeField] private float eraseStrengthPerHit = 0.22f;   // quanto togli al centro per “passata”
+    [SerializeField] private float smoothSpeed = 12f;             // quanto velocemente l’alpha segue il target
+    [SerializeField] private float neighborBlur = 0.08f;           // 0 = niente blur, 0.05–0.15 = leggero
+    private float[,] dirt;        // stato reale (0..1)
+    private float[,] dirtTarget;  // target dopo l’erase
+    private float cleaningPercent  = 0.0f;
+
+    
+
+
     void Awake()
     {
         if (surfaceRect == null) surfaceRect = GetComponentInParent<RectTransform>();
@@ -36,7 +47,64 @@ public class DirtGridController : MonoBehaviour
         {
             EraseAtScreenPoint(Input.mousePosition);
         }
+
+        cleaningPercent = Mathf.Clamp01(cleaningPercent);
+        if (cleaningPercent > percentToWin) {
+
+            Debug.Log("Surface cleaned!");
+            //voglio che tutte le celle spariscano
+
+            //aggiungo animazione che fa sparire tutte le celle
+
+
+
+            for (int y = 0; y < rows; y++)
+            for (int x = 0; x < cols; x++)
+            {
+                dirtTarget[x, y] = 0f;
+            }
+
+        }
     }
+
+    void LateUpdate()
+    {
+        // 1) blur leggero tra vicini (opzionale)
+        if (neighborBlur > 0f)
+            ApplyNeighborBlur();
+
+        // 2) smooth verso il target (fade)
+        float k = 1f - Mathf.Exp(-smoothSpeed * Time.deltaTime);
+
+        for (int y = 0; y < rows; y++)
+        for (int x = 0; x < cols; x++)
+        {
+            dirt[x, y] = Mathf.Lerp(dirt[x, y], dirtTarget[x, y], k);
+            SetCellAlpha(x, y, dirt[x, y]);
+        }
+    }
+
+    private void ApplyNeighborBlur()
+    {
+        // Un blur leggero tipo diffusione: ogni cella tende verso la media dei vicini
+        // neighborBlur 0.05–0.15 è già realistico
+        for (int y = 0; y < rows; y++)
+        for (int x = 0; x < cols; x++)
+        {
+            float sum = dirtTarget[x, y];
+            int n = 1;
+
+            if (x > 0) { sum += dirtTarget[x - 1, y]; n++; }
+            if (x < cols - 1) { sum += dirtTarget[x + 1, y]; n++; }
+            if (y > 0) { sum += dirtTarget[x, y - 1]; n++; }
+            if (y < rows - 1) { sum += dirtTarget[x, y + 1]; n++; }
+
+            float avg = sum / n;
+            dirtTarget[x, y] = Mathf.Lerp(dirtTarget[x, y], avg, neighborBlur);
+        }
+    }
+
+
 
     public void GenerateGrid()
     {
@@ -91,7 +159,28 @@ public class DirtGridController : MonoBehaviour
                 cleared[x, y] = false;
             }
         }
+
+        dirt = new float[cols, rows];
+        dirtTarget = new float[cols, rows];
+
+        for (int y = 0; y < rows; y++)
+        for (int x = 0; x < cols; x++)
+        {
+            dirt[x,y] = 1f;        // sporco pieno
+            dirtTarget[x,y] = 1f;
+            SetCellAlpha(x, y, 1f);
+        }
+
     }
+        private void SetCellAlpha(int x, int y, float a)
+    {
+        var img = cells[x, y];
+        if (img == null) return;
+        Color c = img.color;
+        c.a = a;
+        img.color = c;
+    }
+
 
     public void ResetDirt()
     {
@@ -134,6 +223,7 @@ public class DirtGridController : MonoBehaviour
     private void EraseCellsAround(int cx, int cy)
     {
         int rad = Mathf.CeilToInt(eraseRadiusCells);
+
         for (int y = cy - rad; y <= cy + rad; y++)
         for (int x = cx - rad; x <= cx + rad; x++)
         {
@@ -141,18 +231,28 @@ public class DirtGridController : MonoBehaviour
 
             float dx = x - cx;
             float dy = y - cy;
-            if (dx * dx + dy * dy > eraseRadiusCells * eraseRadiusCells) continue;
+            float dist = Mathf.Sqrt(dx * dx + dy * dy);
 
-            if (!cleared[x, y])
-            {
-                cleared[x, y] = true;
-                clearedCount++;
+            if (dist > eraseRadiusCells) continue;
 
-                if (cells[x, y] != null)
-                    cells[x, y].enabled = false; // “cancellato” -> trasparente
-            }
+            // falloff morbido: 1 al centro -> 0 al bordo
+            float t = 1f - Mathf.Clamp01(dist / eraseRadiusCells);
+            // curva più “soft”
+            float falloff = t * t; // puoi provare t^3 se vuoi più concentrato
+
+            float delta = eraseStrengthPerHit * falloff;
+
+            float previousDirt = dirtTarget[x, y];
+            dirtTarget[x, y] = Mathf.Max(0f, dirtTarget[x, y] - delta);
+
+            // Calcola la differenza di sporco rimossa
+            float dirtRemoved = previousDirt - dirtTarget[x, y];
+
+            // Aggiorna la percentuale di pulizia
+            cleaningPercent += dirtRemoved / totalCount;
         }
     }
+
 
     public float GetCleanPercent()
     {

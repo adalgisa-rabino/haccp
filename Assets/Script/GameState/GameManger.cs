@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Playables;
 
 public enum GameFlowState
 {
@@ -227,9 +228,28 @@ public sealed class GameManager : MonoBehaviour
 
     void TryStartIntroDialogue()
     {
-        var dialogTrigger = FindObjectOfType<DialogTrigger>();
-        if (dialogTrigger != null)
-            dialogTrigger.PlayDialogue();
+        var playableDirector = FindObjectOfType<PlayableDirector>();
+        if (playableDirector != null)
+        {
+            Debug.Log("PlayableDirector trovato. Collegamento all'evento 'stopped'.");
+            playableDirector.stopped += OnIntroTimelineComplete;
+        }
+        else
+        {
+            Debug.LogWarning("PlayableDirector non trovato nella scena.");
+        }
+    }
+
+    void OnIntroTimelineComplete(PlayableDirector director)
+    {
+        Debug.Log("Timeline dell'introduzione completata. Avvio del nuovo gioco.");
+
+        
+        // Carica la scena corretta
+        LoadScene(sceneRistorante);
+
+        // Rimuovi il listener per evitare duplicazioni
+        director.stopped -= OnIntroTimelineComplete;
     }
 
     public void LoadScene(int buildIndex)
