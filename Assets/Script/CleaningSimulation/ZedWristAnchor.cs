@@ -1,3 +1,4 @@
+// ZedWristAnchor.cs
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -15,8 +16,6 @@ public class ZedWristAnchors : MonoBehaviour
     public bool leftTracked { get; private set; }
     public bool rightTracked { get; private set; }
 
-    
-
     void OnEnable()
     {
         if (zedManager == null) zedManager = FindObjectOfType<ZEDManager>();
@@ -32,17 +31,18 @@ public class ZedWristAnchors : MonoBehaviour
     {
         if (zedManager == null || leftWristAnchor == null || rightWristAnchor == null) return;
 
-        // Prendi la prima persona tracciata (puoi cambiarlo dopo con un ID)
         List<DetectedBody> bodies = dframe.GetFilteredObjectList(true, false, false);
         if (bodies == null || bodies.Count == 0)
         {
-            leftTracked = rightTracked = false;
+            leftTracked = false;
+            rightTracked = false;
+            leftWristAnchor.gameObject.SetActive(false);
+            rightWristAnchor.gameObject.SetActive(false);
             return;
         }
 
         sl.BodyData data = bodies[0].rawBodyData;
 
-        // Scegli indici in base al body format impostato nel tuo ZEDManager
         int leftIndex, rightIndex;
         switch (zedManager.bodyFormat)
         {
@@ -58,26 +58,33 @@ public class ZedWristAnchors : MonoBehaviour
                 break;
         }
 
-        // Se l’array non è completo, esci
         if (data.keypoint == null || data.keypointConfidence == null) return;
         if (data.keypoint.Length <= Mathf.Max(leftIndex, rightIndex)) return;
         if (data.keypointConfidence.Length <= Mathf.Max(leftIndex, rightIndex)) return;
 
-        // Confidenza (0-100) per capire se “tracciato bene”
         leftTracked = data.keypointConfidence[leftIndex] >= confidenceThreshold;
         rightTracked = data.keypointConfidence[rightIndex] >= confidenceThreshold;
 
-        // Converti in world Unity usando la root ZED (stesso metodo del tuo manager) :contentReference[oaicite:4]{index=4}
         Transform root = zedManager.GetZedRootTransform();
 
         if (leftTracked)
+        {
             leftWristAnchor.position = root.TransformPoint(data.keypoint[leftIndex]);
+            leftWristAnchor.gameObject.SetActive(true);
+        }
+        else
+        {
+            leftWristAnchor.gameObject.SetActive(false);
+        }
 
         if (rightTracked)
+        {
             rightWristAnchor.position = root.TransformPoint(data.keypoint[rightIndex]);
-
-        // Se vuoi: quando non tracciato, puoi disattivare l’anchor
-        leftWristAnchor.gameObject.SetActive(true);
-        rightWristAnchor.gameObject.SetActive(true);
+            rightWristAnchor.gameObject.SetActive(true);
+        }
+        else
+        {
+            rightWristAnchor.gameObject.SetActive(false);
+        }
     }
 }
