@@ -10,6 +10,7 @@ TagManager:
   - zomBunny
   - Touchable
   - Waste
+  - Debris
   layers:
   - Default
   - TransparentFX
@@ -23,8 +24,8 @@ TagManager:
   - SelectedFoodPanel
   - CullingMaskD1
   - CullingMaskD2
-  - 
-  - 
+  - Surface
+  - Debris
   - 
   - 
   - tagInvisibleToZED
