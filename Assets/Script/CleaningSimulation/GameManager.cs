@@ -35,6 +35,7 @@ public class GameManagerDishWater : MonoBehaviour
 
     void Start() {
         // Forza l'avvio della prima fase
+        stainSpawner.enabled = false;
         ChangeState(WashGameState.PlanningProtocol);
     }
 
@@ -74,7 +75,10 @@ public class GameManagerDishWater : MonoBehaviour
 
             case WashGameState.SurfaceCleaning:
                 boilerUI.SetActive(true);
-                if(stainSpawner != null) stainSpawner.enabled = true;
+                if(stainSpawner != null) 
+
+                {   stainSpawner.enabled = true;
+                    stainSpawner.SpawnStains();}
                 if(cleaningManager != null) cleaningManager.enabled = true;
                 break;
 

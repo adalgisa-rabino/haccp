@@ -9,10 +9,10 @@ public class StainSpawner : MonoBehaviour
 
     void Start()
     {
-        SpawnStains();
+        
     }
 
-    void SpawnStains()
+    public void SpawnStains()
     {
         Bounds b = tableCollider.bounds;
 

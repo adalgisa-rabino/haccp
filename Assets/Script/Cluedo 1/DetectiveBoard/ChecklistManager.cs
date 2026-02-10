@@ -16,37 +16,41 @@ public class ChecklistManager : MonoBehaviour
     [Header("Riferimenti")]
     public CluedoGameController cluedoController;
     public GameObject prefabCarta;
-    public GameObject indizioPrefab; // Trascina qui il prefab della Polaroid
+    public GameObject indizioPrefab;
 
     [Header("Contenitori (Grid Layout)")]
     public Transform containerColpevoli;
     public Transform containerArmi;
     public Transform containerLuoghi;
-    public Transform containerDestro; // Trascina qui l'oggetto 'dx' della Hierarchy
 
-    private List<Vector2> posizioniDisponibili = new List<Vector2>();
+    [Header("Dove finiscono gli indizi rivelati")]
+    public Transform containerIndiziEsterno; // nuovo: qui vanno gli indizi (al posto di dx)
+
+    [Header("Layout Indizi (se li vuoi sparsi anche lì)")]
+    public float margineIndizi = 80f;
+    public float rotazioneIndizi = 15f;
 
     [Header("Dati Polaroid (FISSI)")]
     [SerializeField] private List<PolaroidData> polaroids;
 
     void OnEnable()
     {
-        // Ci colleghiamo all'evento che hai già nel tuo CluedoGameController
         if (cluedoController != null)
             cluedoController.OnSetupComplete += IniziaPopolamento;
-        ClueTarget.OnClueRevealed += AggiungiIndizioAlMuro;
+
+        ClueTarget.OnClueRevealed += AggiungiIndizio;
     }
 
     void OnDisable()
     {
         if (cluedoController != null)
             cluedoController.OnSetupComplete -= IniziaPopolamento;
-        ClueTarget.OnClueRevealed -= AggiungiIndizioAlMuro;
+
+        ClueTarget.OnClueRevealed -= AggiungiIndizio;
     }
 
     void IniziaPopolamento()
     {
-        // Popoliamo le tre sezioni usando le liste generate dal controller
         PopolaCategoria(cluedoController.tuttiColpevoli, containerColpevoli);
         PopolaCategoria(cluedoController.tutteArmi, containerArmi);
         PopolaCategoria(cluedoController.tuttiLuoghi, containerLuoghi);
@@ -54,14 +58,14 @@ public class ChecklistManager : MonoBehaviour
 
     void PopolaCategoria(List<string> listaNomi, Transform container)
     {
+        if (container == null || prefabCarta == null) return;
+
         foreach (string nome in listaNomi)
         {
             GameObject nuovaCarta = Instantiate(prefabCarta, container);
 
-            // --- AGGIUNGI QUESTO ---
-            float rotazioneCasuale = Random.Range(-5f, 5f); // Ruota tra -5 e +5 gradi
+            float rotazioneCasuale = Random.Range(-5f, 5f);
             nuovaCarta.transform.localRotation = Quaternion.Euler(0, 0, rotazioneCasuale);
-            // -----------------------
 
             var data = TrovaPolaroid(nome);
             Sprite sprite = data != null ? data.immagine : null;
@@ -70,7 +74,6 @@ public class ChecklistManager : MonoBehaviour
         }
     }
 
-    // Cerca nei dati la polaroid giusta
     PolaroidData TrovaPolaroid(string id)
     {
         foreach (var p in polaroids)
@@ -83,34 +86,32 @@ public class ChecklistManager : MonoBehaviour
         return null;
     }
 
-    void AggiungiIndizioAlMuro(Clue indizio)
+    void AggiungiIndizio(Clue indizio)
     {
-        if (containerDestro == null || indizioPrefab == null) return;
+        if (containerIndiziEsterno == null || indizioPrefab == null) return;
 
-        // 1. Istanzia la Polaroid come figlia di 'dx'
-        GameObject nuovaCard = Instantiate(indizioPrefab, containerDestro);
+        GameObject nuovaCard = Instantiate(indizioPrefab, containerIndiziEsterno);
+
+        // Se vuoi che gli indizi siano “sparsi” anche nel nuovo posto:
         RectTransform rectCard = nuovaCard.GetComponent<RectTransform>();
-        RectTransform rectContainer = containerDestro.GetComponent<RectTransform>();
+        RectTransform rectContainer = containerIndiziEsterno.GetComponent<RectTransform>();
 
-        // 2. Forza le ancore al centro per permettere il posizionamento casuale relativo
-        rectCard.anchorMin = new Vector2(0.5f, 0.5f);
-        rectCard.anchorMax = new Vector2(0.5f, 0.5f);
-        rectCard.pivot = new Vector2(0.5f, 0.5f);
+        if (rectCard != null && rectContainer != null)
+        {
+            rectCard.anchorMin = new Vector2(0.5f, 0.5f);
+            rectCard.anchorMax = new Vector2(0.5f, 0.5f);
+            rectCard.pivot = new Vector2(0.5f, 0.5f);
 
-        // 3. Calcola i limiti
-        float margine = 80f;
-        float limiteX = (rectContainer.rect.width / 2) - margine;
-        float limiteY = (rectContainer.rect.height / 2) - margine;
+            float limiteX = (rectContainer.rect.width / 2) - margineIndizi;
+            float limiteY = (rectContainer.rect.height / 2) - margineIndizi;
 
-        // 4. Genera la posizione casuale
-        float posX = Random.Range(-limiteX, limiteX);
-        float posY = Random.Range(-limiteY, limiteY);
-        rectCard.anchoredPosition = new Vector2(posX, posY);
+            float posX = Random.Range(-limiteX, limiteX);
+            float posY = Random.Range(-limiteY, limiteY);
+            rectCard.anchoredPosition = new Vector2(posX, posY);
+        }
 
-        // 5. Applica la rotazione casuale
-        nuovaCard.transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-15f, 15f));
+        nuovaCard.transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-rotazioneIndizi, rotazioneIndizi));
 
-        // 6. Setup e Animazione
         var data = TrovaPolaroid(indizio.testo);
         Sprite sprite = data != null ? data.immagine : null;
 
