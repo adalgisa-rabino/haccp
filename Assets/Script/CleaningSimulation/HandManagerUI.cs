@@ -1,45 +1,51 @@
+// HandManagerUI.cs
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HandUIManager : MonoBehaviour
 {
+    [Header("Interaction Target")]
+    // 1. AGGIUNTA: Riferimento allo script che gestisce lo sporco
+    [SerializeField] private DirtGridController dirtController; 
+
     [Header("References")]
-    [SerializeField] private Camera referenceCamera;
+    [SerializeField] private Camera referenceCamera; // Camera ZED/World
+    [SerializeField] private Camera uiCamera;        // 2. AGGIUNTA: Camera UI (lascia vuoto se usi Overlay)
     [SerializeField] private ZedWristAnchors wristProvider;
 
-    [Header("Anchors (optional, can be read from wristProvider)")]
+    // ... (Il resto delle variabili Header rimane uguale) ...
+    [Header("Anchors")]
     [SerializeField] private Transform leftWristAnchor;
     [SerializeField] private Transform rightWristAnchor;
-
-    [Header("UI - circles (RectTransform)")]
     [SerializeField] private RectTransform leftCircle;
     [SerializeField] private RectTransform rightCircle;
-
-    [Header("UI - circle graphics (Image)")]
     [SerializeField] private Image leftCircleImage;
     [SerializeField] private Image rightCircleImage;
-
-    [Header("UI - question mark graphics (optional)")]
     [SerializeField] private Graphic leftQuestion;
     [SerializeField] private Graphic rightQuestion;
 
     [Header("Behavior")]
     [SerializeField] private bool freezeOnLost = true;
     [SerializeField] private bool hideIfNeverTracked = true;
-    [SerializeField] private float lostGraceSeconds = 0.15f;  // anti flicker
-    [SerializeField] private float lerpSpeed = 18f;           // smoothing UI
+    [SerializeField] private float lostGraceSeconds = 0.15f;
+    [SerializeField] private float lerpSpeed = 18f;
+
+    [Header("Mapping")]
+    [SerializeField] private bool mirrorXOnScreen = true;
 
     [Header("Visual")]
     [SerializeField] private Color trackedColor = Color.white;
     [SerializeField] private Color lostColor = new Color(0.6f, 0.6f, 0.6f, 1f);
     [SerializeField] private float questionFadeSpeed = 10f;
 
+    [Header("Calibration")]
+    [SerializeField] private float motionGain = 1.0f;
+    [SerializeField] private Vector2 motionOffset = Vector2.zero;
+
     private bool leftHadValidPos;
     private bool rightHadValidPos;
-
-    private Vector2 leftLastScreenPos;
-    private Vector2 rightLastScreenPos;
-
+    private Vector2 leftLastAnchoredPos;
+    private Vector2 rightLastAnchoredPos;
     private float leftLostTimer;
     private float rightLostTimer;
 
@@ -59,20 +65,21 @@ public class HandUIManager : MonoBehaviour
 
     void Update()
     {
-        ResolveAnchorsFromProviderIfNeeded();
+        if (referenceCamera == null) referenceCamera = Camera.main;
 
+        // Gestione Mano Sinistra
         UpdateHandUI(
             isLeft: true,
             anchor: leftWristAnchor,
             circle: leftCircle,
             circleImage: leftCircleImage,
             question: leftQuestion,
-            
             hadValid: ref leftHadValidPos,
-            lastPos: ref rightLastScreenPos,
+            lastAnchoredPos: ref leftLastAnchoredPos,
             lostTimer: ref leftLostTimer
         );
 
+        // Gestione Mano Destra
         UpdateHandUI(
             isLeft: false,
             anchor: rightWristAnchor,
@@ -80,26 +87,9 @@ public class HandUIManager : MonoBehaviour
             circleImage: rightCircleImage,
             question: rightQuestion,
             hadValid: ref rightHadValidPos,
-            lastPos: ref rightLastScreenPos,
+            lastAnchoredPos: ref rightLastAnchoredPos,
             lostTimer: ref rightLostTimer
         );
-    }
-
-    private void ResolveAnchorsFromProviderIfNeeded()
-    {
-        if (wristProvider == null) return;
-
-        if (leftWristAnchor == null)
-        {
-            // Se hai esposto i due anchor nel provider, assegna qui.
-            // In alternativa trascinali a mano in Inspector e lascia stare.
-            // leftWristAnchor = wristProvider.leftWristAnchor; // se lo rendi pubblico
-        }
-
-        if (rightWristAnchor == null)
-        {
-            // rightWristAnchor = wristProvider.rightWristAnchor; // se lo rendi pubblico
-        }
     }
 
     private void UpdateHandUI(
@@ -109,7 +99,7 @@ public class HandUIManager : MonoBehaviour
         Image circleImage,
         Graphic question,
         ref bool hadValid,
-        ref Vector2 lastPos,
+        ref Vector2 lastAnchoredPos,
         ref float lostTimer
     )
     {
@@ -117,31 +107,36 @@ public class HandUIManager : MonoBehaviour
 
         bool trackedNow = GetTrackedState(isLeft);
 
+        // --- Logica di calcolo posizione (Invariata) ---
         if (trackedNow)
         {
             lostTimer = 0f;
-
-            if (anchor != null)
+            if (anchor != null && referenceCamera != null)
             {
-                Vector3 sp = referenceCamera != null
-                    ? referenceCamera.WorldToScreenPoint(anchor.position)
-                    : new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 1f);
-
-                // se il punto è dietro la camera, consideralo non valido
+                Vector3 sp = referenceCamera.WorldToScreenPoint(anchor.position);
                 if (sp.z > 0.001f)
                 {
-                    lastPos = new Vector2(sp.x, sp.y);
-                    hadValid = true;
+                    if (mirrorXOnScreen) sp.x = Screen.width - sp.x;
+
+                    RectTransform parentRect = circle.parent as RectTransform;
+                    if (parentRect != null)
+                    {
+                        // Nota: Qui usiamo null come camera per ScreenPointToLocalPoint se siamo in Overlay,
+                        // altrimenti servirebbe la uiCamera.
+                        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, new Vector2(sp.x, sp.y), uiCamera, out Vector2 localPoint))
+                        {
+                            Vector2 pivot = Vector2.zero; 
+                            localPoint = pivot + (localPoint - pivot) * motionGain + motionOffset;
+                            lastAnchoredPos = localPoint;
+                            hadValid = true;
+                        }
+                        else trackedNow = false;
+                    }
+                    else trackedNow = false;
                 }
-                else
-                {
-                    trackedNow = false;
-                }
+                else trackedNow = false;
             }
-            else
-            {
-                trackedNow = false;
-            }
+            else trackedNow = false;
         }
         else
         {
@@ -159,14 +154,25 @@ public class HandUIManager : MonoBehaviour
             return;
         }
 
-        // Posizione UI: segue se tracked, altrimenti resta ferma sull’ultima
-        Vector2 targetPos = lastPos;
-
-        // smoothing della UI per evitare jitter
-        Vector2 current = circle.position;
+        // --- Movimento Visuale ---
+        Vector2 targetPos = lastAnchoredPos;
+        Vector2 current = circle.anchoredPosition;
         float t = 1f - Mathf.Exp(-lerpSpeed * Time.deltaTime);
-        circle.position = Vector2.Lerp(current, targetPos, t);
+        circle.anchoredPosition = Vector2.Lerp(current, targetPos, t);
 
+        // --- 3. MODIFICA CRUCIALE: Cancellazione dello sporco ---
+        // Se la mano è tracciata e abbiamo il riferimento al controller dello sporco
+        if (trackedNow && dirtController != null)
+        {
+            // Convertiamo la posizione ATTUALE del pallino UI (che include già mirror, gain e lerp)
+            // in coordinate schermo globali (Screen Point).
+            Vector2 finalScreenPos = RectTransformUtility.WorldToScreenPoint(uiCamera, circle.position);
+            
+            // Inviare il comando di cancellazione
+            dirtController.EraseAtScreenPoint(finalScreenPos, uiCamera);
+        }
+
+        // --- Gestione Colori/Alpha (Invariata) ---
         if (trackedNow)
         {
             circleImage.color = Color.Lerp(circleImage.color, trackedColor, Time.deltaTime * questionFadeSpeed);
@@ -176,7 +182,6 @@ public class HandUIManager : MonoBehaviour
         else
         {
             circleImage.color = Color.Lerp(circleImage.color, lostColor, Time.deltaTime * questionFadeSpeed);
-
             if (freezeOnLost)
             {
                 SetGraphicAlpha(circleImage, 1f);
@@ -184,22 +189,16 @@ public class HandUIManager : MonoBehaviour
             }
             else
             {
-                // se non vuoi congelare, puoi far sparire gradualmente
                 SetGraphicAlpha(circleImage, Mathf.MoveTowards(GetGraphicAlpha(circleImage), 0f, Time.deltaTime * questionFadeSpeed));
                 SetGraphicAlpha(question, 0f);
             }
         }
     }
 
+    // ... (Resto dei metodi helper invariati) ...
     private bool GetTrackedState(bool isLeft)
     {
-        // Metodo migliore: usa i boolean del provider basati su confidence.
-        if (wristProvider != null)
-        {
-            return isLeft ? wristProvider.leftTracked : wristProvider.rightTracked;
-        }
-
-        // Fallback se non hai provider: considera tracciato se l’anchor esiste ed è attivo.
+        if (wristProvider != null) return isLeft ? wristProvider.leftTracked : wristProvider.rightTracked;
         Transform a = isLeft ? leftWristAnchor : rightWristAnchor;
         return a != null && a.gameObject.activeInHierarchy;
     }
